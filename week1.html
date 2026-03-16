@@ -43,9 +43,42 @@
             font-size: 0.85rem;
             cursor: pointer;
         }
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 10px;
+        }
+        nav a {
+            color: #0366d6;
+            font-weight: 600;
+            padding: 0.4rem 0.75rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+        nav a:hover {
+            background: rgba(3, 102, 214, 0.1);
+        }
+        nav a.active {
+            background: #0366d6;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
+
+<nav>
+    <a href="index.html">Cuprins</a>
+    <a href="week1.html" class="active">Săptămâna 1</a>
+    <a href="week2.html">Săptămâna 2</a>
+    <a href="week3.html">Săptămâna 3</a>
+</nav>
 
 <h1>Săptămâna 1 – Configurarea Mediului de Dezvoltare</h1>
 

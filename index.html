@@ -30,15 +30,64 @@
         a:hover {
             text-decoration: underline;
         }
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 10px;
+        }
+        nav a {
+            color: #0366d6;
+            font-weight: 600;
+            padding: 0.4rem 0.75rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+        nav a:hover {
+            background: rgba(3, 102, 214, 0.1);
+        }
+        nav a.active {
+            background: #0366d6;
+            color: #fff;
+        }
+        .card {
+            background: #fff;
+            border: 1px solid #d0d7de;
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: 0 10px 18px rgba(36, 41, 46, 0.05);
+            max-width: 700px;
+        }
+        .card ul {
+            margin: 1rem 0 0;
+            padding: 0;
+        }
+        .card li {
+            margin: 0.65rem 0;
+        }
     </style>
 </head>
 <body>
-<h1>Cuprins</h1>
-<p>Alege săptămâna pe care vrei să o parcurgi:</p>
-<ul>
-    <li><a href="week1.html">Săptămâna 1 – Configurarea mediului de dezvoltare</a></li>
-    <li><a href="week2.html">Săptămâna 2 – HTML &amp; CSS (partea 1)</a></li>
-    <!-- <li><a href="week3.html">Săptămâna 3 – HTML &amp; CSS (partea 2)</a></li> -->
-</ul>
+<nav>
+    <a href="index.html" class="active">Cuprins</a>
+    <a href="week1.html">Săptămâna 1</a>
+    <a href="week2.html">Săptămâna 2</a>
+    <a href="week3.html">Săptămâna 3</a>
+</nav>
+<div class="card">
+    <h1>Cuprins</h1>
+    <p>Alege săptămâna pe care vrei să o parcurgi:</p>
+    <ul>
+        <li><a href="week1.html">Săptămâna 1 – Configurarea mediului de dezvoltare</a></li>
+        <li><a href="week2.html">Săptămâna 2 – HTML &amp; CSS</a></li>
+        <li><a href="week3.html">Săptămâna 3 – Tabele HTML, Media Queries și Design Responsiv</a></li>
+    </ul>
+</div>
 </body>
 </html>
