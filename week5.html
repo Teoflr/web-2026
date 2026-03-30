@@ -403,14 +403,14 @@ document.getElementById('toateBtn').addEventListener('click', () => {
         <li><strong>localStorage.getItem(key)</strong> – Recuperează valoarea. Dacă cheia nu există, returnează
             <code>null</code>.</li>
         <li><strong>localStorage.removeItem(key)</strong> – Șterge o înregistrare.</li>
-        <li><strong>localStorage.clear()</strong> – Șterge tutto localStorage-ul.</li>
+        <li><strong>localStorage.clear()</strong> – Șterge tot localStorage-ul.</li>
     </ul>
 
     <h3>localStorage vs sessionStorage</h3>
     <p>localStorage persistă pagina, sessionStorage se șterge când tab-ul se închide.</p>
 
     <h3>JSON.stringify și JSON.parse</h3>
-    <p>localStorage salvează doar string-uri, nu obiecte. Pentru a salva obiecte sau array-uri, trebuie să le converți
+    <p>localStorage salvează doar string-uri, nu obiecte. Pentru a salva obiecte sau array-uri, trebuie să le convertesti
         cu <code>JSON.stringify()</code>; pentru a le obține, folosești <code>JSON.parse()</code>.</p>
     <div class="code-block"><button class="copy-btn">Copy</button>
         <pre><code>const student = { nume: "Ana", varsta: 24 };
