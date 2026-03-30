@@ -307,6 +307,16 @@ form.addEventListener('submit', function(event) {
     <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">Documentația MDN pentru JavaScript</a></li>
     <li><a href="https://www.w3schools.com/js/" target="_blank">Tutoriale W3Schools pentru JS</a></li>
 </ul>
-
+<script>
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('copy-btn')) {
+            const code = e.target.nextElementSibling.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                e.target.textContent = 'Copied!';
+                setTimeout(() => { e.target.textContent = 'Copy'; }, 1000);
+            });
+        }
+    });
+</script>
 </body>
 </html>
