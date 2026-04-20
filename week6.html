@@ -345,7 +345,7 @@ fetch('https://jsonplaceholder.typicode.com/posts/1', {
     <ul>
         <li>Returnează mereu un Promise.</li>
         <li>Permite folosirea <code>await</code> în interiorul ei.</li>
-        <li>Dacă returnezi o valoare normală, va fi retur ată ca Promise rezolvat.</li>
+        <li>Dacă returnezi o valoare normală, va fi returnată ca Promise rezolvat.</li>
     </ul>
     <div class="code-block"><button class="copy-btn">Copy</button>
         <pre><code>// Funcție async simplă
@@ -524,13 +524,13 @@ await loadPostsAsync();
     </div>
 
     <h2>5. Introducere în jQuery</h2>
-    <p>jQuery este o bibliotecă JavaScript care simplifică manipularea DOM-ului, handle-area evenimentelor și AJAX. Deși azi framework-urile moderne (React, Vue) sunt preferred, jQuery este încă folosit în multe proiecte legacy și pentru prototipuri rapide.</p>
+    <p>jQuery este o bibliotecă JavaScript care simplifică manipularea DOM-ului, handle de evenimente și AJAX. Deși azi framework-urile moderne (React, Vue) sunt preferred, jQuery este încă folosit în multe proiecte legacy și pentru prototipuri rapide.</p>
 
     <h3>Ce este jQuery?</h3>
     <p>jQuery oferă o API mai simplă decât vanilla JavaScript pentru:</p>
     <ul>
         <li>Selectarea și manipularea elementelor DOM.</li>
-        <li>Handle-area evenimentelor (click, submit, input, etc.).</li>
+        <li>Handle de evenimente (click, submit, input, etc.).</li>
         <li>Efecte și animații.</li>
         <li>AJAX requests (mai simplu decât Fetch API).</li>
         <li>Compatibilitate între browser-e - jQuery gestionează cazurile speciale.</li>
@@ -606,7 +606,7 @@ $('#myId').prev();                               // Element sibling anterior
     </div>
 
     <h3>AJAX cu jQuery – Mult mai simplu decât Fetch!</h3>
-    <p>jQuery oferă metode speciale pentru AJAX care sunt mai concise decât Fetch API. Toate metodele jQuery AJAX returnează un obiect jqXHR care are metode <code>.done()</code>, <code>.fail()</code>, și <code>.always()</code> pentru handle-are.</p>
+    <p>jQuery oferă metode speciale pentru AJAX care sunt mai concise decât Fetch API. Toate metodele jQuery AJAX returnează un obiect jqXHR care are metode <code>.done()</code>, <code>.fail()</code>, și <code>.always()</code> pentru handle.</p>
     <div class="code-block"><button class="copy-btn">Copy</button>
         <pre><code>// GET simplu - cea mai concisă formă
 $.get('https://jsonplaceholder.typicode.com/posts/1', function(data) {
@@ -622,7 +622,7 @@ $.post('https://jsonplaceholder.typicode.com/posts', {
     console.log('Creat cu ID:', data.id);
 });
 
-// AJAX generic cu mai multe opțiuni și handle-are
+// AJAX generic cu mai multe opțiuni și handles
 $.ajax({
     url: 'https://jsonplaceholder.typicode.com/posts/1',
     type: 'GET',
@@ -703,7 +703,7 @@ $('#myInput').keyup(function(e) {
     }
 });
 
-// Event delegation - handle-are evenimentelor pentru elemente adăugate dinamic
+// Event delegation - handle de evenimente pentru elemente adăugate dinamic
 $(document).on('click', '.dynamicButton', function() {
     console.log('Dynamic button clicked');
 });
