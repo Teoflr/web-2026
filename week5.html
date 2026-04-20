@@ -93,7 +93,8 @@
         <a href="week2.html">Săptămâna 2</a>
         <a href="week3.html">Săptămâna 3</a>
         <a href="week4.html">Săptămâna 4</a>
-        <a href="week5.html" class="active">Săptămâna 5</a>
+        <a href="week5.html">Săptămâna 5</a>
+        <a href="week6.html">Săptămâna 6</a>
     </nav>
 
     <h1>Săptămâna 5 – JavaScript avansat</h1>
@@ -103,10 +104,12 @@
         execută depinde de condiții evaluate la runtime.</p>
     <p>În JavaScript, expresia din cadrul <code>if</code> este evaluată la true sau false. Se recomandă folosirea
         <code>===</code>/<code>!==</code> pentru verificări stricte (tip și valoare), ca să evităm surprizele compared
-        cu <code>==</code>/<code>!=</code>.</p>
+        cu <code>==</code>/<code>!=</code>.
+    </p>
     <h3>if / else / else if</h3>
     <p><code>if</code> rulează un bloc atunci când condiția este truthy, <code>else if</code> oferă un fallback, iar
-        <code>else</code> se execută când niciuna din condiții nu este îndeplinită.</p>
+        <code>else</code> se execută când niciuna din condiții nu este îndeplinită.
+    </p>
     <div class="code-block"><button class="copy-btn">Copy</button>
         <pre><code>const temperatura = 18;
 
@@ -152,7 +155,8 @@ switch (zi) {
         acestora te ajută să scrii verificări concise și fără buguri.</p>
     <ul>
         <li><code>false</code>, <code>0</code>, <code>""</code>, <code>null</code>, <code>undefined</code>,
-            <code>NaN</code> sunt falsy.</li>
+            <code>NaN</code> sunt falsy.
+        </li>
         <li>Tot ce este altceva este truthy (inclusiv obiecte goale, array-uri goale, string-uri non-empty).</li>
     </ul>
     <p>Conversia explicită cu <code>Boolean()</code> va arăta clar ce se consideră truthy/falsy:</p>
@@ -164,7 +168,8 @@ console.log(Boolean({})); // true
     </div>
     <p>Operatorii <code>||</code>, <code>&&</code> și
         <code>!<code> se bazează pe truthy/falsy. De exemplu, <code>a || b</code> returnează prima valoare truthy sau
-        ultima valoare falsy.</p>
+        ultima valoare falsy.
+    </p>
     <div class="code-block"><button class="copy-btn">Copy</button>
         <pre>
     <code>const valoare = "";
@@ -233,7 +238,8 @@ console.log(pare, patrate, suma);
 
     <h2>5. Funcții avansate</h2>
     <p>Funcțiile sunt unități de bază pentru reutilizarea logicii. Folosește parametri default pentru a evita
-        <code>undefined</code> și un număr variabil de parametri cu rest/spread.</p>
+        <code>undefined</code> și un număr variabil de parametri cu rest/spread.
+    </p>
     <ul>
         <li><code>function aduna(a = 0, b = 0)</code> asigură valori implicite când argumentul nu e trecut.</li>
         <li><code>suma(...valori)</code> tratează orice număr de argumente ca un array în interiorul funcției.</li>
@@ -259,7 +265,8 @@ console.log(produs({ nume: "Caiet", pret: 12 }));
 
     <h2>6. Scope, hoisting, closure</h2>
     <p>Scope defineste unde o variabilă poate fi accesată. <code>var</code> are scope la nivel de funcție;
-        <code>let</code> și <code>const</code> au scope de bloc (curly braces).</p>
+        <code>let</code> și <code>const</code> au scope de bloc (curly braces).
+    </p>
     <p>Hoisting înseamnă că declarațiile de variabile și funcții sunt aduse la începutul blocului de execuție, însă
         valorile <code>let</code>/<code>const</code> nu pot fi folosite înaintea inițializării (temporal dead zone).</p>
     <p>Closure: o funcție internă „memorează” variabilele din contextul extern chiar și după ce funcția externă și-a
@@ -289,7 +296,8 @@ console.log(next()); // 2
         <li>Crează funcție <code>verificaInput(val)</code> cu behavior truthy/falsy.</li>
         <li>Crează obiect <code>persoana</code> cu proprietăți și metodă <code>descriere()</code>.</li>
         <li>Crează <code>makeCounter()</code> ce returnează obiect cu <code>increment()</code> și
-            <code>getValue()</code>.</li>
+            <code>getValue()</code>.
+        </li>
     </ul>
 
     <h2>8. Mini proiect – listă de produse + filtre</h2>
@@ -302,7 +310,8 @@ console.log(next()); // 2
         <li><strong>Array produse</strong>: salvează în memorie internă cu obiecte <code>{nume, pret, categorie}</code>.
         </li>
         <li><strong>Funcție de afișare</strong>: readuce DOM-ul din array cu <code>forEach</code> și
-            <code>innerHTML</code>.</li>
+            <code>innerHTML</code>.
+        </li>
         <li><strong>Filtrare</strong>: exemplu cu <code>filter</code> pentru categorie.</li>
         <li><strong>Reducere</strong>: calculează total cu <code>reduce</code>.</li>
         <li><strong>Reset</strong>: curăță formularul și reinițializează starea.</li>
@@ -401,7 +410,8 @@ document.getElementById('toateBtn').addEventListener('click', () => {
         <li><strong>localStorage.setItem(key, value)</strong> – Salvează o pereche cheie-valoare. Valorile sunt mereu
             string-uri; pentru obiecte trebuie să folosești <code>JSON.stringify()</code>.</li>
         <li><strong>localStorage.getItem(key)</strong> – Recuperează valoarea. Dacă cheia nu există, returnează
-            <code>null</code>.</li>
+            <code>null</code>.
+        </li>
         <li><strong>localStorage.removeItem(key)</strong> – Șterge o înregistrare.</li>
         <li><strong>localStorage.clear()</strong> – Șterge tot localStorage-ul.</li>
     </ul>
@@ -410,7 +420,8 @@ document.getElementById('toateBtn').addEventListener('click', () => {
     <p>localStorage persistă pagina, sessionStorage se șterge când tab-ul se închide.</p>
 
     <h3>JSON.stringify și JSON.parse</h3>
-    <p>localStorage salvează doar string-uri, nu obiecte. Pentru a salva obiecte sau array-uri, trebuie să le convertesti
+    <p>localStorage salvează doar string-uri, nu obiecte. Pentru a salva obiecte sau array-uri, trebuie să le
+        convertesti
         cu <code>JSON.stringify()</code>; pentru a le obține, folosești <code>JSON.parse()</code>.</p>
     <div class="code-block"><button class="copy-btn">Copy</button>
         <pre><code>const student = { nume: "Ana", varsta: 24 };
