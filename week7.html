@@ -346,6 +346,11 @@
     <h2>8. Superglobalele și date din formular</h2>
     <p>PHP are variabile predefinite (superglobale) accesibile oriunde în script: <code>$_GET</code>, <code>$_POST</code>, <code>$_SERVER</code>, <code>$_SESSION</code> etc. Ele sunt folosite pentru a primi date de la utilizator sau informații despre server.</p>
 
+    <h3>Definiții și mod de utilizare pentru fiecare superglobală</h3>
+
+    <h4>1. $_GET</h4>
+    <p><strong>Definiție:</strong> Array asociativ care conține parametrii transmisi prin URL (în string-ul de interogare). Se vede în URL ca <code>?param1=valoare1&amp;param2=valoare2</code>.</p>
+    <p><strong>Caracteristici:</strong> Date vizibile în URL, limitate ca mărime (~2KB), mai puțin sigure. Ideal pentru filtrare, paginare sau parametri simpli.</p>
     <h3>Exemplu: procesare simplă cu GET</h3>
     <p>Creează două fișiere: <code>formular.html</code> și <code>procesare.php</code>.</p>
     <div class="code-block">
@@ -360,7 +365,7 @@
     <div class="code-block">
         <button class="copy-btn">Copiază</button>
         <pre><code>&lt;?php // procesare.php
-    if (isset($_GET['nume_utilizator'])) {
+    if (if($_GET['nume_utilizator'])) {  // Verificăm dacă există parametrul în URL - se poate si cu metoda isset($_GET['nume_utilizator'])
         $nume = htmlspecialchars($_GET['nume_utilizator']);
         echo "&lt;h2&gt;Bună, $nume!&lt;/h2&gt;";
     } else {
@@ -370,6 +375,67 @@
     </div>
     <div class="warning">
         <strong>Securitate:</strong> Funcția <code>htmlspecialchars()</code> previne atacurile XSS (Cross‑Site Scripting) convertind caracterele speciale (&lt;, &gt;, ", ') în entități HTML. Folosește‑o întotdeauna când afișezi date primite de la utilizator.
+    </div>
+
+    <h4>2. $_POST</h4>
+    <p><strong>Definiție:</strong> Array asociativ care conține datele trimise prin metoda POST din formulare. Datele nu apar în URL, ci în body-ul cererii HTTP.</p>
+    <p><strong>Caracteristici:</strong> Date ascunse, suportă fișiere și date mari, mai sigură decât GET. Ideală pentru formularele de login, înregistrare sau trimitere de date sensibile.</p>
+    <div class="code-block">
+        <button class="copy-btn">Copiază</button>
+        <pre><code>&lt;?php
+    // Din formular: &lt;form method="POST"&gt;
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $parola = isset($_POST['parola']) ? $_POST['parola'] : '';
+        $email = isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '';
+        if (!empty($email) &amp;&amp; !empty($parola)) {
+            echo "Login incercat cu: $email";
+        }
+    }
+?&gt;</code></pre>
+    </div>
+
+    <h4>3. $_SERVER</h4>
+    <p><strong>Definiție:</strong> Array asociativ care conține informații despre server și cererea HTTP actuală: adresa IP a clientului, metoda cererii (GET/POST), URL-ul paginii, header-e HTTP, etc.</p>
+    <p><strong>Caracteristici:</strong> Doar citire (setată de server), conține metadate. Util pentru verificări de securitate și logging.</p>
+    <div class="code-block">
+        <button class="copy-btn">Copiază</button>
+        <pre><code>&lt;?php
+    echo "Metoda cererii: " . $_SERVER['REQUEST_METHOD'] . "&lt;br&gt;";
+    echo "IP client: " . $_SERVER['REMOTE_ADDR'] . "&lt;br&gt;";
+    echo "URL pagina: " . $_SERVER['PHP_SELF'] . "&lt;br&gt;";
+    echo "Server: " . $_SERVER['SERVER_NAME'] . "&lt;br&gt;";
+    echo "User-Agent: " . $_SERVER['HTTP_USER_AGENT'] . "&lt;br&gt;";
+    
+    // Verificare metoda POST
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        echo "Formular trimis prin POST";
+    }
+?&gt;</code></pre>
+    </div>
+
+    <h4>4. $_SESSION</h4>
+    <p><strong>Definiție:</strong> Array asociativ care stochează date persistent pentru un utilizator pe parcursul unor multiple cereri. Datele rămân în memorie pe server până când sesiunea se termină.</p>
+    <p><strong>Caracteristici:</strong> Necesită <code>session_start()</code>, datele nu se trimit la client, sigure pentru informații sensibile (ID utilizator, preferințe). Fiecare vizitator are propria sesiune.</p>
+    <div class="code-block">
+        <button class="copy-btn">Copiază</button>
+        <pre><code>&lt;?php
+    session_start(); // Trebuie apelat la INCEPUTUL fișierului, înainte de orice output
+    
+    // Stocheaza date in sesiune dupa login
+    $_SESSION['user_id'] = 123;
+    $_SESSION['username'] = 'alexandra';
+    $_SESSION['logged_in'] = true;
+    
+    // Pe alte pagini, retrieve datele
+    if (isset($_SESSION['logged_in']) &amp;&amp; $_SESSION['logged_in']) {
+        echo "Bine ai venit, " . $_SESSION['username'];
+    } else {
+        echo "Va rugam sa va autentificati";
+    }
+    
+    // Logout - sterge sesiunea
+    // session_destroy();
+?&gt;</code></pre>
     </div>
 
     <h2>9. Exerciții practice</h2>
