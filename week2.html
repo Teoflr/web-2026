@@ -96,6 +96,7 @@
         <a href="week5.html">Săptămâna 5</a>
         <a href="week6.html">Săptămâna 6</a>
         <a href="week7.html">Săptămâna 7</a>
+        <a href="week8.html">Săptămâna 8</a>
     </nav>
 
     <h1>Săptămâna 2 – HTML &amp; CSS (partea 1)</h1>
@@ -172,11 +173,14 @@
         taguri, clase sau id-uri. O regulă CSS are trei părţi principale:</p>
     <ol>
         <li><strong>Selector</strong> – elementul căruia i se aplică stilul (ex. <code>body</code>, <code>nav a</code>,
-            <code>.container</code>).</li>
+            <code>.container</code>).
+        </li>
         <li><strong>Proprietate</strong> – ce aspect vrei să modifici (ex. <code>color</code>, <code>margin</code>,
-            <code>display</code>).</li>
+            <code>display</code>).
+        </li>
         <li><strong>Valoare</strong> – ce setare aplici proprietăţii (ex. <code>#333</code>, <code>1rem</code>,
-            <code>flex</code>).</li>
+            <code>flex</code>).
+        </li>
     </ol>
     <p>Exemplu de sintaxă:</p>
     <pre><code>selector {
@@ -264,7 +268,8 @@
         <li><strong>padding</strong> – spațiul interior dintre conținut și margine. Crește spațiul din interiorul
             elementului, dar nu afectează elementele din jur. Exemplu: <code>padding: 1rem;</code>.</li>
         <li><strong>border</strong> – linia de contur care înconjoară padding-ul. Se controlează cu proprietăți precum
-            <code>border: 2px solid #333;</code>. Are grosime, stil și culoare.</li>
+            <code>border: 2px solid #333;</code>. Are grosime, stil și culoare.
+        </li>
         <li><strong>margin</strong> – spațiul exterior dintre element și elementele din jur. Crește distanța dintre
             acest element și alții. Exemplu: <code>margin: 1rem;</code>.</li>
     </ul>
@@ -282,7 +287,8 @@
     <ul>
         <li><code>block</code> – elementul ocupă toată lățimea disponibilă și forțează un rând nou. Exemplu:
             <code>&lt;div&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;h1&gt;</code>. Margin-ul și padding-ul
-            funcționează pe toate laturile.</li>
+            funcționează pe toate laturile.
+        </li>
         <li><code>inline</code> – elementul ocupă doar spațiul necesar și nu forțează rând nou. Alte elemente se pot
             alinia pe aceeași linie. Exemplu: <code>&lt;span&gt;</code>, <code>&lt;a&gt;</code>. Margin-ul vertical nu
             funcționează.</li>
@@ -295,10 +301,12 @@
     <h4>Poziționare</h4>
     <ul>
         <li><code>static</code> – valoarea implicită. Elementul urmează fluxul normal al documentului. Proprietățile
-            <code>top</code>, <code>bottom</code>, <code>left</code>, <code>right</code> nu au efect.</li>
+            <code>top</code>, <code>bottom</code>, <code>left</code>, <code>right</code> nu au efect.
+        </li>
         <li><code>relative</code> – elementul se poziționează relativ la poziția sa normală. Poți folosi
             <code>top</code>, <code>bottom</code>, <code>left</code>, <code>right</code> pentru a-l muta. Ocupă încă
-            spațiu în fluxul normal.</li>
+            spațiu în fluxul normal.
+        </li>
         <li><code>absolute</code> – elementul se scoate din fluxul normal și se poziționează relativ la cel mai apropiat
             element părinte care are <code>position</code> setat (nu static). Dacă nu există, se poziționează relativ la
             ferestrele browserului. Ocupă zero spațiu în flux.</li>

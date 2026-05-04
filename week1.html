@@ -96,6 +96,7 @@
         <a href="week5.html">Săptămâna 5</a>
         <a href="week6.html">Săptămâna 6</a>
         <a href="week7.html">Săptămâna 7</a>
+        <a href="week8.html">Săptămâna 8</a>
     </nav>
 
     <h1>Săptămâna 1 – Configurarea Mediului de Dezvoltare</h1>
@@ -112,7 +113,8 @@
         <li>Deschide fișierul .dmg și urmează instrucțiunile installer-ului.</li>
         <li>După instalare, caută XAMPP în Applications folder și deschide-l.</li>
         <li>Deschide XAMPP Control Panel (sau "XAMPP Manager") și pornește modulele <strong>Apache</strong> și
-            <strong>MySQL</strong>.</li>
+            <strong>MySQL</strong>.
+        </li>
         <li>Verifică funcționarea: deschide browserul și navighează la <code>http://localhost</code>. Ar trebui să vezi
             pagina de start XAMPP cu mesajul "It Works!".</li>
         <li>Folderul root pentru proiecte web se află în <code>/Applications/XAMPP/htdocs</code>. Acolo îți vei pune
@@ -125,7 +127,8 @@
                 target="_blank">https://www.apachefriends.org/download.html</a>.</li>
         <li>Selectează versiunea pentru Windows și descarcă fișierul .exe.</li>
         <li>Rulează fișierul .exe și urmează instrucțiunile installer-ului (recomandă instalarea în
-            <code>C:\xampp</code>).</li>
+            <code>C:\xampp</code>).
+        </li>
         <li>Dacă Windows cere permisiunea (UAC), acceptă.</li>
         <li>După instalare, deschide XAMPP Control Panel din Start menu.</li>
         <li>Pornește modulele <strong>Apache</strong> și <strong>MySQL</strong> (butonul "Start" lângă fiecare).</li>
@@ -209,13 +212,15 @@
         <pre><code>git remote add origin https://github.com/username/proiect.git</code></pre>
     </div>
     <p>Aceasta leagă folderul local de repository-ul online (înlocuiește <code>username</code> cu al tău și
-        <code>proiect</code> cu numele repository-ului).</p>
+        <code>proiect</code> cu numele repository-ului).
+    </p>
     <div class="code-block">
         <button class="copy-btn">Copy</button>
         <pre><code>git push -u origin main</code></pre>
     </div>
     <p>Aceasta trimite versiunea locală online pe branch-ul <code>main</code>. După prima dată, poți doar folosi
-        <code>git push</code> pentru a trimite modificari.</p>
+        <code>git push</code> pentru a trimite modificari.
+    </p>
 
     <h3>GitHub Copilot</h3>
     <p>Copilot este o extensie care te ajută să generezi cod mai rapid. După ce o instalezi în VS Code, pur și simplu
@@ -230,7 +235,8 @@
     <ul>
         <li>Etichetele se scriu cu caractere &lt; și &gt;: <code>&lt;tagname&gt;</code>.</li>
         <li>Majoritatea etichetelor au o etichetă de deschidere și una de închidere:
-            <code>&lt;tag&gt;...conținut...&lt;/tag&gt;</code>.</li>
+            <code>&lt;tag&gt;...conținut...&lt;/tag&gt;</code>.
+        </li>
         <li>Etichetele descriu ceea ce conțin: <code>&lt;h1&gt;</code> pentru titlu principal, <code>&lt;p&gt;</code>
             pentru paragraf, etc.</li>
         <li>Prin folosirea etichetelor corecte, facem pagina mai ușor de înțeles atât pentru browser, cât și pentru
@@ -260,7 +266,8 @@
         <li><code>&lt;!DOCTYPE html&gt;</code> – spune browserului că documentul este HTML5 (versiunea modernă); trebuie
             să fie prima linie din fișier.</li>
         <li><code>&lt;html lang="ro"&gt;</code> – eticheta de început a întregului document; atributul
-            <code>lang="ro"</code> spune că pagina e în limba română.</li>
+            <code>lang="ro"</code> spune că pagina e în limba română.
+        </li>
         <li><code>&lt;head&gt;</code> – secțiune pentru metadate (informații despre pagină care nu se vad direct pe
             ecran).</li>
         <li><code>&lt;meta charset="UTF-8"&gt;</code> – spune browserului ce set de caractere folosim; UTF-8 permite

@@ -113,6 +113,7 @@
         <a href="week5.html">Săptămâna 5</a>
         <a href="week6.html">Săptămâna 6</a>
         <a href="week7.html">Săptămâna 7</a>
+        <a href="week8.html">Săptămâna 8</a>
     </nav>
 
     <h1>Săptămâna 3 – Tabele HTML, Media Queries și Design Responsiv</h1>
@@ -170,9 +171,11 @@
     <h3>Atribute utile pentru tabele</h3>
     <ul>
         <li><code>colspan</code> – Permite unei celule să se întindă pe mai multe coloane. De exemplu,
-            <code>&lt;td colspan="2"&gt;</code> îmbină două coloane.</li>
+            <code>&lt;td colspan="2"&gt;</code> îmbină două coloane.
+        </li>
         <li><code>rowspan</code> – Permite unei celule să se întindă pe mai multe rânduri. De exemplu,
-            <code>&lt;td rowspan="2"&gt;</code> îmbină două rânduri.</li>
+            <code>&lt;td rowspan="2"&gt;</code> îmbină două rânduri.
+        </li>
         <li><code>border</code> – Adaugă o bordură tabelului (deși este mai bine să folosești CSS pentru stilizare).
         </li>
     </ul>
@@ -312,7 +315,8 @@ th {
                     linie.</li>
                 <li><code>flex: 1 1 200px;</code> – combină <code>flex-grow</code>, <code>flex-shrink</code> și
                     <code>flex-basis</code>, astfel încât elementele să crească, să se micșoreze și să pornească de la o
-                    dimensiune de bază.</li>
+                    dimensiune de bază.
+                </li>
                 <li><code>max-width: 100%;</code> – util pentru imagini, tabele și alte elemente pentru a nu depăși
                     containerul părinte.</li>
                 <li><code>box-sizing: border-box;</code> – face ca padding-ul și border-ul să fie incluse în
@@ -333,11 +337,13 @@ th {
     <p><code>flex</code> este un shorthand care combină trei proprietăți:</p>
     <ul>
         <li><code>flex-grow</code> – cât de mult crește un element pentru a umple spațiul liber (valoarea default este
-            <code>0</code>).</li>
+            <code>0</code>).
+        </li>
         <li><code>flex-shrink</code> – cât de mult se micșorează un element atunci când nu mai încap toate elementele
             într-un rând (valoarea default este <code>1</code>).</li>
         <li><code>flex-basis</code> – dimensiunea de bază a elementului înainte de a împărți spațiul (poate fi
-            <code>auto</code>, <code>0</code>, sau o valoare fixă precum <code>200px</code>).</li>
+            <code>auto</code>, <code>0</code>, sau o valoare fixă precum <code>200px</code>).
+        </li>
     </ul>
     <p>Exemplu: <code>flex: 1 1 220px;</code> înseamnă că elementul pornește de la 220px, poate crește (dacă mai este
         spațiu) și se poate micșora (dacă spațiul scade).</p>
@@ -400,21 +406,25 @@ img {
     <h3>Meta viewport</h3>
     <p>Pentru ca pagina să fie responsive, trebuie să adaugi
         <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code> în head. Acest lucru
-        spune browserului să seteze lățimea viewport-ului la lățimea dispozitivului și să prevină zoom-ul inițial.</p>
+        spune browserului să seteze lățimea viewport-ului la lățimea dispozitivului și să prevină zoom-ul inițial.
+    </p>
 
     <h3>Exercițiu practic</h3>
     <p>Construiește o pagină HTML care include:</p>
     <ol>
         <li>Un tabel cu cel puțin 5 coloane (de exemplu: <em>curs</em>, <em>profesor</em>, <em>durată</em>,
-            <em>nivel</em>, <em>status</em>).</li>
+            <em>nivel</em>, <em>status</em>).
+        </li>
         <li>O clasă CSS pentru tabel (<code>.responsive-table</code>) care adaugă borduri, spațiere și culori ușoare
             pentru antete.</li>
         <li>Cel puțin un media query care modifică layout-ul pe mobil:
             <ul>
                 <li>Pe ecrane mici (<code>max-width: 600px</code>) ascunde coloanele mai puțin importante (de exemplu
-                    <em>durata</em> și <em>status</em>).</li>
+                    <em>durata</em> și <em>status</em>).
+                </li>
                 <li>Sau transformă rândurile în „carduri” (folosind <code>display: block</code> și
-                    <code>display: grid</code> pentru fiecare rând) pentru o vizualizare mai ușor de citit.</li>
+                    <code>display: grid</code> pentru fiecare rând) pentru o vizualizare mai ușor de citit.
+                </li>
             </ul>
         </li>
     </ol>

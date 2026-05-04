@@ -96,12 +96,15 @@
         <a href="week5.html">Săptămâna 5</a>
         <a href="week6.html" class="active">Săptămâna 6</a>
         <a href="week7.html">Săptămâna 7</a>
+        <a href="week8.html">Săptămâna 8</a>
     </nav>
 
     <h1>Săptămâna 6 – API-uri, AJAX și jQuery</h1>
 
     <h2>1. Introducere în API-uri</h2>
-    <p>Un <strong>API (Application Programming Interface)</strong> este o interfață care permite aplicațiilor să comunice între ele. În context web, API-urile sunt accesate prin HTTP, iar datele sunt adesea returnate în format JSON.</p>
+    <p>Un <strong>API (Application Programming Interface)</strong> este o interfață care permite aplicațiilor să
+        comunice între ele. În context web, API-urile sunt accesate prin HTTP, iar datele sunt adesea returnate în
+        format JSON.</p>
     <p>API-urile permit:</p>
     <ul>
         <li>Preluarea datelor de pe un server distant.</li>
@@ -111,7 +114,8 @@
     </ul>
 
     <h3>Structura unui API și REST</h3>
-    <p><strong>REST (Representational State Transfer)</strong> este o arhitectură care folosește HTTP în mod standard. Un API RESTful expune resurse (posts, users, comments) accesibile prin URL-uri și operate prin metode HTTP.</p>
+    <p><strong>REST (Representational State Transfer)</strong> este o arhitectură care folosește HTTP în mod standard.
+        Un API RESTful expune resurse (posts, users, comments) accesibile prin URL-uri și operate prin metode HTTP.</p>
     <p>Exemplu de structură REST:</p>
     <ul>
         <li><code>GET /posts</code> – Obține toate postările.</li>
@@ -123,7 +127,8 @@
     </ul>
 
     <h3>Format JSON</h3>
-    <p>JSON (JavaScript Object Notation) este formatul standard pentru schimbul de date în API-uri. Este ușor de citit și ușor de parsat în JavaScript.</p>
+    <p>JSON (JavaScript Object Notation) este formatul standard pentru schimbul de date în API-uri. Este ușor de citit
+        și ușor de parsat în JavaScript.</p>
     <div class="code-block"><button class="copy-btn">Copy</button>
         <pre><code>// Exemplu de răspuns API în JSON
 {
@@ -149,14 +154,21 @@
 </code></pre>
     </div>
 
-    <p>Un exemplu simplu: <code>https://jsonplaceholder.typicode.com/posts/1</code> returnează obiectul de mai sus în format JSON.</p>
+    <p>Un exemplu simplu: <code>https://jsonplaceholder.typicode.com/posts/1</code> returnează obiectul de mai sus în
+        format JSON.</p>
 
     <h2>2. AJAX (Asynchronous JavaScript and XML)</h2>
-    <p><strong>AJAX</strong> permite să faci cereri HTTP din JavaScript fără a reîncărca pagina. Deși se numește "XML", azi se folosește mai mult JSON. "Asynchronous" este cuvântul cheie – cererea se execută în fundal, iar pagina rămâne responsivă.</p>
-    
+    <p><strong>AJAX</strong> permite să faci cereri HTTP din JavaScript fără a reîncărca pagina. Deși se numește "XML",
+        azi se folosește mai mult JSON. "Asynchronous" este cuvântul cheie – cererea se execută în fundal, iar pagina
+        rămâne responsivă.</p>
+
     <h3>Sincron vs Asincron</h3>
-    <p><strong>Cod sincron</strong> se execută linie după linie, iar fiecare operație trebuie să se termine înainte de următoarea. Dacă faci o cerere la server care durează 3 secunde, aplicația se blochează pentru 3 secunde – utilizatorul nu poate interacționa cu pagina.</p>
-    <p><strong>Cod asincron</strong> permite operații de lungă durată să se execute în fundal. Restul codului continuă să se execute, iar când cererea se termină, o callback sau Promise-ul se rezolvă. Utilizatorul rămâne în control.</p>
+    <p><strong>Cod sincron</strong> se execută linie după linie, iar fiecare operație trebuie să se termine înainte de
+        următoarea. Dacă faci o cerere la server care durează 3 secunde, aplicația se blochează pentru 3 secunde –
+        utilizatorul nu poate interacționa cu pagina.</p>
+    <p><strong>Cod asincron</strong> permite operații de lungă durată să se execute în fundal. Restul codului continuă
+        să se execute, iar când cererea se termină, o callback sau Promise-ul se rezolvă. Utilizatorul rămâne în
+        control.</p>
     <div class="code-block"><button class="copy-btn">Copy</button>
         <pre><code>// SINCRON (rău) - pagina se blochează
 const response = earnestFetchSync('https://jsonplaceholder.typicode.com/posts/1'); // Aștept 3 secunde!
@@ -172,7 +184,8 @@ console.log('Cererea s-a inițiat, continui'); // Aceasta se execută imediat
     </div>
 
     <h3>XMLHttpRequest (XHR) – Metoda tradițională</h3>
-    <p><code>XMLHttpRequest</code> este API-ul original pentru AJAX, disponibil în browser-e de zeci de ani. Sintaxa este mai verboză.</p>
+    <p><code>XMLHttpRequest</code> este API-ul original pentru AJAX, disponibil în browser-e de zeci de ani. Sintaxa
+        este mai verboză.</p>
     <div class="code-block"><button class="copy-btn">Copy</button>
         <pre><code>const xhr = new XMLHttpRequest();
 xhr.open('GET', 'https://jsonplaceholder.typicode.com/posts/1');
@@ -204,7 +217,10 @@ console.log('Cererea a fost trimisă, dar nu aștept răspunsul');
     </div>
 
     <h3>Fetch API – Metoda modernă cu Promises</h3>
-    <p><code>Fetch</code> este API-ul modern (introdus unde 2015) și este mult mai curat. Returnează <strong>Promise-uri</strong>, care sunt obiecte care reprezintă o valoare care va fi disponibilă în viitor (sau o eroare).</p>
+    <p><code>Fetch</code> este API-ul modern (introdus unde 2015) și este mult mai curat. Returnează
+        <strong>Promise-uri</strong>, care sunt obiecte care reprezintă o valoare care va fi disponibilă în viitor (sau
+        o eroare).
+    </p>
     <div class="code-block"><button class="copy-btn">Copy</button>
         <pre><code>fetch('https://jsonplaceholder.typicode.com/posts/1')
     .then(response => {
@@ -229,7 +245,8 @@ console.log('Cererea a fost inițiată');
     </div>
 
     <h3>Promises – Fundația pentru Async/Await</h3>
-    <p>Un <strong>Promise</strong> reprezentă rezultatul unei operații asincrone care se va completa în viitor. Poate fi:</p>
+    <p>Un <strong>Promise</strong> reprezentă rezultatul unei operații asincrone care se va completa în viitor. Poate
+        fi:</p>
     <ul>
         <li><strong>Pending</strong> – Operația este încă în progres.</li>
         <li><strong>Fulfilled (rezolvat)</strong> – Operația s-a terminat cu succes, și avem o valoare.</li>
@@ -277,7 +294,8 @@ failPromise
         <li><code>1xx</code> – Informație (rar întâlnit).</li>
         <li><code>2xx</code> – Succes (200 OK, 201 Created, 204 No Content).</li>
         <li><code>3xx</code> – Redirecționare (301, 302, 304).</li>
-        <li><code>4xx</code> – Eroare client (400 Bad Request, 401 Unauthorized, 404 Not Found, 429 Too Many Requests).</li>
+        <li><code>4xx</code> – Eroare client (400 Bad Request, 401 Unauthorized, 404 Not Found, 429 Too Many Requests).
+        </li>
         <li><code>5xx</code> – Eroare server (500 Internal Server Error, 502 Bad Gateway, 503 Service Unavailable).</li>
     </ul>
 
@@ -339,7 +357,8 @@ fetch('https://jsonplaceholder.typicode.com/posts/1', {
     </div>
 
     <h2>4. Async/Await – Programare asincronă ușor de citit</h2>
-    <p><strong>Async/await</strong> este sintaxa modernă pentru a lucra cu Promise-uri și operații asincrone. Face codul să arate ca șicodurile sincron, dar rămâne asincron în fundal.</p>
+    <p><strong>Async/await</strong> este sintaxa modernă pentru a lucra cu Promise-uri și operații asincrone. Face codul
+        să arate ca șicodurile sincron, dar rămâne asincron în fundal.</p>
 
     <h3>Ce înseamnă async?</h3>
     <p>Cuvântul cheie <code>async</code> declară o funcție ca fiind asincronă. O funcție <code>async</code>:</p>
@@ -366,7 +385,8 @@ function greetTraditional() {
     </div>
 
     <h3>Ce înseamnă await?</h3>
-    <p>Cuvântul cheie <code>await</code> pune în pauză execuția funcției async până când Promise-ul se rezolvă. Returnează valoarea din Promise.</p>
+    <p>Cuvântul cheie <code>await</code> pune în pauză execuția funcției async până când Promise-ul se rezolvă.
+        Returnează valoarea din Promise.</p>
     <div class="code-block"><button class="copy-btn">Copy</button>
         <pre><code>async function loadPosts() {
     console.log('1. Incepe cererea');
@@ -525,7 +545,9 @@ await loadPostsAsync();
     </div>
 
     <h2>5. Introducere în jQuery</h2>
-    <p>jQuery este o bibliotecă JavaScript care simplifică manipularea DOM-ului, handle de evenimente și AJAX. Deși azi framework-urile moderne (React, Vue) sunt preferred, jQuery este încă folosit în multe proiecte legacy și pentru prototipuri rapide.</p>
+    <p>jQuery este o bibliotecă JavaScript care simplifică manipularea DOM-ului, handle de evenimente și AJAX. Deși azi
+        framework-urile moderne (React, Vue) sunt preferred, jQuery este încă folosit în multe proiecte legacy și pentru
+        prototipuri rapide.</p>
 
     <h3>Ce este jQuery?</h3>
     <p>jQuery oferă o API mai simplă decât vanilla JavaScript pentru:</p>
@@ -538,7 +560,8 @@ await loadPostsAsync();
     </ul>
 
     <h3>Instalare și includere</h3>
-    <p>Poți înclude jQuery din CDN (Content Delivery Network) direct în HTML. jQuery trebuie inclus înainte de propriile tale scripturi:</p>
+    <p>Poți înclude jQuery din CDN (Content Delivery Network) direct în HTML. jQuery trebuie inclus înainte de propriile
+        tale scripturi:</p>
     <div class="code-block"><button class="copy-btn">Copy</button>
         <pre><code>&lt;script src="https://code.jquery.com/jquery-3.6.0.min.js"&gt;&lt;/script&gt;
 &lt;!-- Propriile tale scripturi jQuery pot veni după --&gt;
@@ -547,7 +570,8 @@ await loadPostsAsync();
     </div>
 
     <h3>Selectoare și manipulare DOM în jQuery</h3>
-    <p>jQuery folosește sintaxa <code>$()</code> (sau <code>jQuery()</code>) pentru a selecta elemente și returneaza un obiect jQuery pe care poți aplica metode:</p>
+    <p>jQuery folosește sintaxa <code>$()</code> (sau <code>jQuery()</code>) pentru a selecta elemente și returneaza un
+        obiect jQuery pe care poți aplica metode:</p>
     <div class="code-block"><button class="copy-btn">Copy</button>
         <pre><code>// Selectoare - returnează obiecte jQuery
 $('#myId');           // ID - selectează elementul cu id="myId"
@@ -607,7 +631,9 @@ $('#myId').prev();                               // Element sibling anterior
     </div>
 
     <h3>AJAX cu jQuery – Mult mai simplu decât Fetch!</h3>
-    <p>jQuery oferă metode speciale pentru AJAX care sunt mai concise decât Fetch API. Toate metodele jQuery AJAX returnează un obiect jqXHR care are metode <code>.done()</code>, <code>.fail()</code>, și <code>.always()</code> pentru handle.</p>
+    <p>jQuery oferă metode speciale pentru AJAX care sunt mai concise decât Fetch API. Toate metodele jQuery AJAX
+        returnează un obiect jqXHR care are metode <code>.done()</code>, <code>.fail()</code>, și <code>.always()</code>
+        pentru handle.</p>
     <div class="code-block"><button class="copy-btn">Copy</button>
         <pre><code>// GET simplu - cea mai concisă formă
 $.get('https://jsonplaceholder.typicode.com/posts/1', function(data) {
@@ -712,7 +738,8 @@ $(document).on('click', '.dynamicButton', function() {
     </div>
 
     <h2>6. Integrarea Fetch vs jQuery AJAX – Care să folosesc?</h2>
-    <p>Azi, <code>Fetch</code> este preferred pentru cod modern și nou, dar jQuery AJAX este încă util pentru proiecte existente și rapid prototyping. Iată o comparație:</p>
+    <p>Azi, <code>Fetch</code> este preferred pentru cod modern și nou, dar jQuery AJAX este încă util pentru proiecte
+        existente și rapid prototyping. Iată o comparație:</p>
     <div class="code-block"><button class="copy-btn">Copy</button>
         <pre><code>// jQuery AJAX
 $.ajax({
@@ -762,7 +789,8 @@ async function getData() {
     </ul>
 
     <h2>7. Mini proiect – Gestionar de postări cu JSONPlaceholder</h2>
-    <p>Prin integrarea API-urilor și jQuery, vom construi o aplicație completă de gestiune a postărilor de pe JSONPlaceholder. Aplicația va permite:</p>
+    <p>Prin integrarea API-urilor și jQuery, vom construi o aplicație completă de gestiune a postărilor de pe
+        JSONPlaceholder. Aplicația va permite:</p>
     <ul>
         <li>Încărcare și afișare a unei liste de postări.</li>
         <li>Filtrare pe baza utilizatorului.</li>
@@ -771,7 +799,8 @@ async function getData() {
     </ul>
 
     <h3>Mini-proiect: Versiune cu Async/Await (Modern)</h3>
-    <p>Iată același mini-proiect, dar rescris folosind <code>async/await</code> în loc de jQuery AJAX callback-uri. Codul este mai clar și ușor de urmărit:</p>
+    <p>Iată același mini-proiect, dar rescris folosind <code>async/await</code> în loc de jQuery AJAX callback-uri.
+        Codul este mai clar și ușor de urmărit:</p>
     <div class="code-block"><button class="copy-btn">Copy</button>
         <pre><code>&lt;!DOCTYPE html&gt;
 &lt;html&gt;
@@ -1070,7 +1099,8 @@ async function getData() {
     </div>
 
     <h2>8. Bune practici și tratarea erorilor</h2>
-    <p>La lucrul cu API-uri și operații asincrone, este important să gestionezi erorile corespunzător și să urmezi bune practici:</p>
+    <p>La lucrul cu API-uri și operații asincrone, este important să gestionezi erorile corespunzător și să urmezi bune
+        practici:</p>
     <div class="code-block"><button class="copy-btn">Copy</button>
         <pre><code>async function fetchData(url) {
     try {
@@ -1206,28 +1236,46 @@ async function userFriendlyFetch(url) {
 
     <h2>9. Exerciții</h2>
     <ul>
-        <li><strong>Promises și async/await:</strong> Scrie o funcție cu <code>async/await</code> care preia postări și comentariile pentru fiecare postare (folosește <code>Promise.all()</code> pentru a face cererile în paralel).</li>
-        <li><strong>API GET/POST/DELETE:</strong> Crează o pagină care afișează utilizatorii de pe JSONPlaceholder și permite ștergerea unui utilizator (folosind DELETE).</li>
-        <li><strong>Error handling:</strong> Implementează o funcție care reîncearcă cererea de 3 ori înainte de a arunca eroarea finală.</li>
-        <li><strong>localStorage + AJAX:</strong> Implementează un sistem de favorit (cu localStorage) pentru postări favorit, salvând și reîncărcând din storage.</li>
-        <li><strong>Loading indicator:</strong> Adaugă un spinner la AJAX requests și ascunde-l când datele sunt încărcate.</li>
+        <li><strong>Promises și async/await:</strong> Scrie o funcție cu <code>async/await</code> care preia postări și
+            comentariile pentru fiecare postare (folosește <code>Promise.all()</code> pentru a face cererile în
+            paralel).</li>
+        <li><strong>API GET/POST/DELETE:</strong> Crează o pagină care afișează utilizatorii de pe JSONPlaceholder și
+            permite ștergerea unui utilizator (folosind DELETE).</li>
+        <li><strong>Error handling:</strong> Implementează o funcție care reîncearcă cererea de 3 ori înainte de a
+            arunca eroarea finală.</li>
+        <li><strong>localStorage + AJAX:</strong> Implementează un sistem de favorit (cu localStorage) pentru postări
+            favorit, salvând și reîncărcând din storage.</li>
+        <li><strong>Loading indicator:</strong> Adaugă un spinner la AJAX requests și ascunde-l când datele sunt
+            încărcate.</li>
         <li><strong>Paginare:</strong> Implementează paginare pentru lista de postări (10 per pagină).</li>
-        <li><strong>Căutare text:</strong> Adaugă input de căutare care filtrează postările folosind <code>filter()</code> și <code>includes()</code>.</li>
+        <li><strong>Căutare text:</strong> Adaugă input de căutare care filtrează postările folosind
+            <code>filter()</code> și <code>includes()</code>.
+        </li>
     </ul>
 
     <h2>10. Resurse suplimentare</h2>
     <ul>
-        <li><a href="https://jsonplaceholder.typicode.com/" target="_blank">JSONPlaceholder API – Test API pentru învățare</a></li>
-        <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API" target="_blank">MDN Fetch API – Documentație oficială</a></li>
-        <li><a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous" target="_blank">MDN Asynchronous JavaScript – Ghid complet</a></li>
-        <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">MDN Promise – Explicare detalică</a></li>
-        <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function" target="_blank">MDN Async Function – Sintaxă și exemple</a></li>
-        <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await" target="_blank">MDN Await – Detalii și cazuri de utilizare</a></li>
+        <li><a href="https://jsonplaceholder.typicode.com/" target="_blank">JSONPlaceholder API – Test API pentru
+                învățare</a></li>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API" target="_blank">MDN Fetch API –
+                Documentație oficială</a></li>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous" target="_blank">MDN
+                Asynchronous JavaScript – Ghid complet</a></li>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+                target="_blank">MDN Promise – Explicare detalică</a></li>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"
+                target="_blank">MDN Async Function – Sintaxă și exemple</a></li>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await"
+                target="_blank">MDN Await – Detalii și cazuri de utilizare</a></li>
         <li><a href="https://api.jquery.com/" target="_blank">jQuery API Documentation – Referință completă</a></li>
-        <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest" target="_blank">MDN XMLHttpRequest – API-ul tradițional</a></li>
-        <li><a href="https://javascript.info/promise" target="_blank">JavaScript.info Promises – Tutorial interactiv</a></li>
-        <li><a href="https://javascript.info/async-await" target="_blank">JavaScript.info Async/Await – Explicație pas cu pas</a></li>
-        <li><a href="https://httpwg.org/" target="_blank">HTTP Specification – Ce sunt metodele HTTP și status codes</a></li>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest" target="_blank">MDN XMLHttpRequest
+                – API-ul tradițional</a></li>
+        <li><a href="https://javascript.info/promise" target="_blank">JavaScript.info Promises – Tutorial interactiv</a>
+        </li>
+        <li><a href="https://javascript.info/async-await" target="_blank">JavaScript.info Async/Await – Explicație pas
+                cu pas</a></li>
+        <li><a href="https://httpwg.org/" target="_blank">HTTP Specification – Ce sunt metodele HTTP și status codes</a>
+        </li>
     </ul>
 
     <script>
