@@ -192,6 +192,7 @@ if (isset($_POST["submit"])) {
 </div>
 <div class="func-def">
     <strong>Functii noi:</strong><br>
+    - <code>$_FILES</code> – variabila superglobala care contine informatii despre fisierele incarcate printr-un formular cu metoda POST (nume, tip, dimensiune, locatie temporara etc.).<br>
     - <code>basename()</code> – returneaza numele ultimei componente dintr-o cale (de ex. din "uploads/poza.jpg" returneaza "poza.jpg").<br>
     - <code>pathinfo()</code> – returneaza informatii despre o cale: director, nume de baza, extensie. Folosim <code>PATHINFO_EXTENSION</code> pentru a obtine extensia.<br>
     - <code>move_uploaded_file()</code> – muta un fisier incarcat din locatia temporara ($_FILES["file"]["tmp_name"]) in destinatia finala. Este o masura de securitate.<br>
