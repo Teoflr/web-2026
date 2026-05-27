@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Proiect de Semestru – Google API (Calendar/Contacte) cu CRUD</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            margin: 2rem;
+            line-height: 1.6;
+            color: #24292e;
+            background: #fff;
+        }
+
+        h1 {
+            font-weight: 600;
+            margin-top: 1.5rem;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 10px;
+        }
+
+        nav a {
+            color: #0366d6;
+            font-weight: 600;
+            padding: 0.4rem 0.75rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+
+        nav a:hover {
+            background: rgba(3, 102, 214, 0.1);
+        }
+
+        nav a.active {
+            background: #0366d6;
+            color: #fff;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #d0d7de;
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: 0 10px 18px rgba(36, 41, 46, 0.05);
+            max-width: 1000px;
+        }
+
+        .card h2 {
+            margin-top: 1.25rem;
+        }
+
+        .muted {
+            color: #6a737d;
+            font-size: 0.95rem;
+        }
+
+        code.literal {
+            background: #f6f8fa;
+            padding: 0.08rem 0.3rem;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        ul {
+            margin: 0.5rem 0 1rem 1.25rem;
+        }
+
+        ol {
+            margin: 0.5rem 0 1rem 1.25rem;
+        }
+
+        .note {
+            background: #fff7e6;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            border: 1px solid #f0d9b5;
+            margin: 1rem 0;
+        }
+
+        hr {
+            margin: 1.5rem 0;
+            border: 0;
+            border-top: 1px solid #d0d7de;
+        }
+
+        .badge {
+            background: #e1e4e8;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="index.html">Cuprins</a>
+        <a href="week1.html">Săptămâna 1</a>
+        <a href="week2.html">Săptămâna 2</a>
+        <a href="week3.html">Săptămâna 3</a>
+        <a href="week4.html">Săptămâna 4</a>
+        <a href="week5.html">Săptămâna 5</a>
+        <a href="week6.html">Săptămâna 6</a>
+        <a href="week7.html">Săptămâna 7</a>
+        <a href="week8.html">Săptămâna 8</a>
+        <a href="week9.html">Săptămâna 9</a>
+        <a href="final-project.html">Proiect Final</a>
+        <a href="proiect-final-ea.html" class="active">Proiect Final - EA</a>
+    </nav>
+
+    <div>
+        <h1> Proiect Final: Aplicație CRUD cu integrare Google API (Calendar / Contacte)</h1>
+
+              <h2>Obiectivul Proiectului</h2>
+            <p style="margin-top: 0.5rem;"><strong>Dezvoltarea unei aplicații web complete (portofoliu personal + instrument de gestiune)</strong> care se conectează la un serviciu Google la alegere – <strong>Calendar API</strong> sau <strong>People API (Contacte)</strong>. Aplicația trebuie să permită utilizatorului autentificat să <strong>vizualizeze, adauge, editeze și șteargă</strong> intrări (evenimente sau persoane de contact) folosind API-ul real, oferind o experiență modernă de tip Single Page Application (SPA).</p>
+            <p>Proiectul îmbină o pagină de profil / CV cu o zonă funcțională de administrare a datelor, având cerințe clare de filtrare, sortare, paginare și gestionare a erorilor.</p>
+      
+
+        <h2> Cerințe Obligatorii (nota 5 – 7)</h2>
+        <ol>
+            <li>
+                <strong>Arhitectură și conținut personal (Portofoliu + Gestiune)</strong>
+                <ul>
+                    <li><strong>Secțiune Profil</strong>: Pagina trebuie să conțină numele studentului, rol/tehnologii preferate, o scurtă descriere și o fotografie de profil.</li>
+                    <li><strong>Secțiune centrală de administrare</strong>: O zonă dedicată unde sunt listate dinamic intrările (evenimente sau contacte) preluate de la Google API. Interfața trebuie să includă butoane clare pentru adăugare, editare și ștergere.</li>
+                    <li><strong>Experiență profesională</strong> (dacă există): joburi relevante în IT sau alte domenii, cu rol, companie și perioadă.</li>
+                    <li><strong>Educație</strong>: instituție, program de studii, perioadă (ex: „Facultatea de Informatică, UAIC – 2022‑2026”).</li>
+                    <li><strong>Design original şi personalizat</strong> – culori, tipografie, layout unic, care reflectă personalitatea studentului.</li>
+                </ul>
+            </li>
+
+            <li>
+                <strong>Integrare Google API (Calendar SAU People API)</strong>
+                <ul>
+                    <li>Autentificare OAuth 2.0 cu Google Identity Services. Studentul trebuie să solicite permisiunile necesare:
+                        <ul>
+                            <li>Pentru <strong>Calendar API</strong>: domeniu <code class="literal">https://www.googleapis.com/auth/calendar.events</code> (acces complet la evenimente).</li>
+                            <li>Pentru <strong>People API</strong>: domeniu <code class="literal">https://www.googleapis.com/auth/contacts</code> (acces la contacte).</li>
+                        </ul>
+                    </li>
+                    <li>Efectuarea de requesturi asincrone (fetch + token OAuth) către endpoint-urile Google pentru a prelua lista de intrări existente.</li>
+                    <li>Afișarea a cel puțin <strong>5 intrări</strong> (evenimente sau contacte) sub formă de carduri sau tabel. Dacă utilizatorul are mai puține date reale, aplicația va afișa un mesaj sugestiv și va oferi posibilitatea de a adăuga date demonstrative (mock local sau localStorage).</li>
+                </ul>
+            </li>
+
+            <li>
+                <strong>Operații CRUD complete (Create, Read, Update, Delete)</strong>
+                <ul>
+                    <li><strong>Adăugare (Create)</strong>: Formular dedicat pentru crearea unei noi intrări.<br>
+                        <em>Calendar:</em> titlu, dată început, dată sfârșit, locație (opțional).<br>
+                        <em>Contacte:</em> nume, prenume, email, telefon, companie.
+                    </li>
+                    <li><strong>Citire (Read)</strong>: Afișarea corectă a proprietăților relevante din răspunsul API.</li>
+                    <li><strong>Editare (Update)</strong>: Fiecare intrare are buton „Editează” – se deschide un formular precompletat, iar modificările sunt trimise la API (PATCH/PUT).</li>
+                    <li><strong>Ștergere (Delete)</strong>: Buton „Șterge” cu confirmare înainte de a trimite cererea de ștergere.</li>
+                    <li>După fiecare operație CRUD, lista de intrări se reîmprospătează dinamic fără reîncărcarea paginii.</li>
+                </ul>
+            </li>
+
+            <li>
+                <strong>Design responsiv</strong>
+                <p class="muted">Layout-ul trebuie să se adapteze pe telefon, tabletă și desktop folosind CSS Grid / Flexbox sau framework-uri moderne (Bootstrap, Tailwind).</p>
+            </li>
+        </ol>
+
+
+        <h2> Cerințe Medii (nota 8 – 9)</h2>
+        <ol>
+            <li>
+                <strong>Filtrare și sortare pe client‑side</strong>
+                <ul>
+                    <li>Implementarea unei <strong>bare de căutare</strong> care filtrează intrările în timp real (după titlu/eveniment sau după nume/email contact).</li>
+                    <li><strong>Filtrare suplimentară</strong>: pentru Calendar – filtrare după interval de date (ex: evenimente din ultimele 7 zile); pentru Contacte – filtrare după inițiala numelui sau după domeniul de email.</li>
+                    <li><strong>Sortare</strong>: evenimente după dată (crescător/descrescător), contacte alfabetic după nume.</li>
+                </ul>
+            </li>
+
+            <li>
+                <strong>Experiență utilizator (UX) profesională</strong>
+                <ul>
+                    <li><strong>Stare de încărcare (loading)</strong>: Prezentarea unui spinner sau skeleton în timpul cererilor către Google API (autentificare, preluare date, salvare, ștergere).</li>
+                    <li><strong>Gestionare erori completă</strong>: Dacă token-ul OAuth expiră, utilizatorul primește un mesaj prietenos și un buton de reautentificare. Dacă cererea eșuează (lipsă internet, rată limită, eroare API), UI-ul afișează un mesaj clar: „⚠️ Nu s‑au putut încărca datele. Verifică conexiunea sau încearcă din nou.” Aplicația nu trebuie să se oprească din funcționare.</li>
+                    <li><strong>Confirmare înainte de ștergere</strong>: un dialog modal sau confirm() personalizat pentru a preveni ștergerile accidentale.</li>
+                </ul>
+            </li>
+        </ol>
+
+        <h2> Cerințe Avansate / Bonus (minim 1 subpunct pentru nota 10)</h2>
+        <ol>
+            <li>
+                <strong>Backend proxy securizat (Serverless / Node.js)</strong>
+                <ul>
+                    <li>Pentru a ascunde cheile și token-urile, studentul va implementa un mini-server (Express în Node.js, funcții serverless pe Vercel/Netlify, sau PHP) care face schimbul OAuth și stochează token-ul de acces în variabile de mediu. Frontend-ul comunică doar cu acest proxy, iar proxy-ul adaugă antetul de autorizare către Google API. <strong>Token-ul NU este expus în browser.</strong></li>
+                </ul>
+            </li>
+
+            <li>
+                <strong>Paginare sau „Load More”</strong>
+                <p class="muted">Dacă utilizatorul are mai mult de 6 intrări (evenimente sau contacte), se va implementa un sistem de paginare (cu numere de pagină) sau un buton „Încarcă mai multe”, pentru a optimiza performanța și UX-ul.</p>
+            </li>
+
+            <li>
+                <strong>Deploy live + README profesionist</strong>
+                <ul>
+                    <li>Proiectul trebuie să fie funcțional și accesibil public pe o platformă gratuită (Vercel, Netlify, Render, GitHub Pages – doar pentru frontend, dar pentru backend se poate folosi Vercel Serverless).</li>
+                    <li>Repository-ul trebuie să conțină un fișier <code class="literal">README.md</code> detaliat: descriere, tehnologii utilizate, instrucțiuni de configurare (creare proiect în Google Cloud Console, activarea API-ului, variabile de mediu), capturi de ecran și link către aplicația live.</li>
+                </ul>
+            </li>
+
+            <li>
+                <strong>Suport offline (PWA) – extra</strong>
+                <p class="muted">Service Worker + IndexedDB pentru a permite vizualizarea ultimelor date sincronizate chiar și fără conexiune. Modificările sunt salvate automat când conexiunea revine.</p>
+            </li>
+        </ol>
+
+        <hr>
+
+        <h2> Recomandări tehnice și resurse</h2>
+        <ul>
+            <li><strong>Autentificare Google</strong>: folosiți <a href="https://developers.google.com/identity/oauth2/web/guides/overview" target="_blank">Google Identity Services for Web</a> (GIS) sau biblioteca <code>gapi</code>. Pentru vanilla JS, implementați fluxul OAuth 2.0 implicit cu redirecționare.</li>
+            <li><strong>Endpoint-uri relevante</strong>:
+                <ul>
+                    <li><em>Calendar API:</em> 
+                        <code class="literal">GET https://www.googleapis.com/calendar/v3/calendars/primary/events</code> (listă evenimente)<br>
+                        <code class="literal">POST https://www.googleapis.com/calendar/v3/calendars/primary/events</code> (creare)<br>
+                        <code class="literal">PATCH / PUT / DELETE</code> pe URL-ul specific evenimentului.
+                    </li>
+                    <li><em>People API (Contacte):</em> 
+                        <code class="literal">GET https://people.googleapis.com/v1/people/me/connections?personFields=names,emailAddresses,phoneNumbers,organizations</code><br>
+                        <code class="literal">POST https://people.googleapis.com/v1/people:createContact</code><br>
+                        <code class="literal">PATCH https://people.googleapis.com/v1/{resourceName}:updateContact</code><br>
+                        <code class="literal">DELETE https://people.googleapis.com/v1/{resourceName}</code>
+                    </li>
+                </ul>
+            </li>
+            <li><strong>Paginare la API-ul Google</strong>: folosiți parametrii <code>maxResults</code> și <code>pageToken</code> pentru a itera prin rezultate. Implementarea paginării în frontend trebuie să fie intuitivă.</li>
+            <li><strong>Stocare stare</strong>: În versiunea fără backend, token-ul OAuth poate fi păstrat în memorie sau în sessionStorage, dar atenție la securitate. Backend-ul proxy este recomandat pentru nota maximă.</li>
+        </ul>
+
+    </div>
+</body>
+
+</html>
