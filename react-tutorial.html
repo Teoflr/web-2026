@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React with Vite — Practical Introduction</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>React with Vite</h1>
+            <p>A practical introduction to components, props, state, events, and forms.</p>
+        </header>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+
+        <div class="nav-links">
+            <strong>On this page</strong>
+            <a href="#setup">Setup</a>
+            <a href="#installation">Installation</a>
+            <a href="#first-app">First App</a>
+            <a href="#components">Components</a>
+            <a href="#state">Props and state</a>
+            <a href="#events">Events</a>
+        </div>
+
+        <h2 id="setup">Before you begin</h2>
+        
+        <div class="step">
+            <div class="step-number">1</div>
+            <h3>What this covers</h3>
+            <ul>
+                <li>Install Node.js and check npm</li>
+                <li>Scaffold a React project with Vite</li>
+                <li>Write components and JSX</li>
+                <li>Pass data through props</li>
+                <li>Update state with <code class="code-inline">useState</code></li>
+                <li>Handle events and controlled forms</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <div class="step-number">2</div>
+            <h3>What each tool does</h3>
+            <p>The setup uses four related tools. They do different jobs:</p>
+            <dl class="term-list">
+                <div>
+                    <dt>React</dt>
+                    <dd>A JavaScript library for building an interface from components. React code eventually runs in the browser.</dd>
+                </div>
+                <div>
+                    <dt>Node.js</dt>
+                    <dd>A runtime that executes JavaScript outside the browser. It runs Vite and the other development tools on your computer; it is not a web server you need to write for this lesson.</dd>
+                </div>
+                <div>
+                    <dt>npm</dt>
+                    <dd>The package manager installed with Node.js. It downloads packages, records exact versions, and runs commands defined by the project.</dd>
+                </div>
+                <div>
+                    <dt>Vite</dt>
+                    <dd>The development server and build tool. It serves the project locally, updates the browser after edits, and creates optimized files for deployment.</dd>
+                </div>
+            </dl>
+            <p>Create React App was deprecated in 2025. React recommends a framework for production applications, but Vite remains a good way to learn client-side React without introducing a framework first.</p>
+            
+            <div class="tip">
+                Vite 8 uses native modules during development and Rolldown for production builds. It updates the page as files change.
+            </div>
+        </div>
+
+        <h2 id="installation">Install and scaffold</h2>
+
+        <div class="step">
+            <div class="step-number">3</div>
+            <h3>Install Node.js</h3>
+            <p>Install Node.js once on your computer. npm is included in the same installation.</p>
+
+            <h4>1. Choose an LTS release</h4>
+            <ol>
+                <li>Open <a href="https://nodejs.org/" target="_blank">nodejs.org</a>.</li>
+                <li>Choose the download marked <strong>LTS</strong>, not Current. LTS releases receive longer support and are the safer default for a course or project.</li>
+                <li>As of 26 October 2026, the LTS line is Node.js 24. Node.js 26 becomes LTS on 28 October. Either line can run this project.</li>
+            </ol>
+
+            <h4>2. Run the installer</h4>
+            <ul>
+                <li><strong>Windows:</strong> Download the <code class="code-inline">.msi</code> installer, keep the default options, and allow it to add Node.js to <code class="code-inline">PATH</code>.</li>
+                <li><strong>macOS:</strong> Download the <code class="code-inline">.pkg</code> installer for your Mac and keep the default options.</li>
+                <li><strong>Linux:</strong> Use one of the package-manager or version-manager commands listed on the Node.js download page. Distribution repositories can contain an older release, so check the version after installation.</li>
+            </ul>
+            <p>A version manager such as <code class="code-inline">nvm</code> or <code class="code-inline">fnm</code> is useful when several projects require different Node.js releases, but it is not required for this lesson.</p>
+
+            <h4>3. Open a new terminal</h4>
+            <p>Close any terminal that was open during installation, then open Terminal, PowerShell, or the terminal in your editor. A new session reloads the updated <code class="code-inline">PATH</code>.</p>
+
+            <h4>4. Verify Node.js and npm</h4>
+            <p>Run each command separately:</p>
+            <div class="code-block" data-language="bash"><span class="keyword">node</span> <span class="operator">--version</span>
+<span class="keyword">npm</span> <span class="operator">--version</span></div>
+            
+            <div class="success">
+                Both commands should print a version, for example <code class="code-inline">v24.x.x</code> for Node.js and <code class="code-inline">11.x.x</code> for npm. The exact patch number can differ. Vite 8 requires Node.js 22.12 or newer; Node.js 20 is no longer supported.
+            </div>
+
+            <div class="warning">
+                If the terminal reports “command not found” or “not recognized,” open a new terminal first. If the error remains, run the installer again and make sure Node.js is added to <code class="code-inline">PATH</code>. Do not fix a normal local project by running <code class="code-inline">npm</code> with <code class="code-inline">sudo</code>.
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">4</div>
+            <h3>Create the project</h3>
+            <h4>1. Choose the parent directory</h4>
+            <p>The command will create a new folder named <code class="code-inline">my-react-app</code>. First, move the terminal to the directory that should contain that folder. For example:</p>
+
+            <div class="code-block" data-language="bash"><span class="comment"># macOS or Linux</span>
+<span class="keyword">cd</span> ~/Documents
+
+<span class="comment"># Windows PowerShell</span>
+<span class="keyword">cd</span> $HOME\Documents</div>
+
+            <p>Use another location if you prefer. The <code class="code-inline">cd</code> command changes the terminal's current directory.</p>
+
+            <h4>2. Ask Vite to scaffold the app</h4>
+            <div class="code-block" data-language="bash"><span class="keyword">npm</span> create vite@latest my-react-app <span class="operator">--</span> <span class="operator">--template</span> react</div>
+
+            <p>The parts of this command mean:</p>
+            <ul>
+                <li><code class="code-inline">npm create</code> runs a project generator.</li>
+                <li><code class="code-inline">vite@latest</code> uses the latest stable create-vite package.</li>
+                <li><code class="code-inline">my-react-app</code> is the new folder and package name. Use a lowercase name without spaces.</li>
+                <li>The first <code class="code-inline">--</code> passes the remaining options to create-vite.</li>
+                <li><code class="code-inline">--template react</code> selects React with JavaScript. Use <code class="code-inline">react-ts</code> only if the course uses TypeScript.</li>
+            </ul>
+
+            <p>Choose <strong>Oxlint</strong> when asked which linter to use. When asked whether to install and start now, choose <strong>No</strong> so the next commands remain visible as separate steps.</p>
+
+            <div class="tip">
+                To skip both prompts, run <code class="code-inline">npm create vite@latest my-react-app -- --template react --no-interactive</code>. Non-interactive mode selects Oxlint and does not install the dependencies automatically.
+            </div>
+
+            <h4>3. Enter the project directory</h4>
+            <div class="code-block" data-language="bash"><span class="keyword">cd</span> my-react-app</div>
+            <p>Commands from this point must run inside this folder. It contains <code class="code-inline">package.json</code>, the file that lists the project's packages and scripts.</p>
+
+            <h4>4. Install the dependencies</h4>
+            <div class="code-block" data-language="bash"><span class="keyword">npm</span> install</div>
+            <p>npm reads <code class="code-inline">package.json</code>, downloads the required packages into <code class="code-inline">node_modules/</code>, and writes <code class="code-inline">package-lock.json</code> with the exact resolved versions. Do not edit <code class="code-inline">node_modules/</code> by hand or commit it to source control.</p>
+
+            <h4>5. Start the development server</h4>
+            <div class="code-block" data-language="bash"><span class="keyword">npm</span> run dev</div>
+            <p><code class="code-inline">npm run dev</code> runs the <code class="code-inline">dev</code> script from <code class="code-inline">package.json</code>. Vite prints a local address, normally <code class="code-inline">http://localhost:5173</code>. Open it in a browser. Leave the terminal running while you work.</p>
+            <p>Save a source file to see the browser update. Press <code class="code-inline">Ctrl+C</code> in the terminal when you want to stop the server.</p>
+
+            <h4>6. Know the other project commands</h4>
+            <div class="code-block" data-language="bash"><span class="comment"># Check the source with the configured linter</span>
+<span class="keyword">npm</span> run lint
+
+<span class="comment"># Create an optimized production build in dist/</span>
+<span class="keyword">npm</span> run build
+
+<span class="comment"># Preview the production build locally</span>
+<span class="keyword">npm</span> run preview</div>
+
+            <div class="tip">
+                When returning to the project later, open a terminal, run <code class="code-inline">cd</code> with the project's path, and then run <code class="code-inline">npm run dev</code>. Run <code class="code-inline">npm install</code> again only after dependencies change or when <code class="code-inline">node_modules/</code> is missing.
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">5</div>
+            <h3>Read the project structure</h3>
+            <p>The current JavaScript template creates this structure:</p>
+            
+            <div class="file-structure">
+my-react-app/
+├── public/
+│   ├── favicon.svg
+│   └── icons.svg
+├── src/
+│   ├── assets/
+│   │   ├── hero.png
+│   │   ├── react.svg
+│   │   └── vite.svg
+│   ├── App.css
+│   ├── App.jsx          # Root component
+│   ├── index.css        # Global CSS
+│   └── main.jsx         # Browser entry point
+├── .oxlintrc.json       # Oxlint rules
+├── index.html           # HTML document
+├── package.json         # Dependencies and commands
+└── vite.config.js       # Vite configuration
+            </div>
+            <p>In October 2026, the template installs React 19.3, Vite 8, and the React plugin for Vite. Choosing ESLint at the prompt creates <code class="code-inline">eslint.config.js</code> instead of <code class="code-inline">.oxlintrc.json</code>.</p>
+        </div>
+
+        <h2 id="first-app">The first React render</h2>
+
+        <div class="step">
+            <div class="step-number">6</div>
+            <h3>The entry point: main.jsx</h3>
+            <p>A React project still begins with a normal HTML document. Vite loads <code class="code-inline">src/main.jsx</code> from a module script in <code class="code-inline">index.html</code>, and that JavaScript hands one part of the page over to React.</p>
+
+            <h4>How the browser reaches React</h4>
+            <ol>
+                <li>The browser requests <code class="code-inline">index.html</code> from the Vite development server.</li>
+                <li>The HTML contains an empty <code class="code-inline">&lt;div id="root"&gt;&lt;/div&gt;</code>. This is the mounting point for the application.</li>
+                <li>The module script loads <code class="code-inline">src/main.jsx</code>.</li>
+                <li><code class="code-inline">main.jsx</code> creates a React root and tells React to render <code class="code-inline">&lt;App /&gt;</code> inside the mounting point.</li>
+                <li><code class="code-inline">App</code> renders its child components, which render their own children. Together they form the component tree.</li>
+            </ol>
+
+            <p>Open <code class="code-inline">src/main.jsx</code>. The current template contains:</p>
+            
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { StrictMode } <span class="keyword">from</span> <span class="string">'react'</span>
+<span class="keyword">import</span> { createRoot } <span class="keyword">from</span> <span class="string">'react-dom/client'</span>
+<span class="keyword">import</span> <span class="string">'./index.css'</span>
+<span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">'./App.jsx'</span>
+
+<span class="function">createRoot</span>(<span class="function">document.getElementById</span>(<span class="string">'root'</span>)).<span class="function">render</span>(
+  <span class="tag">&lt;StrictMode&gt;</span>
+    <span class="tag">&lt;App /&gt;</span>
+  <span class="tag">&lt;/StrictMode&gt;</span>,
+)</div>
+            
+            <h4>Read the entry file</h4>
+            <ul>
+                <li><code class="code-inline">import</code> makes code or CSS from another file available here. JavaScript modules let a project be split into focused files.</li>
+                <li><code class="code-inline">document.getElementById('root')</code> finds the matching element in <code class="code-inline">index.html</code>.</li>
+                <li><code class="code-inline">createRoot(...)</code> lets React manage the contents of that element.</li>
+                <li><code class="code-inline">render(&lt;App /&gt;)</code> starts the component tree with the root component.</li>
+            </ul>
+            <p><code class="code-inline">StrictMode</code> enables extra development checks. It may run some component logic twice in development to expose unsafe side effects; it does not do that in the production build. JSX no longer needs a default <code class="code-inline">React</code> import.</p>
+
+            <div class="tip">
+                Most projects rarely change <code class="code-inline">main.jsx</code>. Day-to-day work happens in <code class="code-inline">App.jsx</code> and the components rendered below it.
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">7</div>
+            <h3>The root component: App.jsx</h3>
+            <p><code class="code-inline">App</code> is a JavaScript function used as a React component. React calls it and uses the returned JSX as a description of what should appear on screen.</p>
+            <p>Replace <code class="code-inline">src/App.jsx</code> with a smaller component:</p>
+            
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> <span class="string">'./App.css'</span>
+
+<span class="keyword">function</span> <span class="function">App</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">className</span>=<span class="value">"App"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;h1&gt;</span>React notes<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;p&gt;</span>This page is rendered by a component.<span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}
+
+<span class="keyword">export default</span> App</div>
+
+            <h4>Read the component</h4>
+            <ul>
+                <li><code class="code-inline">import './App.css'</code> includes styles used by this part of the interface.</li>
+                <li><code class="code-inline">function App()</code> declares the component. Component names must begin with a capital letter so React can distinguish them from HTML tags such as <code class="code-inline">div</code>.</li>
+                <li><code class="code-inline">return (...)</code> describes the interface for this render. React compares later renders and updates only the DOM that changed.</li>
+                <li><code class="code-inline">export default App</code> lets another file import this component with <code class="code-inline">import App from './App.jsx'</code>.</li>
+            </ul>
+
+            <div class="tip">
+                JSX resembles HTML, but it follows JavaScript rules. Use <code class="code-inline">className</code> instead of <code class="code-inline">class</code>, close every tag, and return one parent element or fragment.
+            </div>
+
+            <p>JSX can include JavaScript expressions inside curly braces. For example, <code class="code-inline">&lt;p&gt;{2 + 2}&lt;/p&gt;</code> renders the number <code class="code-inline">4</code>. Statements such as <code class="code-inline">if</code> cannot be placed directly inside JSX, but their results can be stored in variables first.</p>
+        </div>
+
+        <h2 id="components">Components</h2>
+
+        <div class="step">
+            <div class="step-number">8</div>
+            <h3>Create a component</h3>
+            <h4>What is a component?</h4>
+            <p>A component is a JavaScript function that owns a piece of the interface. It can contain markup, styling hooks, event handlers, and state. A component may be as small as a button or as large as a complete page.</p>
+            <p>Components are composed rather than copied. A page component might render <code class="code-inline">Header</code>, <code class="code-inline">Sidebar</code>, and <code class="code-inline">Article</code>; <code class="code-inline">Article</code> might then render several smaller components.</p>
+
+            <h4>Why not keep the whole page in App?</h4>
+            <ul>
+                <li><strong>Readability:</strong> a name such as <code class="code-inline">&lt;UserProfile /&gt;</code> explains the purpose of a section without exposing all of its markup.</li>
+                <li><strong>Reuse:</strong> one component can render in several places with different data.</li>
+                <li><strong>Isolation:</strong> related markup and behavior stay together, so a change has a smaller area to affect.</li>
+                <li><strong>Independent state:</strong> separate instances can remember separate values.</li>
+                <li><strong>Testing:</strong> focused pieces are easier to test than one large page component.</li>
+            </ul>
+            <p>Do not split every HTML element into its own component. Extract a component when a section has a clear responsibility, repeats, has its own behavior, or makes its parent difficult to read.</p>
+
+            <h4>Declare and export Welcome</h4>
+            <p>Create a new file <code class="code-inline">src/Welcome.jsx</code>:</p>
+            
+            <div class="code-block" data-language="jsx"><span class="keyword">function</span> <span class="function">Welcome</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;h2&gt;</span>Welcome component<span class="tag">&lt;/h2&gt;</span>
+      <span class="tag">&lt;p&gt;</span>Components split an interface into reusable parts.<span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}
+
+<span class="keyword">export default</span> Welcome</div>
+            
+            <p>The export makes <code class="code-inline">Welcome</code> available to other modules. Import it and render it in <code class="code-inline">App.jsx</code>:</p>
+            
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> <span class="string">'./App.css'</span>
+<span class="keyword">import</span> Welcome <span class="keyword">from</span> <span class="string">'./Welcome'</span>
+
+<span class="keyword">function</span> <span class="function">App</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">className</span>=<span class="value">"App"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;h1&gt;</span>React notes<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;Welcome /&gt;</span>
+      <span class="tag">&lt;Welcome /&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}
+
+<span class="keyword">export default</span> App</div>
+            
+            <div class="success">
+                A component can appear more than once. Each <code class="code-inline">&lt;Welcome /&gt;</code> is a separate instance, even though both instances currently render the same markup.
+            </div>
+        </div>
+
+        <h2 id="state">Props and state</h2>
+
+        <div class="step">
+            <div class="step-number">9</div>
+            <h3>Pass data with props</h3>
+            <p>Reusable components often need different content. <strong>Props</strong>, short for properties, are the inputs a parent component passes to a child component. They work much like function arguments.</p>
+            <ul>
+                <li>Data flows down the component tree: the parent chooses the values and the child reads them.</li>
+                <li>Props are read-only. A child must not change the props it receives.</li>
+                <li>Text can use quotes, as in <code class="code-inline">name="Alice"</code>. Numbers, variables, objects, and functions use curly braces, as in <code class="code-inline">age={25}</code>.</li>
+                <li>A prop can contain any JavaScript value, including another React element.</li>
+            </ul>
+
+            <h4>Read props in the child</h4>
+            <p>Update <code class="code-inline">Welcome.jsx</code>:</p>
+            
+            <div class="code-block" data-language="jsx"><span class="keyword">function</span> <span class="function">Welcome</span>(props) {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;h2&gt;</span>Hello, {props.name}!<span class="tag">&lt;/h2&gt;</span>
+      <span class="tag">&lt;p&gt;</span>You are {props.age} years old.<span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}
+
+<span class="keyword">export default</span> Welcome</div>
+
+            <p>React passes one props object to the function. The example reads <code class="code-inline">props.name</code> and <code class="code-inline">props.age</code>. Current React documentation often destructures these values in the parameter: <code class="code-inline">function Welcome({ name, age })</code>. Both forms are valid.</p>
+            
+            <h4>Supply props from the parent</h4>
+            <p>Pass different values from <code class="code-inline">App.jsx</code>:</p>
+            
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> <span class="string">'./App.css'</span>
+<span class="keyword">import</span> Welcome <span class="keyword">from</span> <span class="string">'./Welcome'</span>
+
+<span class="keyword">function</span> <span class="function">App</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">className</span>=<span class="value">"App"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;h1&gt;</span>React notes<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;Welcome</span> <span class="attribute">name</span>=<span class="value">"Alice"</span> <span class="attribute">age</span>={<span class="number">25</span>} <span class="tag">/&gt;</span>
+      <span class="tag">&lt;Welcome</span> <span class="attribute">name</span>=<span class="value">"Bob"</span> <span class="attribute">age</span>={<span class="number">30</span>} <span class="tag">/&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}
+
+<span class="keyword">export default</span> App</div>
+
+            <p>Both instances use the same component definition, but the props produce different output. If the parent renders again with new values, React passes the new props to the child and updates the screen.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-number">10</div>
+            <h3>Update state with useState</h3>
+            <p><strong>State</strong> is a component's memory. It stores information that can change because of user input, a response from a server, or another event. When state changes, React renders the component again so the screen reflects the new value.</p>
+
+            <h4>Why a normal variable is not enough</h4>
+            <p>A local variable is created again each time the component function runs, and changing it does not ask React to update the screen. <code class="code-inline">useState</code> keeps a value between renders and provides a setter that schedules the next render.</p>
+
+            <h4>How useState works</h4>
+            <p><code class="code-inline">useState(0)</code> returns a two-item array:</p>
+            <ul>
+                <li><code class="code-inline">count</code> is the state value for the current render. Its initial value is <code class="code-inline">0</code>.</li>
+                <li><code class="code-inline">setCount</code> requests a render with a new value.</li>
+            </ul>
+            <p>The names are a convention created through array destructuring. Hooks such as <code class="code-inline">useState</code> must be called at the top level of a component, not inside a loop, condition, or nested function.</p>
+
+            <h4>Build a counter</h4>
+            <p>Create <code class="code-inline">src/Counter.jsx</code>:</p>
+            
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { useState } <span class="keyword">from</span> <span class="string">'react'</span>
+
+<span class="keyword">function</span> <span class="function">Counter</span>() {
+  <span class="comment">// useState returns [currentValue, functionToUpdateValue]</span>
+  <span class="keyword">const</span> [count, setCount] = <span class="function">useState</span>(<span class="number">0</span>)
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;h3&gt;</span>Counter: {count}<span class="tag">&lt;/h3&gt;</span>
+      <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() =&gt; <span class="function">setCount</span>(current =&gt; current + <span class="number">1</span>)}<span class="tag">&gt;</span>
+        Increment
+      <span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() =&gt; <span class="function">setCount</span>(current =&gt; current - <span class="number">1</span>)}<span class="tag">&gt;</span>
+        Decrement
+      <span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() =&gt; <span class="function">setCount</span>(<span class="number">0</span>)}<span class="tag">&gt;</span>
+        Reset
+      <span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}
+
+<span class="keyword">export default</span> Counter</div>
+
+            <p>Each <code class="code-inline">onClick</code> receives a function. React calls that function after the user clicks; it must not be called while rendering. The increment and decrement buttons use an updater function because their next value depends on the previous value.</p>
+            <p>Calling a setter does not change the current <code class="code-inline">count</code> variable immediately. It queues another render. React then calls <code class="code-inline">Counter</code> again with the updated value.</p>
+
+            <div class="tip">
+                Store only information the interface needs to remember. Values that can be calculated from existing props or state usually should be calculated during rendering instead of stored as more state.
+            </div>
+
+            <p>Add the Counter to your <code class="code-inline">App.jsx</code>:</p>
+            
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> <span class="string">'./App.css'</span>
+<span class="keyword">import</span> Welcome <span class="keyword">from</span> <span class="string">'./Welcome'</span>
+<span class="keyword">import</span> Counter <span class="keyword">from</span> <span class="string">'./Counter'</span>
+
+<span class="keyword">function</span> <span class="function">App</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">className</span>=<span class="value">"App"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;h1&gt;</span>React notes<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;Welcome</span> <span class="attribute">name</span>=<span class="value">"Alice"</span> <span class="attribute">age</span>={<span class="number">25</span>} <span class="tag">/&gt;</span>
+      <span class="tag">&lt;Counter /&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}
+
+<span class="keyword">export default</span> App</div>
+            <p>If <code class="code-inline">&lt;Counter /&gt;</code> is rendered twice, each instance receives its own independent <code class="code-inline">count</code> state.</p>
+        </div>
+
+        <h2 id="events">Events and forms</h2>
+
+        <div class="step">
+            <div class="step-number">11</div>
+            <h3>Create a controlled form</h3>
+            <p>React handles browser events through props such as <code class="code-inline">onClick</code>, <code class="code-inline">onChange</code>, and <code class="code-inline">onSubmit</code>. Pass a function to an event prop; React calls it when the event occurs.</p>
+
+            <h4>What makes an input controlled?</h4>
+            <p>A controlled input gets its displayed value from React state:</p>
+            <ul>
+                <li><code class="code-inline">value={name}</code> makes <code class="code-inline">name</code> the source of truth for the input.</li>
+                <li><code class="code-inline">onChange</code> runs after the user types and copies <code class="code-inline">e.target.value</code> into state.</li>
+                <li>The state update renders the component again, and the input displays the new state.</li>
+            </ul>
+            <p>This creates a loop: user input produces an event, the event updates state, and state updates the interface. Controlled inputs make validation, formatting, and conditional buttons easier because the current value is already available to the component.</p>
+
+            <h4>Build the form</h4>
+            <p>Create <code class="code-inline">src/NameForm.jsx</code>:</p>
+            
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { useState } <span class="keyword">from</span> <span class="string">'react'</span>
+
+<span class="keyword">function</span> <span class="function">NameForm</span>() {
+  <span class="keyword">const</span> [name, setName] = <span class="function">useState</span>(<span class="string">''</span>)
+  <span class="keyword">const</span> [submittedName, setSubmittedName] = <span class="function">useState</span>(<span class="string">''</span>)
+
+  <span class="keyword">const</span> <span class="function">handleSubmit</span> = (e) =&gt; {
+    e.<span class="function">preventDefault</span>() <span class="comment">// Prevent page refresh</span>
+    <span class="function">setSubmittedName</span>(name)
+  }
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;form</span> <span class="attribute">onSubmit</span>={handleSubmit}<span class="tag">&gt;</span>
+        <span class="tag">&lt;label&gt;</span>
+          Enter your name:
+          <span class="tag">&lt;input</span> 
+            <span class="attribute">type</span>=<span class="value">"text"</span> 
+            <span class="attribute">value</span>={name}
+            <span class="attribute">onChange</span>={(e) =&gt; <span class="function">setName</span>(e.target.value)}
+            <span class="attribute">placeholder</span>=<span class="value">"Your name here..."</span>
+          <span class="tag">/&gt;</span>
+        <span class="tag">&lt;/label&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attribute">type</span>=<span class="value">"submit"</span><span class="tag">&gt;</span>Submit<span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/form&gt;</span>
+      
+      {submittedName && (
+        <span class="tag">&lt;p&gt;</span>Hello, {submittedName}! Nice to meet you.<span class="tag">&lt;/p&gt;</span>
+      )}
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}
+
+<span class="keyword">export default</span> NameForm</div>
+
+            <h4>Follow the submit flow</h4>
+            <ul>
+                <li><code class="code-inline">name</code> tracks what is currently in the input.</li>
+                <li><code class="code-inline">submittedName</code> stores the last value that was submitted. Keeping these values separate means the greeting does not change with every keystroke.</li>
+                <li><code class="code-inline">e.preventDefault()</code> stops the browser's default form submission, which would navigate or reload the page.</li>
+                <li><code class="code-inline">setSubmittedName(name)</code> saves the current input and schedules a render.</li>
+                <li><code class="code-inline">submittedName && (...)</code> conditionally renders the greeting only when the string is not empty.</li>
+            </ul>
+
+            <div class="tip">
+                Keep the semantic <code class="code-inline">form</code>, <code class="code-inline">label</code>, and submit button. They provide keyboard behavior and accessibility that a collection of generic <code class="code-inline">div</code> elements would not.
+            </div>
+
+            <p>Add it to your App:</p>
+            
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> <span class="string">'./App.css'</span>
+<span class="keyword">import</span> Welcome <span class="keyword">from</span> <span class="string">'./Welcome'</span>
+<span class="keyword">import</span> Counter <span class="keyword">from</span> <span class="string">'./Counter'</span>
+<span class="keyword">import</span> NameForm <span class="keyword">from</span> <span class="string">'./NameForm'</span>
+
+<span class="keyword">function</span> <span class="function">App</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">className</span>=<span class="value">"App"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;h1&gt;</span>React notes<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;Welcome</span> <span class="attribute">name</span>=<span class="value">"Alice"</span> <span class="attribute">age</span>={<span class="number">25</span>} <span class="tag">/&gt;</span>
+      <span class="tag">&lt;Counter /&gt;</span>
+      <span class="tag">&lt;NameForm /&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}
+
+<span class="keyword">export default</span> App</div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">12</div>
+            <h3>Combine the ideas in a todo list</h3>
+            <p>The todo list combines the ideas above in one small feature: a controlled input collects text, state stores a list, event handlers update that list, and JSX renders one item for each object.</p>
+
+            <h4>Plan the state</h4>
+            <ul>
+                <li><code class="code-inline">inputValue</code> is a string containing the text currently in the input.</li>
+                <li><code class="code-inline">todos</code> is an array of objects. Each object has an <code class="code-inline">id</code>, <code class="code-inline">text</code>, and <code class="code-inline">completed</code> value.</li>
+                <li>The total and completed counts can be calculated from <code class="code-inline">todos</code>, so they do not need separate state.</li>
+            </ul>
+
+            <h4>Update arrays without mutation</h4>
+            <p>State should be treated as read-only. Do not call <code class="code-inline">push</code>, <code class="code-inline">splice</code>, or directly assign a property on the existing array. Create a new array instead:</p>
+            <ul>
+                <li>spread syntax creates a new array with one additional item;</li>
+                <li><code class="code-inline">map</code> creates a new array with one changed item;</li>
+                <li><code class="code-inline">filter</code> creates a new array without the deleted item.</li>
+            </ul>
+
+            <h4>Build TodoList</h4>
+            <p>Create <code class="code-inline">src/TodoList.jsx</code>:</p>
+            
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { useState } <span class="keyword">from</span> <span class="string">'react'</span>
+
+<span class="keyword">function</span> <span class="function">TodoList</span>() {
+  <span class="keyword">const</span> [todos, setTodos] = <span class="function">useState</span>([])
+  <span class="keyword">const</span> [inputValue, setInputValue] = <span class="function">useState</span>(<span class="string">''</span>)
+
+  <span class="keyword">const</span> <span class="function">addTodo</span> = (e) =&gt; {
+    e.<span class="function">preventDefault</span>()
+    <span class="keyword">if</span> (inputValue.<span class="function">trim</span>() !== <span class="string">''</span>) {
+      <span class="function">setTodos</span>(currentTodos =&gt; [
+        ...currentTodos,
+        { id: Date.<span class="function">now</span>(), text: inputValue, completed: <span class="keyword">false</span> },
+      ])
+      <span class="function">setInputValue</span>(<span class="string">''</span>)
+    }
+  }
+
+  <span class="keyword">const</span> <span class="function">toggleTodo</span> = (id) =&gt; {
+    <span class="function">setTodos</span>(currentTodos =&gt; currentTodos.<span class="function">map</span>(todo =&gt; 
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ))
+  }
+
+  <span class="keyword">const</span> <span class="function">deleteTodo</span> = (id) =&gt; {
+    <span class="function">setTodos</span>(currentTodos =&gt; currentTodos.<span class="function">filter</span>(todo =&gt; todo.id !== id))
+  }
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;h3&gt;</span>My Todo List<span class="tag">&lt;/h3&gt;</span>
+      
+      <span class="tag">&lt;form</span> <span class="attribute">onSubmit</span>={addTodo}<span class="tag">&gt;</span>
+        <span class="tag">&lt;input</span>
+          <span class="attribute">type</span>=<span class="value">"text"</span>
+          <span class="attribute">value</span>={inputValue}
+          <span class="attribute">onChange</span>={(e) =&gt; <span class="function">setInputValue</span>(e.target.value)}
+          <span class="attribute">placeholder</span>=<span class="value">"Add a new todo..."</span>
+        <span class="tag">/&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attribute">type</span>=<span class="value">"submit"</span><span class="tag">&gt;</span>Add<span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/form&gt;</span>
+
+      <span class="tag">&lt;ul&gt;</span>
+        {todos.<span class="function">map</span>(todo =&gt; (
+          <span class="tag">&lt;li</span> <span class="attribute">key</span>={todo.id}<span class="tag">&gt;</span>
+            <span class="tag">&lt;button</span>
+              <span class="attribute">type</span>=<span class="value">"button"</span>
+              <span class="attribute">aria-pressed</span>={todo.completed}
+              <span class="attribute">onClick</span>={() =&gt; <span class="function">toggleTodo</span>(todo.id)}
+              <span class="attribute">style</span>={{ textDecoration: todo.completed ? <span class="string">'line-through'</span> : <span class="string">'none'</span> }}
+            <span class="tag">&gt;</span>
+              {todo.text}
+            <span class="tag">&lt;/button&gt;</span>
+            <span class="tag">&lt;button</span> <span class="attribute">type</span>=<span class="value">"button"</span> <span class="attribute">onClick</span>={() =&gt; <span class="function">deleteTodo</span>(todo.id)}<span class="tag">&gt;</span>Delete<span class="tag">&lt;/button&gt;</span>
+          <span class="tag">&lt;/li&gt;</span>
+        ))}
+      <span class="tag">&lt;/ul&gt;</span>
+      
+      <span class="tag">&lt;p&gt;</span>Total todos: {todos.length} | Completed: {todos.<span class="function">filter</span>(t =&gt; t.completed).length}<span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}
+
+<span class="keyword">export default</span> TodoList</div>
+
+            <h4>Read the rendering logic</h4>
+            <ul>
+                <li><code class="code-inline">todos.map(...)</code> converts each todo object into an <code class="code-inline">li</code> element.</li>
+                <li><code class="code-inline">key={todo.id}</code> gives React a stable identity for each item. Keys help React track insertions, deletions, and reordering; they are not passed to the component as a normal prop.</li>
+                <li>The conditional <code class="code-inline">textDecoration</code> derives styling from <code class="code-inline">todo.completed</code>.</li>
+                <li>The toggle button uses <code class="code-inline">aria-pressed</code> so assistive technology can read its current state.</li>
+                <li><code class="code-inline">todos.filter(...).length</code> derives the completed count during rendering.</li>
+            </ul>
+            <p>The updater form of <code class="code-inline">setTodos</code> receives the latest array. This is the safest form when the next state depends on the previous state.</p>
+
+            <div class="tip">
+                <code class="code-inline">Date.now()</code> is sufficient for this local exercise. Data from an API or database should use the stable identifier supplied by that data source.
+            </div>
+
+            <p>Add the TodoList to your App:</p>
+            
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> <span class="string">'./App.css'</span>
+<span class="keyword">import</span> Welcome <span class="keyword">from</span> <span class="string">'./Welcome'</span>
+<span class="keyword">import</span> Counter <span class="keyword">from</span> <span class="string">'./Counter'</span>
+<span class="keyword">import</span> NameForm <span class="keyword">from</span> <span class="string">'./NameForm'</span>
+<span class="keyword">import</span> TodoList <span class="keyword">from</span> <span class="string">'./TodoList'</span>
+
+<span class="keyword">function</span> <span class="function">App</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">className</span>=<span class="value">"App"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;h1&gt;</span>React notes<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;Welcome</span> <span class="attribute">name</span>=<span class="value">"Alice"</span> <span class="attribute">age</span>={<span class="number">25</span>} <span class="tag">/&gt;</span>
+      <span class="tag">&lt;Counter /&gt;</span>
+      <span class="tag">&lt;NameForm /&gt;</span>
+      <span class="tag">&lt;TodoList /&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}
+
+<span class="keyword">export default</span> App</div>
+        </div>
+
+        <h2>Where to go next</h2>
+        
+        <div class="step">
+            <div class="step-number">13</div>
+            <h3>Build from here</h3>
+            <p>The examples cover React's core client-side loop: data enters through props or state, JSX describes the interface, and events request state changes. The next topics solve problems that appear as an application grows.</p>
+            <ul>
+                <li><strong>useEffect:</strong> Synchronize a component with something outside React, such as a browser API, timer, or third-party widget. Do not use an Effect for values that can be calculated while rendering.</li>
+                <li><strong>React Router 8:</strong> Map URLs to screens, create nested layouts, and load route data with <a href="https://reactrouter.com/" target="_blank">React Router</a>.</li>
+                <li><strong>Context:</strong> Make a value available to a distant part of the component tree without passing it through every intermediate component.</li>
+                <li><strong>Custom Hooks:</strong> Move reusable stateful logic into a function whose name begins with <code class="code-inline">use</code>. Hooks reuse behavior, not rendered markup.</li>
+                <li><strong>Testing:</strong> Use Vitest with React Testing Library. Prefer tests that interact with the interface the way a user would.</li>
+                <li><strong>Production build:</strong> Run <code class="code-inline">npm run build</code>. Vite bundles the application into <code class="code-inline">dist/</code>, which services such as Vercel and Netlify can host. Run the linter separately before deployment.</li>
+                <li><strong>React Compiler:</strong> Try it later with Vite's <code class="code-inline">react-compiler</code> template. It can optimize component rendering, but it is deliberately not enabled in the basic template.</li>
+            </ul>
+            
+            <div class="tip">
+                <strong>References</strong>
+                <br>React documentation: <a href="https://react.dev/" target="_blank">react.dev</a>
+                <br>React learning guide: <a href="https://react.dev/learn" target="_blank">react.dev/learn</a>
+                <br>Vite documentation: <a href="https://vite.dev/" target="_blank">vite.dev</a>
+            </div>
+        </div>
+
+        <div class="warning">
+            The next useful exercise is to change this project: edit the data model, add a filter, or persist the todo list. Small changes expose gaps in understanding quickly.
+        </div>
+    </div>
+
+    <script>
+        // Add a copy button to every code example
+        async function copyText(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.setAttribute('readonly', '');
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-9999px';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            textArea.setSelectionRange(0, text.length);
+            const copied = document.execCommand('copy');
+            textArea.remove();
+
+            if (copied) {
+                return true;
+            }
+
+            if (navigator.clipboard && window.isSecureContext) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    return true;
+                } catch {
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        document.querySelectorAll('.code-block').forEach(block => {
+            const code = block.textContent.trim();
+            const language = block.dataset.language || 'code';
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'copy-button';
+            button.textContent = 'Copy';
+            button.setAttribute('aria-label', `Copy ${language} example`);
+            button.setAttribute('aria-live', 'polite');
+
+            button.addEventListener('click', async () => {
+                try {
+                    const copied = await copyText(code);
+                    if (!copied) {
+                        throw new Error('Copy command failed');
+                    }
+
+                    button.textContent = 'Copied';
+                    button.setAttribute('aria-label', `Copied ${language} example`);
+                } catch {
+                    button.textContent = 'Copy failed';
+                    button.setAttribute('aria-label', `Could not copy ${language} example`);
+                }
+
+                window.setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.setAttribute('aria-label', `Copy ${language} example`);
+                }, 4000);
+            });
+
+            block.appendChild(button);
+        });
+
+        // Simple progress tracking
+        let progress = 0;
+        const totalSteps = 13;
+        
+        function updateProgress() {
+            const steps = document.querySelectorAll('.step');
+            const progressBar = document.getElementById('progressBar');
+            
+            steps.forEach((step, index) => {
+                const rect = step.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    progress = Math.max(progress, ((index + 1) / totalSteps) * 100);
+                }
+            });
+            
+            progressBar.style.width = progress + '%';
+        }
+        
+        window.addEventListener('scroll', updateProgress);
+        updateProgress(); // Initial call
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
