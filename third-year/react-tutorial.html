@@ -4,10 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>React with Vite — Practical Introduction</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/course-nav.css">
 </head>
 <body>
     <div class="container">
+        <nav class="course-nav" aria-label="Course navigation">
+            <a href="../index.html" class="course-nav__home">← Contents</a>
+            <span class="course-nav__year">Year 3</span>
+            <a href="helper.html" title="Advanced web intro – Portfolio with HTML, CSS and JavaScript">Advanced web intro</a>
+            <a href="react-tutorial.html" class="active" aria-current="page" title="React with Vite – Components, props, state, events">React with Vite</a>
+            <a href="react-tutorial-step-2.html" title="React Hooks &amp; Routing">React Hooks &amp; Routing</a>
+        </nav>
+
         <header class="header">
             <h1>React with Vite</h1>
             <p>A practical introduction to components, props, state, events, and forms.</p>
@@ -688,6 +697,11 @@ my-react-app/
         <div class="warning">
             The next useful exercise is to change this project: edit the data model, add a filter, or persist the todo list. Small changes expose gaps in understanding quickly.
         </div>
+
+        <nav class="course-pager" aria-label="Previous and next page">
+            <a href="helper.html" class="course-pager__prev"><span>← Previous</span>Advanced web intro – Portfolio with HTML, CSS and JavaScript</a>
+            <a href="react-tutorial-step-2.html" class="course-pager__next"><span>Next →</span>React Hooks &amp; Routing</a>
+        </nav>
     </div>
 
     <script>

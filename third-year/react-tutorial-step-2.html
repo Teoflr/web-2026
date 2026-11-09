@@ -1,0 +1,3116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Hooks and Routing — Intermediate Guide</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/course-nav.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="course-nav" aria-label="Course navigation">
+            <a href="../index.html" class="course-nav__home">← Contents</a>
+            <span class="course-nav__year">Year 3</span>
+            <a href="helper.html" title="Advanced web intro – Portfolio with HTML, CSS and JavaScript">Advanced web intro</a>
+            <a href="react-tutorial.html" title="React with Vite – Components, props, state, events">React with Vite</a>
+            <a href="react-tutorial-step-2.html" class="active" aria-current="page" title="React Hooks &amp; Routing">React Hooks &amp; Routing</a>
+        </nav>
+
+        <header class="header">
+            <h1>React Hooks and Routing</h1>
+            <p>An intermediate guide to state, effects, context, memoization, reducers, custom Hooks, and React Router.</p>
+        </header>
+
+        <div class="time-estimate">
+            <span><strong>Time:</strong> 5–7 hours</span>
+            <span><strong>Level:</strong> Intermediate</span>
+            <span><strong>Before you begin:</strong> Complete the first React tutorial</span>
+            <span><strong>Current stack:</strong> React 19.3.1, Vite 8.3.5, React Router 8.5.1</span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+
+        <nav class="nav-links" aria-label="Tutorial sections">
+            <strong>On this page</strong>
+            <a href="#introduction">Hooks</a>
+            <a href="#usestate-deep">useState</a>
+            <a href="#useeffect">useEffect</a>
+            <a href="#usecontext">Context</a>
+            <a href="#custom-hooks">Custom Hooks</a>
+            <a href="#usememo">useMemo</a>
+            <a href="#usecallback">useCallback</a>
+            <a href="#usereducer">useReducer</a>
+            <a href="#react-router">React Router</a>
+        </nav>
+
+        <h2 id="introduction">React Hooks</h2>
+        
+        <div class="step">
+            <div class="step-number">1</div>
+            <h3>What Hooks are</h3>
+            
+            <h4>Class and function components</h4>
+            <p>Hooks were introduced in React 16.8. They let function components use React features such as state, context, refs, and effects. Class components remain supported, but function components and Hooks are the normal choice for new React code.</p>
+            
+            <div class="code-block">
+<span class="comment">// Class component pattern</span>
+<span class="keyword">class</span> <span class="function">Counter</span> <span class="keyword">extends</span> React.Component {
+  <span class="function">constructor</span>(props) {
+    <span class="keyword">super</span>(props);
+    <span class="keyword">this</span>.state = { count: <span class="number">0</span> };
+  }
+
+  <span class="function">render</span>() {
+    <span class="keyword">return</span> (
+      <span class="tag">&lt;div&gt;</span>
+        <span class="tag">&lt;p&gt;</span>Count: {<span class="keyword">this</span>.state.count}<span class="tag">&lt;/p&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() => <span class="keyword">this</span>.<span class="function">setState</span>({count: <span class="keyword">this</span>.state.count + <span class="number">1</span>})}<span class="tag">&gt;</span>
+          Increment
+        <span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+    );
+  }
+}
+
+<span class="comment">// Function component with Hooks</span>
+<span class="keyword">function</span> <span class="function">Counter</span>() {
+  <span class="keyword">const</span> [count, setCount] = <span class="function">useState</span>(<span class="number">0</span>);
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;p&gt;</span>Count: {count}<span class="tag">&lt;/p&gt;</span>
+      <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() => <span class="function">setCount</span>(count + <span class="number">1</span>)}<span class="tag">&gt;</span>
+        Increment
+      <span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+            </div>
+
+            <div class="warning">
+                <strong>Terminology:</strong><br>
+                • <strong>Component:</strong> A reusable function or class that describes part of the interface<br>
+                • <strong>Hook:</strong> A function whose name starts with <code>use</code> and connects a component to a React feature<br>
+                • <strong>Custom Hook:</strong> A function that combines Hooks to share stateful logic, not shared state itself
+            </div>
+
+            <p>Each component render is a snapshot. Hooks let React retain state between those renders and synchronize the component with systems outside React. Hooks do not automatically make an application faster; their main benefit is composition.</p>
+            
+            <div class="tip">
+                <strong>Hook Rules:</strong><br>
+                • Call Hooks at the top level, not inside loops, conditions, event handlers, or nested functions<br>
+                • Call Hooks only from React function components or custom Hooks<br>
+                • Name custom Hooks with a <code>use</code> prefix<br>
+                • Keep <code>eslint-plugin-react-hooks</code> enabled; it checks these rules and effect dependencies
+            </div>
+            
+            <h4>Why Hooks matter</h4>
+            <ul>
+                <li><strong>Local state:</strong> A component can remember values between renders</li>
+                <li><strong>Synchronization:</strong> Effects can connect to browser APIs, networks, and subscriptions</li>
+                <li><strong>Reusable logic:</strong> Custom Hooks can package related state and effects</li>
+                <li><strong>Composition:</strong> Small components and Hooks can be combined without inheritance</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <div class="step-number">2</div>
+            <h3>What this guide covers</h3>
+            <ul>
+                <li>Advanced useState patterns and techniques</li>
+                <li>useEffect for synchronization and cleanup</li>
+                <li>Context for distributing values through a component tree</li>
+                <li>Manual memoization and when to skip it</li>
+                <li>Building custom Hooks</li>
+                <li>Reducers and client-side routing</li>
+            </ul>
+        </div>
+
+        <h2 id="usestate-deep">useState in depth</h2>
+
+        <div class="step">
+            <div class="step-number">3</div>
+            <h3>useState recap and update patterns</h3>
+            
+            <p><code>useState</code> gives a component a value that persists between renders. It returns the current state and a setter. Calling the setter queues another render with the new value; it does not change the state variable in the currently running render.</p>
+            
+            <p>Use separate state variables for independent values. Group values when they are normally updated together, and use a reducer when transitions become difficult to describe with several setters.</p>
+            
+            <h4>Basic useState Pattern:</h4>
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { useState } <span class="keyword">from</span> <span class="string">'react'</span>
+
+<span class="keyword">function</span> <span class="function">BasicCounter</span>() {
+  <span class="comment">// Declare state variable with initial value</span>
+  <span class="keyword">const</span> [count, setCount] = <span class="function">useState</span>(<span class="number">0</span>)
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;p&gt;</span>Count: {count}<span class="tag">&lt;/p&gt;</span>
+      <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() =&gt; <span class="function">setCount</span>(count + <span class="number">1</span>)}<span class="tag">&gt;</span>
+        Increment
+      <span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}</div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">4</div>
+            <h3>Functional Updates - Avoiding Stale Closures</h3>
+            <p>When the next state depends on the previous state, pass an updater function. React applies queued updater functions in order. Passing a value directly is appropriate when the next value does not depend on the old one.</p>
+            
+            <div class="warning">
+                <strong>Render snapshots:</strong> An event handler sees the state from the render that created it. Multiple calls such as <code>setCount(count + 1)</code> therefore queue the same value. Updater functions receive the latest queued state.
+            </div>
+            
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { useState } <span class="keyword">from</span> <span class="string">'react'</span>
+
+<span class="keyword">function</span> <span class="function">SafeCounter</span>() {
+  <span class="keyword">const</span> [count, setCount] = <span class="function">useState</span>(<span class="number">0</span>)
+
+  <span class="comment">// Direct update: uses the value captured by this render</span>
+  <span class="keyword">const</span> <span class="function">incrementBad</span> = () =&gt; {
+    <span class="function">setCount</span>(count + <span class="number">1</span>) <span class="comment">// Uses current closure value</span>
+  }
+
+  <span class="comment">// Updater function: receives the latest queued state</span>
+  <span class="keyword">const</span> <span class="function">incrementGood</span> = () =&gt; {
+    <span class="function">setCount</span>(prevCount =&gt; prevCount + <span class="number">1</span>) <span class="comment">// Function gets latest state</span>
+  }
+
+  <span class="comment">// Update by a supplied amount</span>
+  <span class="keyword">const</span> <span class="function">incrementByAmount</span> = (amount) =&gt; {
+    <span class="function">setCount</span>(prevCount =&gt; prevCount + amount)
+  }
+
+  <span class="comment">// Conditional update</span>
+  <span class="keyword">const</span> <span class="function">incrementIfEven</span> = () =&gt; {
+    <span class="function">setCount</span>(prevCount =&gt; 
+      prevCount % <span class="number">2</span> === <span class="number">0</span> ? prevCount + <span class="number">1</span> : prevCount
+    )
+  }
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;p&gt;</span>Count: {count}<span class="tag">&lt;/p&gt;</span>
+      <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={incrementGood}<span class="tag">&gt;</span>Safe Increment<span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() =&gt; <span class="function">incrementByAmount</span>(<span class="number">5</span>)}<span class="tag">&gt;</span>+5<span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={incrementIfEven}<span class="tag">&gt;</span>Increment if Even<span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}</div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">5</div>
+            <h3>Complex State Objects</h3>
+            <p>Managing complex state objects requires careful consideration of immutability.</p>
+            
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { useState } <span class="keyword">from</span> <span class="string">'react'</span>
+
+<span class="keyword">function</span> <span class="function">UserProfile</span>() {
+  <span class="comment">// Complex state object</span>
+  <span class="keyword">const</span> [user, setUser] = <span class="function">useState</span>({
+    name: <span class="string">''</span>,
+    email: <span class="string">''</span>,
+    age: <span class="number">0</span>,
+    preferences: {
+      theme: <span class="string">'light'</span>,
+      notifications: <span class="keyword">true</span>,
+      language: <span class="string">'en'</span>
+    },
+    hobbies: []
+  })
+
+  <span class="comment">// Update one property without mutating the object</span>
+  <span class="keyword">const</span> <span class="function">updateName</span> = (newName) =&gt; {
+    <span class="function">setUser</span>(prevUser =&gt; ({
+      ...prevUser,
+      name: newName
+    }))
+  }
+
+  <span class="comment">// Copy each level that changes</span>
+  <span class="keyword">const</span> <span class="function">updateTheme</span> = (newTheme) =&gt; {
+    <span class="function">setUser</span>(prevUser =&gt; ({
+      ...prevUser,
+      preferences: {
+        ...prevUser.preferences,
+        theme: newTheme
+      }
+    }))
+  }
+
+  <span class="comment">// Add to an array by creating a new array</span>
+  <span class="keyword">const</span> <span class="function">addHobby</span> = (hobby) =&gt; {
+    <span class="function">setUser</span>(prevUser =&gt; ({
+      ...prevUser,
+      hobbies: [...prevUser.hobbies, hobby]
+    }))
+  }
+
+  <span class="comment">// Remove from an array with filter</span>
+  <span class="keyword">const</span> <span class="function">removeHobby</span> = (hobbyIndex) =&gt; {
+    <span class="function">setUser</span>(prevUser =&gt; ({
+      ...prevUser,
+      hobbies: prevUser.hobbies.<span class="function">filter</span>((_, index) =&gt; index !== hobbyIndex)
+    }))
+  }
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;h3&gt;</span>User Profile<span class="tag">&lt;/h3&gt;</span>
+      <span class="tag">&lt;input</span>
+        <span class="attribute">type</span>=<span class="value">"text"</span>
+        <span class="attribute">placeholder</span>=<span class="value">"Name"</span>
+        <span class="attribute">value</span>={user.name}
+        <span class="attribute">onChange</span>={(e) =&gt; <span class="function">updateName</span>(e.target.value)}
+      <span class="tag">/&gt;</span>
+      
+      <span class="tag">&lt;select</span> <span class="attribute">value</span>={user.preferences.theme} <span class="attribute">onChange</span>={(e) =&gt; <span class="function">updateTheme</span>(e.target.value)}<span class="tag">&gt;</span>
+        <span class="tag">&lt;option</span> <span class="attribute">value</span>=<span class="value">"light"</span><span class="tag">&gt;</span>Light<span class="tag">&lt;/option&gt;</span>
+        <span class="tag">&lt;option</span> <span class="attribute">value</span>=<span class="value">"dark"</span><span class="tag">&gt;</span>Dark<span class="tag">&lt;/option&gt;</span>
+      <span class="tag">&lt;/select&gt;</span>
+
+      <span class="tag">&lt;div&gt;</span>
+        <span class="tag">&lt;h4&gt;</span>Hobbies:<span class="tag">&lt;/h4&gt;</span>
+        {user.hobbies.<span class="function">map</span>((hobby, index) =&gt; (
+          <span class="tag">&lt;div</span> <span class="attribute">key</span>={index}<span class="tag">&gt;</span>
+            {hobby} 
+            <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() =&gt; <span class="function">removeHobby</span>(index)}<span class="tag">&gt;</span>Remove<span class="tag">&lt;/button&gt;</span>
+          <span class="tag">&lt;/div&gt;</span>
+        ))}
+        <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() =&gt; <span class="function">addHobby</span>(<span class="string">'Reading'</span>)}<span class="tag">&gt;</span>Add Reading<span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+
+      <span class="tag">&lt;pre&gt;</span>{JSON.<span class="function">stringify</span>(user, <span class="keyword">null</span>, <span class="number">2</span>)}<span class="tag">&lt;/pre&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}</div>
+        </div>
+
+        <section class="exercise-set" aria-labelledby="usestate-exercises">
+            <h3 id="usestate-exercises">useState exercises</h3>
+            <p>Build each exercise in a separate component. Render the components from <code>App.jsx</code> one at a time while testing them.</p>
+
+            <article>
+                <h4>Exercise 1: Score controls</h4>
+                <p>Create a score display with buttons for <strong>+1</strong>, <strong>-1</strong>, <strong>+5</strong>, and <strong>Reset</strong>.</p>
+                <ul>
+                    <li>Store the score in one state variable with an initial value of <code>0</code>.</li>
+                    <li>Use updater functions whenever the next score depends on the previous score.</li>
+                    <li>Do not allow the score to go below zero.</li>
+                    <li>Disable Reset while the score is already zero.</li>
+                </ul>
+                <p><strong>Check:</strong> Add a “+3” button that calls the increment updater three times. The score should increase by three, not one.</p>
+            </article>
+
+            <article>
+                <h4>Exercise 2: Editable profile</h4>
+                <p>Create a form backed by one profile object containing <code>name</code>, <code>email</code>, and a nested <code>preferences</code> object with a <code>theme</code> property.</p>
+                <ul>
+                    <li>Use controlled inputs for the name and email.</li>
+                    <li>Add a select input for light and dark themes.</li>
+                    <li>Copy every object level that changes; do not mutate the existing profile.</li>
+                    <li>Show the current profile below the form with <code>JSON.stringify</code>.</li>
+                    <li>Add a button that restores the initial profile.</li>
+                </ul>
+            </article>
+
+            <article>
+                <h4>Exercise 3: Shopping list</h4>
+                <p>Store an array of shopping items. Each item needs an <code>id</code>, <code>name</code>, and <code>purchased</code> boolean.</p>
+                <ul>
+                    <li>Add items from a controlled text input and reject empty names.</li>
+                    <li>Toggle an item's purchased state with <code>map</code>.</li>
+                    <li>Remove an item with <code>filter</code>.</li>
+                    <li>Use each item's ID as its React key rather than its array index.</li>
+                    <li>Calculate the number of unpurchased items during render. Do not store that derived count in separate state.</li>
+                </ul>
+            </article>
+        </section>
+
+        <h2 id="useeffect">useEffect and external systems</h2>
+
+        <div class="step">
+            <div class="step-number">6</div>
+            <h3>What an Effect does</h3>
+            <p><code>useEffect</code> synchronizes a component with a system outside React: a network connection, timer, browser API, third-party widget, or subscription. If a value can be calculated from props or state during render, it normally should not be stored or updated in an Effect.</p>
+            
+            <div class="tip">
+                <strong>An Effect has three parts:</strong><br>
+                • Setup connects to or updates the external system<br>
+                • Dependencies list every reactive value used by setup<br>
+                • Optional cleanup undoes the previous setup before a rerun or unmount
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">7</div>
+            <h3>Basic useEffect Patterns</h3>
+            
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { useState, useEffect } <span class="keyword">from</span> <span class="string">'react'</span>
+
+<span class="keyword">function</span> <span class="function">EffectExamples</span>() {
+  <span class="keyword">const</span> [count, setCount] = <span class="function">useState</span>(<span class="number">0</span>)
+  <span class="comment">// 1. No dependency array: run after every committed render</span>
+  <span class="function">useEffect</span>(() =&gt; {
+    <span class="function">console.log</span>(<span class="string">'Component rendered'</span>)
+  })
+
+  <span class="comment">// 2. Empty array: reconnect only when the component mounts</span>
+  <span class="function">useEffect</span>(() =&gt; {
+    <span class="function">console.log</span>(<span class="string">'Component connected'</span>)
+  }, [])
+
+  <span class="comment">// 3. Effect with dependencies - runs when dependencies change</span>
+  <span class="function">useEffect</span>(() =&gt; {
+    <span class="function">console.log</span>(<span class="string">`Count changed to: ${count}`</span>)
+    <span class="comment">// Update document title</span>
+    document.title = <span class="string">`Count: ${count}`</span>
+  }, [count])
+
+  <span class="comment">// 4. Effect with cleanup function</span>
+  <span class="function">useEffect</span>(() =&gt; {
+    <span class="keyword">const</span> timer = <span class="function">setInterval</span>(() =&gt; {
+      <span class="function">console.log</span>(<span class="string">'Timer tick'</span>)
+    }, <span class="number">1000</span>)
+
+    <span class="comment">// Cleanup runs before the next setup and when the component unmounts</span>
+    <span class="keyword">return</span> () =&gt; {
+      <span class="function">clearInterval</span>(timer)
+      <span class="function">console.log</span>(<span class="string">'Timer cleaned up'</span>)
+    }
+  }, [])
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;p&gt;</span>Count: {count}<span class="tag">&lt;/p&gt;</span>
+      <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() =&gt; <span class="function">setCount</span>(c =&gt; c + <span class="number">1</span>)}<span class="tag">&gt;</span>Increment<span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}</div>
+            <h4>How the dependency list works</h4>
+            <p>The dependency list is the array passed as the second argument to <code>useEffect</code>. It tells React which reactive values the Effect reads. A reactive value is a prop, state value, or variable or function created inside the component. Include every reactive value used by the setup and cleanup functions.</p>
+
+            <p>After each committed render, React compares every dependency with its value from the previous render using <code>Object.is</code>. If at least one value is different, React first runs the previous cleanup and then runs the new setup with values from the latest render.</p>
+
+            <div class="code-block" data-language="jsx"><span class="comment">// No dependency list: run after every committed render</span>
+<span class="function">useEffect</span>(() =&gt; {
+  <span class="function">synchronize</span>()
+})
+
+<span class="comment">// Empty list: this Effect has no reactive dependencies</span>
+<span class="function">useEffect</span>(() =&gt; {
+  <span class="function">connectOncePerMount</span>()
+  <span class="keyword">return</span> () =&gt; <span class="function">disconnect</span>()
+}, [])
+
+<span class="comment">// Dependency list: rerun when roomId or serverUrl changes</span>
+<span class="function">useEffect</span>(() =&gt; {
+  <span class="keyword">const</span> connection = <span class="function">createConnection</span>(serverUrl, roomId)
+  connection.<span class="function">connect</span>()
+
+  <span class="keyword">return</span> () =&gt; connection.<span class="function">disconnect</span>()
+}, [serverUrl, roomId])</div>
+
+            <div class="tip">
+                <strong>What normally belongs in the list:</strong><br>
+                • Props read by the Effect<br>
+                • State values read by the Effect<br>
+                • Variables and functions declared in the component and read by the Effect<br><br>
+                <strong>What normally does not belong in the list:</strong><br>
+                • State setter functions, because React keeps their identity stable<br>
+                • Constants declared outside the component, because rendering cannot change them<br>
+                • <code>ref.current</code>, because changing it does not trigger a render; the ref object itself is stable
+            </div>
+
+            <p>The dependency list is a description of the code, not a scheduling preference. Do not remove a dependency merely to stop an Effect from rerunning. That makes the Effect use an older render's value, which is called a stale closure. Keep the React Hooks lint rule enabled and change the Effect's structure when the linter reports a missing dependency.</p>
+
+            <h4>Objects and functions as dependencies</h4>
+            <p>Objects and functions created during rendering receive a new identity on every render. If one is a dependency, the Effect can rerun even when its contents appear unchanged. When possible, create that object or function inside the Effect, or depend on the primitive values used to build it. Use <code>useMemo</code> or <code>useCallback</code> only when stable identity is required elsewhere as well.</p>
+
+            <div class="code-block" data-language="jsx"><span class="keyword">const</span> serverUrl = <span class="string">'https://chat.example.com'</span>
+
+<span class="keyword">function</span> <span class="function">ChatRoom</span>({ roomId }) {
+  <span class="function">useEffect</span>(() =&gt; {
+    <span class="comment">// Create the object inside the Effect so it is not a dependency</span>
+    <span class="keyword">const</span> options = { serverUrl, roomId }
+    <span class="keyword">const</span> connection = <span class="function">createConnection</span>(options)
+    connection.<span class="function">connect</span>()
+
+    <span class="keyword">return</span> () =&gt; connection.<span class="function">disconnect</span>()
+  }, [roomId]) <span class="comment">// serverUrl is declared outside the component</span>
+}</div>
+
+            <div class="warning">
+                <strong>Development behavior:</strong> With <code>StrictMode</code>, React may run an Effect's setup, cleanup, and setup again during development. This checks whether cleanup fully reverses setup. Production does not perform that extra development check.
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">8</div>
+            <h3>Data Fetching with useEffect</h3>
+            <p>A small client-only component can fetch data in an Effect. Use cleanup so an obsolete request cannot update current state. For route data, React Router loaders or a framework data API usually provide better caching, loading, error, and server-rendering behavior.</p>
+            
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { useState, useEffect } <span class="keyword">from</span> <span class="string">'react'</span>
+
+<span class="keyword">function</span> <span class="function">UserList</span>() {
+  <span class="keyword">const</span> [users, setUsers] = <span class="function">useState</span>([])
+  <span class="keyword">const</span> [loading, setLoading] = <span class="function">useState</span>(<span class="keyword">true</span>)
+  <span class="keyword">const</span> [error, setError] = <span class="function">useState</span>(<span class="keyword">null</span>)
+
+  <span class="function">useEffect</span>(() =&gt; {
+    <span class="keyword">const</span> controller = <span class="keyword">new</span> <span class="function">AbortController</span>()
+
+    <span class="keyword">const</span> <span class="function">fetchUsers</span> = <span class="keyword">async</span> () =&gt; {
+      <span class="keyword">try</span> {
+        <span class="function">setLoading</span>(<span class="keyword">true</span>)
+        <span class="function">setError</span>(<span class="keyword">null</span>)
+        
+        <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="function">fetch</span>(
+          <span class="string">'https://jsonplaceholder.typicode.com/users'</span>,
+          { signal: controller.signal }
+        )
+        
+        <span class="keyword">if</span> (!response.ok) {
+          <span class="keyword">throw new</span> <span class="function">Error</span>(<span class="string">'Failed to fetch users'</span>)
+        }
+        
+        <span class="keyword">const</span> userData = <span class="keyword">await</span> response.<span class="function">json</span>()
+        <span class="function">setUsers</span>(userData)
+      } <span class="keyword">catch</span> (err) {
+        <span class="keyword">if</span> (err.name !== <span class="string">'AbortError'</span>) {
+          <span class="function">setError</span>(err.message)
+        }
+      } <span class="keyword">finally</span> {
+        <span class="keyword">if</span> (!controller.signal.aborted) {
+          <span class="function">setLoading</span>(<span class="keyword">false</span>)
+        }
+      }
+    }
+
+    <span class="function">fetchUsers</span>()
+    <span class="keyword">return</span> () =&gt; controller.<span class="function">abort</span>()
+  }, [])
+
+  <span class="keyword">if</span> (loading) <span class="keyword">return</span> <span class="tag">&lt;div&gt;</span>Loading users...<span class="tag">&lt;/div&gt;</span>
+  <span class="keyword">if</span> (error) <span class="keyword">return</span> <span class="tag">&lt;div&gt;</span>Error: {error}<span class="tag">&lt;/div&gt;</span>
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;h3&gt;</span>Users ({users.length})<span class="tag">&lt;/h3&gt;</span>
+      <span class="tag">&lt;ul&gt;</span>
+        {users.<span class="function">map</span>(user =&gt; (
+          <span class="tag">&lt;li</span> <span class="attribute">key</span>={user.id}<span class="tag">&gt;</span>
+            {user.name} - {user.email}
+          <span class="tag">&lt;/li&gt;</span>
+        ))}
+      <span class="tag">&lt;/ul&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}</div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">9</div>
+            <h3>Debounce an external request</h3>
+            <p>This Effect waits until typing pauses before starting a request. Its cleanup cancels the pending timeout when the query changes.</p>
+            
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { useState, useEffect } <span class="keyword">from</span> <span class="string">'react'</span>
+
+<span class="keyword">function</span> <span class="function">SearchComponent</span>() {
+  <span class="keyword">const</span> [query, setQuery] = <span class="function">useState</span>(<span class="string">''</span>)
+  <span class="keyword">const</span> [results, setResults] = <span class="function">useState</span>([])
+  <span class="keyword">const</span> [isSearching, setIsSearching] = <span class="function">useState</span>(<span class="keyword">false</span>)
+
+  <span class="comment">// Debounced search effect</span>
+  <span class="function">useEffect</span>(() =&gt; {
+    <span class="keyword">if</span> (!query.trim()) {
+      <span class="function">setResults</span>([])
+      <span class="keyword">return</span>
+    }
+
+    <span class="keyword">const</span> timeoutId = <span class="function">setTimeout</span>(<span class="keyword">async</span> () =&gt; {
+      <span class="function">setIsSearching</span>(<span class="keyword">true</span>)
+      
+      <span class="keyword">try</span> {
+        <span class="comment">// Simulate API call</span>
+        <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="function">fetch</span>(
+          <span class="string">`https://jsonplaceholder.typicode.com/posts?q=${query}`</span>
+        )
+        <span class="keyword">const</span> data = <span class="keyword">await</span> response.<span class="function">json</span>()
+        <span class="function">setResults</span>(data.<span class="function">slice</span>(<span class="number">0</span>, <span class="number">5</span>)) <span class="comment">// Limit results</span>
+      } <span class="keyword">catch</span> (error) {
+        <span class="function">console.error</span>(<span class="string">'Search failed:'</span>, error)
+        <span class="function">setResults</span>([])
+      } <span class="keyword">finally</span> {
+        <span class="function">setIsSearching</span>(<span class="keyword">false</span>)
+      }
+    }, <span class="number">500</span>) <span class="comment">// 500ms debounce</span>
+
+    <span class="comment">// Cleanup: cancel the timeout if query changes</span>
+    <span class="keyword">return</span> () =&gt; <span class="function">clearTimeout</span>(timeoutId)
+  }, [query])
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;h3&gt;</span>Search Posts<span class="tag">&lt;/h3&gt;</span>
+      <span class="tag">&lt;input</span>
+        <span class="attribute">type</span>=<span class="value">"text"</span>
+        <span class="attribute">value</span>={query}
+        <span class="attribute">onChange</span>={(e) =&gt; <span class="function">setQuery</span>(e.target.value)}
+        <span class="attribute">placeholder</span>=<span class="value">"Search posts..."</span>
+      <span class="tag">/&gt;</span>
+      
+      {isSearching && <span class="tag">&lt;p&gt;</span>Searching...<span class="tag">&lt;/p&gt;</span>}
+      
+      <span class="tag">&lt;ul&gt;</span>
+        {results.<span class="function">map</span>(post =&gt; (
+          <span class="tag">&lt;li</span> <span class="attribute">key</span>={post.id}<span class="tag">&gt;</span>{post.title}<span class="tag">&lt;/li&gt;</span>
+        ))}
+      <span class="tag">&lt;/ul&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}</div>
+        </div>
+
+        <section class="exercise-set" aria-labelledby="useeffect-exercises">
+            <h3 id="useeffect-exercises">useEffect exercises</h3>
+            <p>For each exercise, identify the external system, the reactive dependencies, and what the cleanup function must undo before writing the Effect.</p>
+
+            <article>
+                <h4>Exercise 1: Synchronize the document title</h4>
+                <p>Create a counter and display its value in both the page and the browser tab title.</p>
+                <ul>
+                    <li>Keep the count in state.</li>
+                    <li>Use an Effect with <code>count</code> as a dependency to set <code>document.title</code>.</li>
+                    <li>Save the title that existed before the Effect and restore it in cleanup.</li>
+                    <li>Confirm that the result still behaves correctly with <code>StrictMode</code> enabled.</li>
+                </ul>
+            </article>
+
+            <article>
+                <h4>Exercise 2: Keyboard subscription</h4>
+                <p>Create a controlled search input. Pressing Escape anywhere in the window should clear it.</p>
+                <ul>
+                    <li>Subscribe to the window's <code>keydown</code> event in an Effect.</li>
+                    <li>Check <code>event.key === 'Escape'</code> before clearing the state.</li>
+                    <li>Remove the same event listener in cleanup.</li>
+                    <li>Use the React DevTools or temporary logging to verify that only one listener is active.</li>
+                </ul>
+            </article>
+
+            <article>
+                <h4>Exercise 3: Fetch when an ID changes</h4>
+                <p>Add an input for a user ID and load that user from <code>https://jsonplaceholder.typicode.com/users/ID</code>.</p>
+                <ul>
+                    <li>Track the user, loading state, and error state separately.</li>
+                    <li>Run the Effect whenever the user ID changes.</li>
+                    <li>Create an <code>AbortController</code> for each request and abort it in cleanup.</li>
+                    <li>Do not display an error for an aborted request.</li>
+                    <li>Test rapid ID changes and confirm that an older response cannot replace the latest result.</li>
+                </ul>
+            </article>
+        </section>
+
+        <h2 id="usecontext">Context and shared values</h2>
+
+        <div class="step">
+            <div class="step-number">10</div>
+            <h3>What Context does</h3>
+            <p>Context distributes a value to descendants without passing it through every intermediate component. It is a dependency-delivery mechanism, not a complete state-management system. State still lives in a component, reducer, or external store.</p>
+            
+            <div class="tip">
+                <strong>When to Use Context:</strong><br>
+                • Values needed throughout one part of the tree, such as authentication, theme, or locale<br>
+                • Avoiding prop drilling through multiple levels<br>
+                • Stable configuration that many descendants need<br><br>
+                A consumer rerenders when its nearest provider receives a different value. Keep providers close to the area that needs them and avoid putting unrelated, frequently changing values in one context.
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">11</div>
+            <h3>Creating and Using Context</h3>
+            <p>This example creates a theme context and a custom Hook that verifies the provider is present. React 19 allows the context object itself to be rendered as a provider. The older <code>&lt;ThemeContext.Provider&gt;</code> form remains compatible.</p>
+            
+            <div class="code-block" data-language="jsx"><span class="comment">// ThemeContext.jsx</span>
+<span class="keyword">import</span> { createContext, useContext, useState } <span class="keyword">from</span> <span class="string">'react'</span>
+
+<span class="comment">// 1. Create the context</span>
+<span class="keyword">const</span> ThemeContext = <span class="function">createContext</span>()
+
+<span class="comment">// 2. Create a custom hook for using the context</span>
+<span class="keyword">export</span> <span class="keyword">const</span> <span class="function">useTheme</span> = () =&gt; {
+  <span class="keyword">const</span> context = <span class="function">useContext</span>(ThemeContext)
+  
+  <span class="keyword">if</span> (!context) {
+    <span class="keyword">throw new</span> <span class="function">Error</span>(<span class="string">'useTheme must be used within a ThemeProvider'</span>)
+  }
+  
+  <span class="keyword">return</span> context
+}
+
+<span class="comment">// 3. Create the provider component</span>
+<span class="keyword">export</span> <span class="keyword">const</span> <span class="function">ThemeProvider</span> = ({ children }) =&gt; {
+  <span class="keyword">const</span> [theme, setTheme] = <span class="function">useState</span>(<span class="string">'light'</span>)
+  <span class="keyword">const</span> [primaryColor, setPrimaryColor] = <span class="function">useState</span>(<span class="string">'#333333'</span>)
+
+  <span class="comment">// Theme configuration</span>
+  <span class="keyword">const</span> themes = {
+    light: {
+      background: <span class="string">'#ffffff'</span>,
+      text: <span class="string">'#000000'</span>,
+      border: <span class="string">'#cccccc'</span>
+    },
+    dark: {
+      background: <span class="string">'#1a1a1a'</span>,
+      text: <span class="string">'#ffffff'</span>,
+      border: <span class="string">'#444444'</span>
+    }
+  }
+
+  <span class="keyword">const</span> <span class="function">toggleTheme</span> = () =&gt; {
+    <span class="function">setTheme</span>(prev =&gt; prev === <span class="string">'light'</span> ? <span class="string">'dark'</span> : <span class="string">'light'</span>)
+  }
+
+  <span class="keyword">const</span> value = {
+    theme,
+    setTheme,
+    primaryColor,
+    setPrimaryColor,
+    toggleTheme,
+    colors: themes[theme]
+  }
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;ThemeContext</span> <span class="attribute">value</span>={value}<span class="tag">&gt;</span>
+      {children}
+    <span class="tag">&lt;/ThemeContext&gt;</span>
+  )
+}</div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">12</div>
+            <h3>Using Context in Components</h3>
+            <p>Any descendant can read the nearest provider value through <code>useTheme</code>. Components outside that provider receive the default value passed to <code>createContext</code>; this example throws instead so a missing provider is caught early.</p>
+            
+            <div class="code-block" data-language="jsx"><span class="comment">// Components that use the theme context</span>
+<span class="keyword">import</span> { useTheme } <span class="keyword">from</span> <span class="string">'./ThemeContext'</span>
+
+<span class="comment">// Header component using theme</span>
+<span class="keyword">const</span> <span class="function">Header</span> = () =&gt; {
+  <span class="keyword">const</span> { colors, toggleTheme, theme } = <span class="function">useTheme</span>()
+
+  <span class="keyword">const</span> headerStyle = {
+    backgroundColor: colors.background,
+    color: colors.text,
+    borderBottom: <span class="string">`1px solid ${colors.border}`</span>,
+    padding: <span class="string">'1rem'</span>,
+    display: <span class="string">'flex'</span>,
+    justifyContent: <span class="string">'space-between'</span>,
+    alignItems: <span class="string">'center'</span>
+  }
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;header</span> <span class="attribute">style</span>={headerStyle}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h1&gt;</span>My App<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={toggleTheme}<span class="tag">&gt;</span>
+        Switch to {theme === <span class="string">'light'</span> ? <span class="string">'dark'</span> : <span class="string">'light'</span>} mode
+      <span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/header&gt;</span>
+  )
+}
+
+<span class="comment">// Card component using theme</span>
+<span class="keyword">const</span> <span class="function">Card</span> = ({ title, content }) =&gt; {
+  <span class="keyword">const</span> { colors, primaryColor } = <span class="function">useTheme</span>()
+
+  <span class="keyword">const</span> cardStyle = {
+    backgroundColor: colors.background,
+    color: colors.text,
+    border: <span class="string">`1px solid ${colors.border}`</span>,
+    borderRadius: <span class="string">'8px'</span>,
+    padding: <span class="string">'1rem'</span>,
+    margin: <span class="string">'1rem 0'</span>,
+    borderLeft: <span class="string">`4px solid ${primaryColor}`</span>
+  }
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={cardStyle}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h3&gt;</span>{title}<span class="tag">&lt;/h3&gt;</span>
+      <span class="tag">&lt;p&gt;</span>{content}<span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}
+
+<span class="comment">// Settings component</span>
+<span class="keyword">const</span> <span class="function">Settings</span> = () =&gt; {
+  <span class="keyword">const</span> { primaryColor, setPrimaryColor, colors } = <span class="function">useTheme</span>()
+
+  <span class="keyword">const</span> colors_list = [<span class="string">'#111111'</span>, <span class="string">'#333333'</span>, <span class="string">'#666666'</span>, <span class="string">'#999999'</span>]
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={{ backgroundColor: colors.background, color: colors.text, padding: <span class="string">'1rem'</span> }}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h3&gt;</span>Settings<span class="tag">&lt;/h3&gt;</span>
+      <span class="tag">&lt;div&gt;</span>
+        <span class="tag">&lt;label&gt;</span>Primary Color: <span class="tag">&lt;/label&gt;</span>
+        <span class="tag">&lt;select</span> <span class="attribute">value</span>={primaryColor} <span class="attribute">onChange</span>={(e) =&gt; <span class="function">setPrimaryColor</span>(e.target.value)}<span class="tag">&gt;</span>
+          {colors_list.<span class="function">map</span>(color =&gt; (
+            <span class="tag">&lt;option</span> <span class="attribute">key</span>={color} <span class="attribute">value</span>={color}<span class="tag">&gt;</span>{color}<span class="tag">&lt;/option&gt;</span>
+          ))}
+        <span class="tag">&lt;/select&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}</div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">13</div>
+            <h3>Complete App with Context</h3>
+            <p>The provider owns the shared state. Components below it can consume the value, while components outside it remain unaffected.</p>
+            
+            <div class="code-block" data-language="jsx"><span class="comment">// App.jsx - Main application component</span>
+<span class="keyword">import</span> { ThemeProvider } <span class="keyword">from</span> <span class="string">'./ThemeContext'</span>
+
+<span class="keyword">function</span> <span class="function">App</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;ThemeProvider&gt;</span>
+      <span class="tag">&lt;div</span> <span class="attribute">className</span>=<span class="value">"app"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;Header /&gt;</span>
+        
+        <span class="tag">&lt;main</span> <span class="attribute">style</span>={{ padding: <span class="string">'1rem'</span> }}<span class="tag">&gt;</span>
+          <span class="tag">&lt;Card</span> 
+            <span class="attribute">title</span>=<span class="value">"Welcome"</span>
+            <span class="attribute">content</span>=<span class="value">"This is a React Context theme example."</span>
+          <span class="tag">/&gt;</span>
+          
+          <span class="tag">&lt;Card</span>
+            <span class="attribute">title</span>=<span class="value">"Features"</span>
+            <span class="attribute">content</span>=<span class="value">"Toggle between light and dark themes, and change the primary color."</span>
+          <span class="tag">/&gt;</span>
+          
+          <span class="tag">&lt;Settings /&gt;</span>
+        <span class="tag">&lt;/main&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/ThemeProvider&gt;</span>
+  )
+}
+
+<span class="keyword">export default</span> App</div>
+        </div>
+
+        <h2 id="custom-hooks">Custom Hooks</h2>
+
+        <div class="step">
+            <div class="step-number">14</div>
+            <h3>Custom Hook: useLocalStorage</h3>
+            <p>A custom Hook is a JavaScript function that starts with <code>use</code> and calls other Hooks. It shares behavior, not one global state value: every component call receives its own state unless the Hook connects to a shared external store. This example persists state in <code>localStorage</code> and listens for updates from other tabs.</p>
+            
+            <div class="code-block" data-language="jsx"><span class="comment">// useLocalStorage.jsx - Custom hook</span>
+<span class="keyword">import</span> { useState, useEffect } <span class="keyword">from</span> <span class="string">'react'</span>
+
+<span class="keyword">export</span> <span class="keyword">function</span> <span class="function">useLocalStorage</span>(key, initialValue) {
+  <span class="comment">// Get value from localStorage or use initialValue</span>
+  <span class="keyword">const</span> [storedValue, setStoredValue] = <span class="function">useState</span>(() =&gt; {
+    <span class="keyword">try</span> {
+      <span class="keyword">const</span> item = window.localStorage.<span class="function">getItem</span>(key)
+      <span class="keyword">return</span> item ? JSON.<span class="function">parse</span>(item) : initialValue
+    } <span class="keyword">catch</span> (error) {
+      <span class="function">console.error</span>(<span class="string">`Error reading localStorage key "${key}":`, error</span>)
+      <span class="keyword">return</span> initialValue
+    }
+  })
+
+  <span class="comment">// Preserve the useState setter API, including updater functions</span>
+  <span class="keyword">const</span> <span class="function">setValue</span> = (value) =&gt; {
+    <span class="function">setStoredValue</span>(previous =&gt;
+      <span class="keyword">typeof</span> value === <span class="string">'function'</span> ? <span class="function">value</span>(previous) : value
+    )
+  }
+
+  <span class="comment">// Synchronize local state to the external browser API</span>
+  <span class="function">useEffect</span>(() =&gt; {
+    <span class="keyword">try</span> {
+      window.localStorage.<span class="function">setItem</span>(key, JSON.<span class="function">stringify</span>(storedValue))
+    } <span class="keyword">catch</span> (error) {
+      <span class="function">console.error</span>(<span class="string">`Error setting localStorage key "${key}":`, error</span>)
+    }
+  }, [key, storedValue])
+
+  <span class="comment">// Listen for changes made by other tabs</span>
+  <span class="function">useEffect</span>(() =&gt; {
+    <span class="keyword">const</span> <span class="function">handleStorageChange</span> = (e) =&gt; {
+      <span class="keyword">if</span> (e.key === key && e.newValue !== <span class="keyword">null</span>) {
+        <span class="function">setStoredValue</span>(JSON.<span class="function">parse</span>(e.newValue))
+      }
+    }
+
+    window.<span class="function">addEventListener</span>(<span class="string">'storage'</span>, handleStorageChange)
+    
+    <span class="keyword">return</span> () =&gt; {
+      window.<span class="function">removeEventListener</span>(<span class="string">'storage'</span>, handleStorageChange)
+    }
+  }, [key])
+
+  <span class="keyword">return</span> [storedValue, setValue]
+}
+
+<span class="comment">// Example usage component</span>
+<span class="keyword">function</span> <span class="function">PersistentCounter</span>() {
+  <span class="keyword">const</span> [count, setCount] = <span class="function">useLocalStorage</span>(<span class="string">'counter'</span>, <span class="number">0</span>)
+  <span class="keyword">const</span> [name, setName] = <span class="function">useLocalStorage</span>(<span class="string">'username'</span>, <span class="string">''</span>)
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;h3&gt;</span>Persistent Counter<span class="tag">&lt;/h3&gt;</span>
+      
+      <span class="tag">&lt;input</span>
+        <span class="attribute">type</span>=<span class="value">"text"</span>
+        <span class="attribute">placeholder</span>=<span class="value">"Enter your name"</span>
+        <span class="attribute">value</span>={name}
+        <span class="attribute">onChange</span>={(e) =&gt; <span class="function">setName</span>(e.target.value)}
+      <span class="tag">/&gt;</span>
+      
+      <span class="tag">&lt;p&gt;</span>Hello {name || <span class="string">'Anonymous'</span>}. Count: {count}<span class="tag">&lt;/p&gt;</span>
+      
+      <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() =&gt; <span class="function">setCount</span>(c =&gt; c + <span class="number">1</span>)}<span class="tag">&gt;</span>
+        Increment
+      <span class="tag">&lt;/button&gt;</span>
+      
+      <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() =&gt; <span class="function">setCount</span>(<span class="number">0</span>)}<span class="tag">&gt;</span>
+        Reset
+      <span class="tag">&lt;/button&gt;</span>
+      
+      <span class="tag">&lt;p</span> <span class="attribute">style</span>={{ fontSize: <span class="string">'0.8em'</span>, color: <span class="string">'gray'</span> }}<span class="tag">&gt;</span>
+        This data persists after a page refresh.
+      <span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}</div>
+        </div>
+
+        <h2 id="usememo">useMemo</h2>
+        
+        <div class="step">
+            <div class="step-number">15</div>
+            <h3>Cache an expensive calculation</h3>
+            
+            <div class="tip">
+                <strong>What is Memoization?</strong><br>
+                Memoization stores a calculated value and reuses it while its inputs remain unchanged. The cache is an optimization, not a semantic guarantee; your component must still work if React recalculates the value.
+            </div>
+            
+            <p><code>useMemo</code> is useful when a measured calculation is expensive or when a stable object or array identity is required by another optimization. Do not add it to every calculation. It has its own bookkeeping cost and can make dependencies harder to maintain.</p>
+
+            <p>React Compiler can automatically memoize many values and functions when a project enables it. Manual memoization remains useful for specific identity requirements and performance work confirmed with the React DevTools Profiler.</p>
+            
+            <h4>Basic Syntax</h4>
+            <div class="code-block">
+<span class="keyword">const</span> memoizedValue = <span class="function">useMemo</span>(() => {
+  <span class="comment">// Expensive calculation</span>
+  <span class="keyword">return</span> <span class="function">computeExpensiveValue</span>(a, b);
+}, [a, b]); <span class="comment">// Only recalculates when a or b changes</span>
+            </div>
+
+            <h4>Practical Example: Expensive List Filtering</h4>
+            <div class="code-block">
+<span class="keyword">import</span> { <span class="function">useState</span>, <span class="function">useMemo</span> } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="keyword">function</span> <span class="function">ExpensiveList</span>() {
+  <span class="comment">// Generate a large dataset</span>
+  <span class="keyword">const</span> [items, setItems] = <span class="function">useState</span>(() => 
+    <span class="function">Array.from</span>({ length: <span class="number">10000</span> }, (_, i) => ({
+      id: i,
+      name: <span class="string">`Item </span><span class="template">${i}</span><span class="string">`</span>,
+      category: i % <span class="number">3</span> === <span class="number">0</span> ? <span class="string">'A'</span> : i % <span class="number">3</span> === <span class="number">1</span> ? <span class="string">'B'</span> : <span class="string">'C'</span>,
+      price: <span class="function">Math.random</span>() * <span class="number">100</span>
+    }))
+  );
+  
+  <span class="keyword">const</span> [filter, setFilter] = <span class="function">useState</span>(<span class="string">''</span>);
+  <span class="keyword">const</span> [category, setCategory] = <span class="function">useState</span>(<span class="string">'all'</span>);
+  <span class="keyword">const</span> [minPrice, setMinPrice] = <span class="function">useState</span>(<span class="number">0</span>);
+
+  <span class="comment">// Recalculate only when one of these inputs changes</span>
+  <span class="keyword">const</span> { filteredItems, stats } = <span class="function">useMemo</span>(() => {
+    <span class="function">console.log</span>(<span class="string">'Filtering 10,000 items'</span>);
+    
+    <span class="keyword">const</span> filtered = items.<span class="function">filter</span>(item => {
+      <span class="keyword">const</span> matchesName = item.name.<span class="function">toLowerCase</span>().<span class="function">includes</span>(filter.<span class="function">toLowerCase</span>());
+      <span class="keyword">const</span> matchesCategory = category === <span class="string">'all'</span> || item.category === category;
+      <span class="keyword">const</span> matchesPrice = item.price >= minPrice;
+      <span class="keyword">return</span> matchesName && matchesCategory && matchesPrice;
+    });
+
+    <span class="comment">// Calculate expensive statistics</span>
+    <span class="keyword">const</span> stats = {
+      total: filtered.length,
+      avgPrice: filtered.length > <span class="number">0</span> ? 
+        filtered.<span class="function">reduce</span>((sum, item) => sum + item.price, <span class="number">0</span>) / filtered.length : <span class="number">0</span>,
+      categories: filtered.<span class="function">reduce</span>((acc, item) => {
+        acc[item.category] = (acc[item.category] || <span class="number">0</span>) + <span class="number">1</span>;
+        <span class="keyword">return</span> acc;
+      }, {})
+    };
+
+    <span class="keyword">return</span> { filteredItems: filtered, stats };
+  }, [items, filter, category, minPrice]); <span class="comment">// Only recalculate when these change</span>
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;h4&gt;</span>Expensive List (10,000 items)<span class="tag">&lt;/h4&gt;</span>
+      
+      <span class="tag">&lt;div</span> <span class="attribute">style</span>={{ display: <span class="string">'flex'</span>, gap: <span class="string">'1rem'</span>, marginBottom: <span class="string">'1rem'</span> }}<span class="tag">&gt;</span>
+        <span class="tag">&lt;input</span>
+          <span class="attribute">type</span>=<span class="string">"text"</span>
+          <span class="attribute">placeholder</span>=<span class="string">"Filter by name..."</span>
+          <span class="attribute">value</span>={filter}
+          <span class="attribute">onChange</span>={(e) => <span class="function">setFilter</span>(e.target.value)}
+        <span class="tag">/&gt;</span>
+        
+        <span class="tag">&lt;select</span> <span class="attribute">value</span>={category} <span class="attribute">onChange</span>={(e) => <span class="function">setCategory</span>(e.target.value)}<span class="tag">&gt;</span>
+          <span class="tag">&lt;option</span> <span class="attribute">value</span>=<span class="string">"all"</span><span class="tag">&gt;</span>All Categories<span class="tag">&lt;/option&gt;</span>
+          <span class="tag">&lt;option</span> <span class="attribute">value</span>=<span class="string">"A"</span><span class="tag">&gt;</span>Category A<span class="tag">&lt;/option&gt;</span>
+          <span class="tag">&lt;option</span> <span class="attribute">value</span>=<span class="string">"B"</span><span class="tag">&gt;</span>Category B<span class="tag">&lt;/option&gt;</span>
+          <span class="tag">&lt;option</span> <span class="attribute">value</span>=<span class="string">"C"</span><span class="tag">&gt;</span>Category C<span class="tag">&lt;/option&gt;</span>
+        <span class="tag">&lt;/select&gt;</span>
+
+        <span class="tag">&lt;input</span>
+          <span class="attribute">type</span>=<span class="string">"range"</span>
+          <span class="attribute">min</span>=<span class="string">"0"</span>
+          <span class="attribute">max</span>=<span class="string">"100"</span>
+          <span class="attribute">value</span>={minPrice}
+          <span class="attribute">onChange</span>={(e) => <span class="function">setMinPrice</span>(<span class="function">Number</span>(e.target.value))}
+        <span class="tag">/&gt;</span>
+        <span class="tag">&lt;span&gt;</span>Min Price: ${minPrice.<span class="function">toFixed</span>(<span class="number">0</span>)}<span class="tag">&lt;/span&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+
+      <span class="tag">&lt;div</span> <span class="attribute">style</span>={{ marginBottom: <span class="string">'1rem'</span>, padding: <span class="string">'1rem'</span>, background: <span class="string">'#f5f5f5'</span> }}<span class="tag">&gt;</span>
+        <span class="tag">&lt;h5&gt;</span>Statistics<span class="tag">&lt;/h5&gt;</span>
+        <span class="tag">&lt;p&gt;</span>Total Items: {stats.total}<span class="tag">&lt;/p&gt;</span>
+        <span class="tag">&lt;p&gt;</span>Average Price: ${stats.avgPrice.<span class="function">toFixed</span>(<span class="number">2</span>)}<span class="tag">&lt;/p&gt;</span>
+        <span class="tag">&lt;p&gt;</span>Categories: {<span class="function">Object.entries</span>(stats.categories).<span class="function">map</span>(([cat, count]) => 
+          <span class="string">`</span><span class="template">${cat}: ${count}</span><span class="string">`</span>).<span class="function">join</span>(<span class="string">', '</span>)}<span class="tag">&lt;/p&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+      
+      <span class="tag">&lt;ul&gt;</span>
+        {filteredItems.<span class="function">slice</span>(<span class="number">0</span>, <span class="number">20</span>).<span class="function">map</span>(item => (
+          <span class="tag">&lt;li</span> <span class="attribute">key</span>={item.id}<span class="tag">&gt;</span>
+            {item.name} - {item.category} - ${item.price.<span class="function">toFixed</span>(<span class="number">2</span>)}
+          <span class="tag">&lt;/li&gt;</span>
+        ))}
+        {filteredItems.length > <span class="number">20</span> && (
+          <span class="tag">&lt;li&gt;</span>... and {filteredItems.length - <span class="number">20</span>} more items<span class="tag">&lt;/li&gt;</span>
+        )}
+      <span class="tag">&lt;/ul&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+            </div>
+
+            <div class="warning">
+                <strong>When to use useMemo:</strong><br>
+                • Expensive calculations (complex filtering, sorting, mathematical operations)<br>
+                • Preserving object or array identity for a memoized consumer<br>
+                • Computing derived state from multiple variables<br><br>
+                <strong>When NOT to use useMemo:</strong><br>
+                • Simple calculations (basic arithmetic, string concatenation)<br>
+                • Every computation; memoization also has overhead<br>
+                • Primitive values that don't need memoization
+            </div>
+        </div>
+
+        <h2 id="usecallback">useCallback</h2>
+        
+        <div class="step">
+            <div class="step-number">16</div>
+            <h3>Keep a function reference stable</h3>
+            
+            <p><code>useCallback</code> keeps the same function reference until one of its dependencies changes. Creating a function during render is normal and usually cheap. Stable identity matters when a callback is passed to a component wrapped in <code>memo</code>, used as another Hook's dependency, or registered with an external system.</p>
+            
+            <h4>Basic Syntax</h4>
+            <div class="code-block">
+<span class="keyword">const</span> memoizedCallback = <span class="function">useCallback</span>(() => {
+  <span class="comment">// Function logic</span>
+  <span class="function">doSomething</span>(a, b);
+}, [a, b]); <span class="comment">// Only recreate if a or b changes</span>
+            </div>
+
+            <h4>Without a stable callback</h4>
+            <div class="code-block">
+<span class="comment">// A new function reference is created on each render</span>
+<span class="keyword">function</span> <span class="function">ParentWithoutCallback</span>() {
+  <span class="keyword">const</span> [count, setCount] = <span class="function">useState</span>(<span class="number">0</span>);
+  <span class="keyword">const</span> [name, setName] = <span class="function">useState</span>(<span class="string">''</span>);
+
+  <span class="comment">// This is only a problem when a consumer relies on stable identity</span>
+  <span class="keyword">const</span> handleClick = () => {
+    <span class="function">console.log</span>(<span class="string">'Button clicked'</span>);
+  };
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;p&gt;</span>Count: {count}<span class="tag">&lt;/p&gt;</span>
+      <span class="tag">&lt;input</span> 
+        <span class="attribute">value</span>={name} 
+        <span class="attribute">onChange</span>={(e) => <span class="function">setName</span>(e.target.value)} 
+        <span class="attribute">placeholder</span>=<span class="string">"Type something..."</span>
+      <span class="tag">/&gt;</span>
+      
+      <span class="comment">{/* ExpensiveChild re-renders every time parent renders */}</span>
+      <span class="tag">&lt;ExpensiveChild</span> <span class="attribute">onClick</span>={handleClick} <span class="tag">/&gt;</span>
+      
+      <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() => <span class="function">setCount</span>(count + <span class="number">1</span>)}<span class="tag">&gt;</span>
+        Increment Count
+      <span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="comment">// Child component that should only re-render when its props actually change</span>
+<span class="keyword">const</span> <span class="function">ExpensiveChild</span> = <span class="function">React.memo</span>(({ onClick }) => {
+  <span class="function">console.log</span>(<span class="string">'ExpensiveChild rendered'</span>); <span class="comment">// Logs on every parent render</span>
+  
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={{ padding: <span class="string">'1rem'</span>, border: <span class="string">'2px solid #666'</span> }}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h4&gt;</span>Expensive Child Component<span class="tag">&lt;/h4&gt;</span>
+      <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={onClick}<span class="tag">&gt;</span>Click Me<span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;p&gt;</span>This component does expensive calculations...<span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+});
+            </div>
+
+            <h4>Using useCallback where identity matters</h4>
+            <div class="code-block">
+<span class="comment">// Keep the callback reference stable for the memoized child</span>
+<span class="keyword">import</span> React, { <span class="function">useState</span>, <span class="function">useCallback</span> } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="keyword">function</span> <span class="function">ParentWithCallback</span>() {
+  <span class="keyword">const</span> [count, setCount] = <span class="function">useState</span>(<span class="number">0</span>);
+  <span class="keyword">const</span> [name, setName] = <span class="function">useState</span>(<span class="string">''</span>);
+
+  <span class="comment">// This callback has no reactive dependencies</span>
+  <span class="keyword">const</span> handleClick = <span class="function">useCallback</span>(() => {
+    <span class="function">console.log</span>(<span class="string">'Button clicked'</span>);
+  }, []); <span class="comment">// Empty dependency array means function never changes</span>
+
+  <span class="comment">// The updater form removes count from the dependencies</span>
+  <span class="keyword">const</span> handleIncrement = <span class="function">useCallback</span>(() => {
+    <span class="function">setCount</span>(prevCount => prevCount + <span class="number">1</span>);
+  }, []); <span class="comment">// No dependencies needed due to functional update</span>
+
+  <span class="comment">// State setters have stable identity</span>
+  <span class="keyword">const</span> handleReset = <span class="function">useCallback</span>(() => {
+    <span class="function">setCount</span>(<span class="number">0</span>);
+  }, []); <span class="comment">// No dependencies needed</span>
+
+  <span class="comment">// This callback only uses its argument and a state setter</span>
+  <span class="keyword">const</span> handleNameChange = <span class="function">useCallback</span>((newName) => {
+    <span class="function">setName</span>(newName);
+    <span class="function">console.log</span>(<span class="string">`Name changed to: </span><span class="template">${newName}</span><span class="string">`</span>);
+  }, []); <span class="comment">// No dependencies needed for setter</span>
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;p&gt;</span>Count: {count}<span class="tag">&lt;/p&gt;</span>
+      <span class="tag">&lt;p&gt;</span>Name: {name}<span class="tag">&lt;/p&gt;</span>
+      
+      <span class="tag">&lt;input</span> 
+        <span class="attribute">value</span>={name} 
+        <span class="attribute">onChange</span>={(e) => <span class="function">handleNameChange</span>(e.target.value)} 
+        <span class="attribute">placeholder</span>=<span class="string">"Type something..."</span>
+      <span class="tag">/&gt;</span>
+      
+      <span class="comment">{/* ExpensiveChild only re-renders when handleClick actually changes */}</span>
+      <span class="tag">&lt;OptimizedChild</span> <span class="attribute">onClick</span>={handleClick} <span class="tag">/&gt;</span>
+      
+      <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={handleIncrement}<span class="tag">&gt;</span>
+        Increment Count
+      <span class="tag">&lt;/button&gt;</span>
+      
+      <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={handleReset}<span class="tag">&gt;</span>
+        Reset Count
+      <span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="keyword">const</span> <span class="function">OptimizedChild</span> = <span class="function">React.memo</span>(({ onClick }) => {
+  <span class="function">console.log</span>(<span class="string">'OptimizedChild rendered'</span>); <span class="comment">// Logs when a prop changes</span>
+  
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={{ padding: <span class="string">'1rem'</span>, border: <span class="string">'2px solid #111'</span> }}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h4&gt;</span>Optimized Child Component<span class="tag">&lt;/h4&gt;</span>
+      <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={onClick}<span class="tag">&gt;</span>Click Me<span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;p&gt;</span>This component only rerenders when its prop changes.<span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+});
+            </div>
+
+            <div class="warning">
+                <strong>Use useCallback when:</strong><br>
+                • Passing functions to memoized child components<br>
+                • Functions are dependencies of other hooks<br>
+                • An external subscription requires a stable callback<br><br>
+                <strong>Usually skip it when:</strong><br>
+                • Child components aren't memoized<br>
+                • Profiling shows no relevant rendering cost<br>
+                • Functions are only used within the same component
+            </div>
+
+            <div class="tip">
+                <strong>Performance Debugging Tip:</strong><br>
+                Use React DevTools Profiler before adding manual memoization. A component that renders frequently with unchanged props may be a candidate for <code>memo</code> and <code>useCallback</code>. React Compiler can automate many of these optimizations in projects that enable it.
+            </div>
+        </div>
+<div class="step">
+            <div class="step-number">17</div>
+            <h3>Performance Optimization Tips</h3>
+            <p>Important patterns to avoid unnecessary re-renders and optimize your React applications.</p>
+            
+            <div class="warning">
+                <strong>Common Performance Issues:</strong><br>
+                • Creating objects/functions in render<br>
+                • Unnecessary re-renders due to reference changes<br>
+                • Large dependency arrays in useEffect<br>
+                • Not cleaning up subscriptions
+            </div>
+
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { useState, useEffect, useCallback, useMemo } <span class="keyword">from</span> <span class="string">'react'</span>
+
+<span class="keyword">function</span> <span class="function">OptimizedComponent</span>() {
+  <span class="keyword">const</span> [items, setItems] = <span class="function">useState</span>([])
+  <span class="keyword">const</span> [filter, setFilter] = <span class="function">useState</span>(<span class="string">''</span>)
+  <span class="keyword">const</span> [sortOrder, setSortOrder] = <span class="function">useState</span>(<span class="string">'asc'</span>)
+
+  <span class="comment">// Cache a measured expensive calculation</span>
+  <span class="keyword">const</span> filteredAndSortedItems = <span class="function">useMemo</span>(() =&gt; {
+    <span class="function">console.log</span>(<span class="string">'Recalculating filtered items...'</span>)
+    
+    <span class="keyword">return</span> items
+      .<span class="function">filter</span>(item =&gt; item.name.<span class="function">toLowerCase</span>().<span class="function">includes</span>(filter.<span class="function">toLowerCase</span>()))
+      .<span class="function">sort</span>((a, b) =&gt; {
+        <span class="keyword">const</span> modifier = sortOrder === <span class="string">'asc'</span> ? <span class="number">1</span> : <span class="number">-1</span>
+        <span class="keyword">return</span> a.name.<span class="function">localeCompare</span>(b.name) * modifier
+      })
+  }, [items, filter, sortOrder])
+
+  <span class="comment">// Keep callback references stable for memoized children</span>
+  <span class="keyword">const</span> handleAddItem = <span class="function">useCallback</span>((newItem) =&gt; {
+    <span class="function">setItems</span>(prevItems =&gt; [...prevItems, { id: Date.<span class="function">now</span>(), ...newItem }])
+  }, [])
+
+  <span class="keyword">const</span> handleRemoveItem = <span class="function">useCallback</span>((itemId) =&gt; {
+    <span class="function">setItems</span>(prevItems =&gt; prevItems.<span class="function">filter</span>(item =&gt; item.id !== itemId))
+  }, [])
+
+  <span class="comment">// Synchronize after filter changes</span>
+  <span class="function">useEffect</span>(() =&gt; {
+    <span class="function">console.log</span>(<span class="string">`Filter changed to: ${filter}`</span>)
+    <span class="comment">// Could trigger analytics or other side effects</span>
+  }, [filter])
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;h3&gt;</span>Optimized Item List<span class="tag">&lt;/h3&gt;</span>
+      
+      <span class="tag">&lt;input</span>
+        <span class="attribute">type</span>=<span class="value">"text"</span>
+        <span class="attribute">placeholder</span>=<span class="value">"Filter items..."</span>
+        <span class="attribute">value</span>={filter}
+        <span class="attribute">onChange</span>={(e) =&gt; <span class="function">setFilter</span>(e.target.value)}
+      <span class="tag">/&gt;</span>
+
+      <span class="tag">&lt;select</span> <span class="attribute">value</span>={sortOrder} <span class="attribute">onChange</span>={(e) =&gt; <span class="function">setSortOrder</span>(e.target.value)}<span class="tag">&gt;</span>
+        <span class="tag">&lt;option</span> <span class="attribute">value</span>=<span class="value">"asc"</span><span class="tag">&gt;</span>A-Z<span class="tag">&lt;/option&gt;</span>
+        <span class="tag">&lt;option</span> <span class="attribute">value</span>=<span class="value">"desc"</span><span class="tag">&gt;</span>Z-A<span class="tag">&lt;/option&gt;</span>
+      <span class="tag">&lt;/select&gt;</span>
+
+      <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() =&gt; <span class="function">handleAddItem</span>({ name: <span class="string">`Item ${items.length + 1}`</span> })}<span class="tag">&gt;</span>
+        Add Item
+      <span class="tag">&lt;/button&gt;</span>
+
+      <span class="tag">&lt;p&gt;</span>Showing {filteredAndSortedItems.length} of {items.length} items<span class="tag">&lt;/p&gt;</span>
+
+      <span class="tag">&lt;ul&gt;</span>
+        {filteredAndSortedItems.<span class="function">map</span>(item =&gt; (
+          <span class="tag">&lt;li</span> <span class="attribute">key</span>={item.id}<span class="tag">&gt;</span>
+            {item.name}
+            <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() =&gt; <span class="function">handleRemoveItem</span>(item.id)}<span class="tag">&gt;</span>
+              Remove
+            <span class="tag">&lt;/button&gt;</span>
+          <span class="tag">&lt;/li&gt;</span>
+        ))}
+      <span class="tag">&lt;/ul&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  )
+}</div>
+        </div>
+        <h2 id="usereducer">useReducer</h2>
+        
+        <div class="step">
+            <div class="step-number">18</div>
+            <h3>Describe state transitions with a reducer</h3>
+            
+            <p><code>useReducer</code> centralizes related state transitions in one function. A component dispatches an action that describes what happened, and the reducer returns the next state. Reducers must be pure: do not mutate existing state, perform network requests, read changing globals, or trigger other side effects inside them.</p>
+            
+            <h4>Basic Syntax</h4>
+            <div class="code-block">
+<span class="keyword">const</span> [state, dispatch] = <span class="function">useReducer</span>(reducer, initialState);
+
+<span class="comment">// Reducer function signature</span>
+<span class="keyword">function</span> <span class="function">reducer</span>(state, action) {
+  <span class="keyword">switch</span> (action.type) {
+    <span class="keyword">case</span> <span class="string">'ACTION_TYPE'</span>:
+      <span class="keyword">return</span> { ...state, /* new state */ };
+    <span class="keyword">default</span>:
+      <span class="keyword">throw new</span> <span class="function">Error</span>(<span class="string">`Unknown action: </span><span class="template">${action.type}</span><span class="string">`</span>);
+  }
+}
+            </div>
+
+            <h4>Example 1: Advanced Counter with History</h4>
+            <div class="code-block">
+<span class="keyword">import</span> { <span class="function">useReducer</span> } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="comment">// Reducer function - pure function that returns new state</span>
+<span class="keyword">function</span> <span class="function">counterReducer</span>(state, action) {
+  <span class="keyword">switch</span> (action.type) {
+    <span class="keyword">case</span> <span class="string">'INCREMENT'</span>:
+      <span class="keyword">return</span> {
+        count: state.count + (action.payload || <span class="number">1</span>),
+        history: [...state.history, <span class="string">`+</span><span class="template">${action.payload || 1}</span><span class="string">`</span>]
+      };
+    
+    <span class="keyword">case</span> <span class="string">'DECREMENT'</span>:
+      <span class="keyword">return</span> {
+        count: state.count - (action.payload || <span class="number">1</span>),
+        history: [...state.history, <span class="string">`-</span><span class="template">${action.payload || 1}</span><span class="string">`</span>]
+      };
+    
+    <span class="keyword">case</span> <span class="string">'RESET'</span>:
+      <span class="keyword">return</span> {
+        count: <span class="number">0</span>,
+        history: [...state.history, <span class="string">'RESET'</span>]
+      };
+    
+    <span class="keyword">case</span> <span class="string">'UNDO'</span>:
+      <span class="keyword">if</span> (state.history.length === <span class="number">0</span>) <span class="keyword">return</span> state;
+      
+      <span class="keyword">const</span> newHistory = state.history.<span class="function">slice</span>(<span class="number">0</span>, -<span class="number">1</span>);
+      <span class="keyword">const</span> lastAction = state.history[state.history.length - <span class="number">1</span>];
+      
+      <span class="keyword">let</span> newCount = state.count;
+      <span class="keyword">if</span> (lastAction === <span class="string">'RESET'</span>) {
+        <span class="comment">// Complex undo logic could go here</span>
+        newCount = <span class="number">0</span>; <span class="comment">// Simplified</span>
+      } <span class="keyword">else if</span> (lastAction.<span class="function">startsWith</span>(<span class="string">'+'</span>)) {
+        <span class="keyword">const</span> amount = <span class="function">parseInt</span>(lastAction.<span class="function">slice</span>(<span class="number">1</span>));
+        newCount = state.count - amount;
+      } <span class="keyword">else if</span> (lastAction.<span class="function">startsWith</span>(<span class="string">'-'</span>)) {
+        <span class="keyword">const</span> amount = <span class="function">parseInt</span>(lastAction.<span class="function">slice</span>(<span class="number">1</span>));
+        newCount = state.count + amount;
+      }
+      
+      <span class="keyword">return</span> { count: newCount, history: newHistory };
+    
+    <span class="keyword">default</span>:
+      <span class="keyword">throw new</span> <span class="function">Error</span>(<span class="string">`Unknown action type: </span><span class="template">${action.type}</span><span class="string">`</span>);
+  }
+}
+
+<span class="keyword">function</span> <span class="function">AdvancedCounter</span>() {
+  <span class="keyword">const</span> [state, dispatch] = <span class="function">useReducer</span>(counterReducer, {
+    count: <span class="number">0</span>,
+    history: []
+  });
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;h4&gt;</span>Advanced Counter: {state.count}<span class="tag">&lt;/h4&gt;</span>
+      
+      <span class="tag">&lt;div</span> <span class="attribute">style</span>={{ display: <span class="string">'flex'</span>, gap: <span class="string">'0.5rem'</span>, marginBottom: <span class="string">'1rem'</span> }}<span class="tag">&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() => <span class="function">dispatch</span>({ type: <span class="string">'INCREMENT'</span> })}<span class="tag">&gt;</span>+1<span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() => <span class="function">dispatch</span>({ type: <span class="string">'INCREMENT'</span>, payload: <span class="number">5</span> })}<span class="tag">&gt;</span>+5<span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() => <span class="function">dispatch</span>({ type: <span class="string">'DECREMENT'</span> })}<span class="tag">&gt;</span>-1<span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() => <span class="function">dispatch</span>({ type: <span class="string">'DECREMENT'</span>, payload: <span class="number">5</span> })}<span class="tag">&gt;</span>-5<span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() => <span class="function">dispatch</span>({ type: <span class="string">'RESET'</span> })}<span class="tag">&gt;</span>Reset<span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() => <span class="function">dispatch</span>({ type: <span class="string">'UNDO'</span> })}<span class="tag">&gt;</span>Undo<span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+
+      <span class="tag">&lt;div&gt;</span>
+        <span class="tag">&lt;h5&gt;</span>History:<span class="tag">&lt;/h5&gt;</span>
+        <span class="tag">&lt;p&gt;</span>{state.history.<span class="function">join</span>(<span class="string">' → '</span>) || <span class="string">'No actions yet'</span>}<span class="tag">&lt;/p&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+            </div>
+
+            <h4>Example 2: Shopping Cart with Complex Logic</h4>
+            <div class="code-block">
+<span class="keyword">import</span> { <span class="function">useReducer</span>, <span class="function">useMemo</span> } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="comment">// Complex reducer for shopping cart management</span>
+<span class="keyword">function</span> <span class="function">cartReducer</span>(state, action) {
+  <span class="keyword">switch</span> (action.type) {
+    <span class="keyword">case</span> <span class="string">'ADD_ITEM'</span>: {
+      <span class="keyword">const</span> existingItem = state.items.<span class="function">find</span>(item => item.id === action.payload.id);
+      
+      <span class="keyword">if</span> (existingItem) {
+        <span class="keyword">return</span> {
+          ...state,
+          items: state.items.<span class="function">map</span>(item =>
+            item.id === action.payload.id
+              ? { ...item, quantity: item.quantity + <span class="number">1</span> }
+              : item
+          ),
+          lastAction: <span class="string">`Added </span><span class="template">${action.payload.name}</span><span class="string"> (quantity updated)`</span>
+        };
+      } <span class="keyword">else</span> {
+        <span class="keyword">return</span> {
+          ...state,
+          items: [...state.items, { ...action.payload, quantity: <span class="number">1</span> }],
+          lastAction: <span class="string">`Added </span><span class="template">${action.payload.name}</span><span class="string"> to cart`</span>
+        };
+      }
+    }
+    
+    <span class="keyword">case</span> <span class="string">'REMOVE_ITEM'</span>: {
+      <span class="keyword">const</span> item = state.items.<span class="function">find</span>(item => item.id === action.payload);
+      <span class="keyword">return</span> {
+        ...state,
+        items: state.items.<span class="function">filter</span>(item => item.id !== action.payload),
+        lastAction: <span class="string">`Removed </span><span class="template">${item ? item.name : 'item'}</span><span class="string"> from cart`</span>
+      };
+    }
+    
+    <span class="keyword">case</span> <span class="string">'UPDATE_QUANTITY'</span>: {
+      <span class="keyword">const</span> { id, quantity } = action.payload;
+      <span class="keyword">const</span> item = state.items.<span class="function">find</span>(item => item.id === id);
+      
+      <span class="keyword">if</span> (quantity <= <span class="number">0</span>) {
+        <span class="keyword">return</span> {
+          ...state,
+          items: state.items.<span class="function">filter</span>(item => item.id !== id),
+          lastAction: <span class="string">`Removed </span><span class="template">${item ? item.name : 'item'}</span><span class="string"> from cart`</span>
+        };
+      }
+      
+      <span class="keyword">return</span> {
+        ...state,
+        items: state.items.<span class="function">map</span>(item =>
+          item.id === id ? { ...item, quantity } : item
+        ),
+        lastAction: <span class="string">`Updated </span><span class="template">${item ? item.name : 'item'}</span><span class="string"> quantity to </span><span class="template">${quantity}</span><span class="string">`</span>
+      };
+    }
+    
+    <span class="keyword">case</span> <span class="string">'APPLY_DISCOUNT'</span>:
+      <span class="keyword">return</span> {
+        ...state,
+        discount: action.payload,
+        lastAction: <span class="string">`Applied </span><span class="template">${action.payload}</span><span class="string">% discount`</span>
+      };
+    
+    <span class="keyword">case</span> <span class="string">'CLEAR_CART'</span>:
+      <span class="keyword">return</span> {
+        ...state,
+        items: [],
+        discount: <span class="number">0</span>,
+        lastAction: <span class="string">'Cleared cart'</span>
+      };
+    
+    <span class="keyword">case</span> <span class="string">'SET_SHIPPING'</span>:
+      <span class="keyword">return</span> {
+        ...state,
+        shipping: action.payload,
+        lastAction: <span class="string">`Set shipping to </span><span class="template">${action.payload}</span><span class="string">`</span>
+      };
+    
+    <span class="keyword">default</span>:
+      <span class="keyword">throw new</span> <span class="function">Error</span>(<span class="string">`Unknown action type: </span><span class="template">${action.type}</span><span class="string">`</span>);
+  }
+}
+
+<span class="keyword">function</span> <span class="function">ShoppingCart</span>() {
+  <span class="keyword">const</span> [state, dispatch] = <span class="function">useReducer</span>(cartReducer, {
+    items: [],
+    discount: <span class="number">0</span>,
+    shipping: <span class="number">0</span>,
+    lastAction: <span class="string">'Cart initialized'</span>
+  });
+
+  <span class="comment">// Cache this calculation if profiling shows it is expensive</span>
+  <span class="keyword">const</span> { subtotal, total, itemCount, savings } = <span class="function">useMemo</span>(() => {
+    <span class="keyword">const</span> subtotal = state.items.<span class="function">reduce</span>((sum, item) => 
+      sum + (item.price * item.quantity), <span class="number">0</span>
+    );
+    <span class="keyword">const</span> discountAmount = subtotal * (state.discount / <span class="number">100</span>);
+    <span class="keyword">const</span> total = subtotal - discountAmount + state.shipping;
+    <span class="keyword">const</span> itemCount = state.items.<span class="function">reduce</span>((sum, item) => 
+      sum + item.quantity, <span class="number">0</span>
+    );
+    
+    <span class="keyword">return</span> { 
+      subtotal, 
+      total: <span class="function">Math.max</span>(<span class="number">0</span>, total), 
+      itemCount, 
+      savings: discountAmount 
+    };
+  }, [state.items, state.discount, state.shipping]);
+
+  <span class="keyword">const</span> products = [
+    { id: <span class="number">1</span>, name: <span class="string">'Laptop'</span>, price: <span class="number">999</span> },
+    { id: <span class="number">2</span>, name: <span class="string">'Mouse'</span>, price: <span class="number">25</span> },
+    { id: <span class="number">3</span>, name: <span class="string">'Keyboard'</span>, price: <span class="number">75</span> },
+    { id: <span class="number">4</span>, name: <span class="string">'Monitor'</span>, price: <span class="number">299</span> }
+  ];
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;h4&gt;</span>Shopping Cart ({itemCount} items)<span class="tag">&lt;/h4&gt;</span>
+      
+      <span class="tag">&lt;p</span> <span class="attribute">style</span>={{ fontStyle: <span class="string">'italic'</span>, color: <span class="string">'#666'</span> }}<span class="tag">&gt;</span>
+        Last action: {state.lastAction}
+      <span class="tag">&lt;/p&gt;</span>
+
+      <span class="tag">&lt;div</span> <span class="attribute">style</span>={{ display: <span class="string">'grid'</span>, gridTemplateColumns: <span class="string">'1fr 1fr'</span>, gap: <span class="string">'2rem'</span> }}<span class="tag">&gt;</span>
+        <span class="tag">&lt;div&gt;</span>
+          <span class="tag">&lt;h5&gt;</span>Products<span class="tag">&lt;/h5&gt;</span>
+          {products.<span class="function">map</span>(product => (
+            <span class="tag">&lt;div</span> <span class="attribute">key</span>={product.id} <span class="attribute">style</span>={{ 
+              display: <span class="string">'flex'</span>, 
+              justifyContent: <span class="string">'space-between'</span>, 
+              alignItems: <span class="string">'center'</span>,
+              padding: <span class="string">'0.5rem'</span>,
+              border: <span class="string">'1px solid #ddd'</span>,
+              marginBottom: <span class="string">'0.5rem'</span>
+            }}<span class="tag">&gt;</span>
+              <span class="tag">&lt;span&gt;</span>{product.name} - ${product.price}<span class="tag">&lt;/span&gt;</span>
+              <span class="tag">&lt;button</span> 
+                <span class="attribute">onClick</span>={() => <span class="function">dispatch</span>({ type: <span class="string">'ADD_ITEM'</span>, payload: product })}
+              <span class="tag">&gt;</span>
+                Add to Cart
+              <span class="tag">&lt;/button&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+          ))}
+        <span class="tag">&lt;/div&gt;</span>
+
+        <span class="tag">&lt;div&gt;</span>
+          <span class="tag">&lt;h5&gt;</span>Cart Items<span class="tag">&lt;/h5&gt;</span>
+          {state.items.length === <span class="number">0</span> ? (
+            <span class="tag">&lt;p&gt;</span>Your cart is empty<span class="tag">&lt;/p&gt;</span>
+          ) : (
+            state.items.<span class="function">map</span>(item => (
+              <span class="tag">&lt;div</span> <span class="attribute">key</span>={item.id} <span class="attribute">style</span>={{ 
+                display: <span class="string">'flex'</span>, 
+                justifyContent: <span class="string">'space-between'</span>,
+                alignItems: <span class="string">'center'</span>,
+                padding: <span class="string">'0.5rem'</span>,
+                border: <span class="string">'1px solid #ddd'</span>,
+                marginBottom: <span class="string">'0.5rem'</span>
+              }}<span class="tag">&gt;</span>
+                <span class="tag">&lt;div&gt;</span>
+                  <span class="tag">&lt;div&gt;</span>{item.name} - ${item.price}<span class="tag">&lt;/div&gt;</span>
+                  <span class="tag">&lt;small&gt;</span>Qty: {item.quantity} | Total: ${(item.price * item.quantity).<span class="function">toFixed</span>(<span class="number">2</span>)}<span class="tag">&lt;/small&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+                
+                <span class="tag">&lt;div&gt;</span>
+                  <span class="tag">&lt;button</span> 
+                    <span class="attribute">onClick</span>={() => <span class="function">dispatch</span>({ 
+                      type: <span class="string">'UPDATE_QUANTITY'</span>, 
+                      payload: { id: item.id, quantity: item.quantity - <span class="number">1</span> } 
+                    })}
+                  <span class="tag">&gt;</span>-<span class="tag">&lt;/button&gt;</span>
+                  
+                  <span class="tag">&lt;button</span> 
+                    <span class="attribute">onClick</span>={() => <span class="function">dispatch</span>({ 
+                      type: <span class="string">'UPDATE_QUANTITY'</span>, 
+                      payload: { id: item.id, quantity: item.quantity + <span class="number">1</span> } 
+                    })}
+                  <span class="tag">&gt;</span>+<span class="tag">&lt;/button&gt;</span>
+                  
+                  <span class="tag">&lt;button</span> 
+                    <span class="attribute">onClick</span>={() => <span class="function">dispatch</span>({ type: <span class="string">'REMOVE_ITEM'</span>, payload: item.id })}
+                  <span class="tag">&gt;</span>×<span class="tag">&lt;/button&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+              <span class="tag">&lt;/div&gt;</span>
+            ))
+          )}
+        <span class="tag">&lt;/div&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+
+      {itemCount > <span class="number">0</span> && (
+        <span class="tag">&lt;div</span> <span class="attribute">style</span>={{ 
+          marginTop: <span class="string">'2rem'</span>, 
+          padding: <span class="string">'1rem'</span>, 
+          border: <span class="string">'2px solid #333'</span>, 
+          borderRadius: <span class="string">'8px'</span> 
+        }}<span class="tag">&gt;</span>
+          <span class="tag">&lt;h5&gt;</span>Cart Summary<span class="tag">&lt;/h5&gt;</span>
+          
+          <span class="tag">&lt;div</span> <span class="attribute">style</span>={{ display: <span class="string">'flex'</span>, gap: <span class="string">'1rem'</span>, marginBottom: <span class="string">'1rem'</span> }}<span class="tag">&gt;</span>
+            <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() => <span class="function">dispatch</span>({ type: <span class="string">'APPLY_DISCOUNT'</span>, payload: <span class="number">10</span> })}<span class="tag">&gt;</span>
+              10% Off
+            <span class="tag">&lt;/button&gt;</span>
+            <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() => <span class="function">dispatch</span>({ type: <span class="string">'APPLY_DISCOUNT'</span>, payload: <span class="number">20</span> })}<span class="tag">&gt;</span>
+              20% Off
+            <span class="tag">&lt;/button&gt;</span>
+            <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() => <span class="function">dispatch</span>({ type: <span class="string">'SET_SHIPPING'</span>, payload: <span class="number">9.99</span> })}<span class="tag">&gt;</span>
+              Add Shipping ($9.99)
+            <span class="tag">&lt;/button&gt;</span>
+            <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() => <span class="function">dispatch</span>({ type: <span class="string">'SET_SHIPPING'</span>, payload: <span class="number">0</span> })}<span class="tag">&gt;</span>
+              Free Shipping
+            <span class="tag">&lt;/button&gt;</span>
+          <span class="tag">&lt;/div&gt;</span>
+
+          <span class="tag">&lt;div&gt;</span>
+            <span class="tag">&lt;p&gt;</span>Subtotal: ${subtotal.<span class="function">toFixed</span>(<span class="number">2</span>)}<span class="tag">&lt;/p&gt;</span>
+            {state.discount > <span class="number">0</span> && (
+              <span class="tag">&lt;p</span> <span class="attribute">style</span>={{ color: <span class="string">'#333'</span> }}<span class="tag">&gt;</span>
+                Discount ({state.discount}%): -${savings.<span class="function">toFixed</span>(<span class="number">2</span>)}
+              <span class="tag">&lt;/p&gt;</span>
+            )}
+            {state.shipping > <span class="number">0</span> && (
+              <span class="tag">&lt;p&gt;</span>Shipping: ${state.shipping.<span class="function">toFixed</span>(<span class="number">2</span>)}<span class="tag">&lt;/p&gt;</span>
+            )}
+            <span class="tag">&lt;p</span> <span class="attribute">style</span>={{ fontSize: <span class="string">'1.2em'</span>, fontWeight: <span class="string">'bold'</span> }}<span class="tag">&gt;</span>
+              Total: ${total.<span class="function">toFixed</span>(<span class="number">2</span>)}
+            <span class="tag">&lt;/p&gt;</span>
+            
+            <span class="tag">&lt;button</span> 
+              <span class="attribute">onClick</span>={() => <span class="function">dispatch</span>({ type: <span class="string">'CLEAR_CART'</span> })}
+              <span class="attribute">style</span>={{ marginTop: <span class="string">'1rem'</span>, backgroundColor: <span class="string">'#111'</span>, color: <span class="string">'white'</span> }}
+            <span class="tag">&gt;</span>
+              Clear Cart
+            <span class="tag">&lt;/button&gt;</span>
+          <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+      )}
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+            </div>
+
+            <div class="tip">
+                <strong>Choosing between useReducer and useState:</strong><br><br>
+                <strong>Use useState when:</strong><br>
+                • Simple state updates (strings, numbers, booleans)<br>
+                • Independent state variables<br>
+                • Few state update functions<br><br>
+                <strong>Use useReducer when:</strong><br>
+                • Complex state logic with multiple sub-values<br>
+                • State transitions depend on previous state<br>
+                • Many different actions/updates<br>
+                • State is a complex object or array<br>
+                • Named actions make transitions easier to test and understand
+            </div>
+        </div>
+
+        <h2 id="react-router">React Router</h2>
+
+        <div class="step">
+            <div class="step-number">19</div>
+            <h3>Routing concepts and installation</h3>
+            
+            <p>React Router maps URLs to interface elements and keeps navigation synchronized with browser history. Version 8 provides Declarative, Data, and Framework modes. This guide uses Declarative Mode because it is the smallest step from a Vite client application.</p>
+            
+            <div class="tip">
+                <strong>What is Client-Side Routing?</strong><br>
+                Client-side routing changes the URL and rendered route without requesting a complete HTML document for each navigation. The server must still be configured to return the app entry point for valid client routes. Data and Framework modes add loaders, actions, pending states, and other route-level features.
+            </div>
+
+            <h4>Why React Router?</h4>
+            <ul>
+                <li><strong>Declarative Routing:</strong> Define routes using JSX components for clear, readable code</li>
+                <li><strong>Dynamic Routing:</strong> URL segments can identify records such as <code>/users/:id</code></li>
+                <li><strong>Code Splitting:</strong> Works seamlessly with React.lazy() for route-based code splitting</li>
+                <li><strong>History Management:</strong> Handles browser history, back/forward buttons, and URL synchronization</li>
+                <li><strong>Route Data:</strong> Data and Framework modes can coordinate loading and mutations with navigation</li>
+            </ul>
+
+            <h4>Core Router Components</h4>
+            <div class="code-block">
+<span class="comment">// 1. BrowserRouter - Main router component for web apps</span>
+<span class="keyword">import</span> { BrowserRouter } <span class="keyword">from</span> <span class="string">'react-router'</span>;
+
+<span class="comment">// 2. Routes - Container for all route definitions</span>
+<span class="keyword">import</span> { Routes } <span class="keyword">from</span> <span class="string">'react-router'</span>;
+
+<span class="comment">// 3. Route - Individual route definition</span>
+<span class="keyword">import</span> { Route } <span class="keyword">from</span> <span class="string">'react-router'</span>;
+
+<span class="comment">// 4. Link - Navigation component (replaces anchor tags)</span>
+<span class="keyword">import</span> { Link, NavLink } <span class="keyword">from</span> <span class="string">'react-router'</span>;
+
+<span class="comment">// 5. useNavigate - Hook for programmatic navigation</span>
+<span class="keyword">import</span> { useNavigate } <span class="keyword">from</span> <span class="string">'react-router'</span>;
+            </div>
+
+            <div class="warning">
+                <strong>Important Concepts:</strong><br>
+                • <strong>Route:</strong> A URL path that renders a specific component<br>
+                • <strong>Router:</strong> The root component that enables routing in your app<br>
+                • <strong>Link:</strong> Component for declarative navigation between routes<br>
+                • <strong>Navigate:</strong> Hook for programmatic navigation<br>
+                • <strong>Params:</strong> Dynamic segments in URLs (e.g., /users/:id)<br>
+                • <strong>Location:</strong> Current URL and state information
+            </div>
+
+            <h4>Installation</h4>
+            <div class="code-block">
+<span class="comment"># React Router 8 declarative and data APIs</span>
+npm install react-router
+
+<span class="comment"># For TypeScript projects, types are included</span>
+<span class="comment"># No additional @types package needed</span>
+            </div>
+            <div class="warning">
+                <strong>Current requirements:</strong> React Router 8.5.1 requires Node.js 22.22 or newer and React 19.2.7 or newer. The Node 26, React 19.3.1, and Vite 8.3.5 setup from the first tutorial meets these requirements.
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">20</div>
+            <h3>Basic router setup</h3>
+            
+            <p>Wrap the route tree in <code>BrowserRouter</code>, place route definitions inside <code>Routes</code>, and map each path to an element with <code>Route</code>. Use <code>Link</code> for internal navigation so React Router can update history without a full document request.</p>
+
+            <h4>Basic App Structure with React Router</h4>
+            <div class="code-block">
+<span class="comment">// App.jsx - Main application file</span>
+<span class="keyword">import</span> { BrowserRouter, Routes, Route, Link } <span class="keyword">from</span> <span class="string">'react-router'</span>;
+
+<span class="comment">// Page 1: Home Page</span>
+<span class="keyword">function</span> <span class="function">HomePage</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.container}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h1</span> <span class="attribute">style</span>={styles.title}<span class="tag">&gt;</span>Home Page<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;p</span> <span class="attribute">style</span>={styles.subtitle}<span class="tag">&gt;</span>This page is rendered for the root route.<span class="tag">&lt;/p&gt;</span>
+      
+      <span class="tag">&lt;Link</span> <span class="attribute">to</span>=<span class="string">"/about"</span> <span class="attribute">style</span>={styles.link}<span class="tag">&gt;</span>
+        Go to About Page
+      <span class="tag">&lt;/Link&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="comment">// Page 2: About Page</span>
+<span class="keyword">function</span> <span class="function">AboutPage</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.container}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h1</span> <span class="attribute">style</span>={styles.title}<span class="tag">&gt;</span>About Page<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;p</span> <span class="attribute">style</span>={styles.subtitle}<span class="tag">&gt;</span>This page is rendered for the about route.<span class="tag">&lt;/p&gt;</span>
+      
+      <span class="tag">&lt;Link</span> <span class="attribute">to</span>=<span class="string">"/"</span> <span class="attribute">style</span>={styles.link}<span class="tag">&gt;</span>
+        Go Back Home
+      <span class="tag">&lt;/Link&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="comment">// Main App Component</span>
+<span class="keyword">export default function</span> <span class="function">App</span>() {
+  <span class="keyword">return</span> (
+    <span class="comment">{/* BrowserRouter enables routing for the entire app */}</span>
+    <span class="tag">&lt;BrowserRouter&gt;</span>
+      <span class="comment">{/* Routes container holds all route definitions */}</span>
+      <span class="tag">&lt;Routes&gt;</span>
+        <span class="comment">{/* Route definitions - path maps to component */}</span>
+        <span class="tag">&lt;Route</span> <span class="attribute">path</span>=<span class="string">"/"</span> <span class="attribute">element</span>={<span class="tag">&lt;HomePage /&gt;</span>} <span class="tag">/&gt;</span>
+        <span class="tag">&lt;Route</span> <span class="attribute">path</span>=<span class="string">"/about"</span> <span class="attribute">element</span>={<span class="tag">&lt;AboutPage /&gt;</span>} <span class="tag">/&gt;</span>
+      <span class="tag">&lt;/Routes&gt;</span>
+    <span class="tag">&lt;/BrowserRouter&gt;</span>
+  );
+}
+
+<span class="comment">// Simple styles object</span>
+<span class="keyword">const</span> styles = {
+  container: {
+    display: <span class="string">'flex'</span>,
+    flexDirection: <span class="string">'column'</span>,
+    alignItems: <span class="string">'center'</span>,
+    justifyContent: <span class="string">'center'</span>,
+    padding: <span class="string">'2rem'</span>,
+    fontFamily: <span class="string">'Arial, sans-serif'</span>
+  },
+  title: {
+    fontSize: <span class="string">'2rem'</span>,
+    fontWeight: <span class="string">'bold'</span>,
+    marginBottom: <span class="string">'1rem'</span>,
+    color: <span class="string">'#333'</span>
+  },
+  subtitle: {
+    fontSize: <span class="string">'1.2rem'</span>,
+    color: <span class="string">'#666'</span>,
+    marginBottom: <span class="string">'2rem'</span>
+  },
+  link: {
+    display: <span class="string">'inline-block'</span>,
+    padding: <span class="string">'0.8rem 1.5rem'</span>,
+    backgroundColor: <span class="string">'#222'</span>,
+    color: <span class="string">'white'</span>,
+    textDecoration: <span class="string">'none'</span>,
+    borderRadius: <span class="string">'5px'</span>,
+    transition: <span class="string">'background-color 0.2s'</span>
+  }
+};
+            </div>
+
+            <div class="tip">
+                <strong>Key Components Explained:</strong><br>
+                • <code>BrowserRouter</code>: The root router component that enables routing for your app<br>
+                • <code>Routes</code>: Container component that holds all route definitions<br>
+                • <code>Route</code>: Defines a path and the component to render for that path<br>
+                • <code>Link</code>: Declarative navigation component (replaces anchor tags)<br>
+                • <code>element</code> prop: The component to render when the route matches
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">21</div>
+            <h3>URL Parameters and Query Strings</h3>
+            
+            <p>One of the most important features in routing is passing data between pages through the URL. React Router supports both URL parameters (path segments) and query strings for creating dynamic, data-driven applications.</p>
+
+            <div class="code-block">
+<span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;
+<span class="keyword">import</span> { 
+  BrowserRouter, 
+  Routes, 
+  Route, 
+  Link, 
+  useParams, 
+  useSearchParams, 
+  useNavigate 
+} <span class="keyword">from</span> <span class="string">'react-router'</span>;
+
+<span class="comment">// Home Page - Creating links with parameters</span>
+<span class="keyword">function</span> <span class="function">HomePage</span>() {
+  <span class="keyword">const</span> [name, setName] = React.<span class="function">useState</span>(<span class="string">''</span>);
+  <span class="keyword">const</span> [age, setAge] = React.<span class="function">useState</span>(<span class="string">''</span>);
+  <span class="keyword">const</span> navigate = <span class="function">useNavigate</span>();
+
+  <span class="keyword">const</span> <span class="function">handleNavigateToProfile</span> = () =&gt; {
+    <span class="comment">// Option 1: URL Parameters (part of the path)</span>
+    navigate(<span class="string">`/profile/</span><span class="template">${name}</span><span class="string">/</span><span class="template">${age}</span><span class="string">`</span>);
+    
+    <span class="comment">// Option 2: Query Parameters (after ?)</span>
+    <span class="comment">// navigate(`/profile?name=${name}&age=${age}`);</span>
+    
+    <span class="comment">// Option 3: State (invisible to URL, passed with navigation)</span>
+    <span class="comment">// navigate('/profile', { state: { name, age, timestamp: new Date().toISOString() } });</span>
+  };
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.container}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h1</span> <span class="attribute">style</span>={styles.title}<span class="tag">&gt;</span>User Profile Setup<span class="tag">&lt;/h1&gt;</span>
+      
+      <span class="tag">&lt;input</span>
+        <span class="attribute">style</span>={styles.input}
+        <span class="attribute">type</span>=<span class="string">"text"</span>
+        <span class="attribute">placeholder</span>=<span class="string">"Enter your name"</span>
+        <span class="attribute">value</span>={name}
+        <span class="attribute">onChange</span>={(e) =&gt; <span class="function">setName</span>(e.target.value)}
+      <span class="tag">/&gt;</span>
+      
+      <span class="tag">&lt;input</span>
+        <span class="attribute">style</span>={styles.input}
+        <span class="attribute">type</span>=<span class="string">"number"</span>
+        <span class="attribute">placeholder</span>=<span class="string">"Enter your age"</span>
+        <span class="attribute">value</span>={age}
+        <span class="attribute">onChange</span>={(e) =&gt; <span class="function">setAge</span>(e.target.value)}
+      <span class="tag">/&gt;</span>
+      
+      <span class="comment">{/* Programmatic navigation with parameters */}</span>
+      <span class="tag">&lt;button</span>
+        <span class="attribute">style</span>={styles.button}
+        <span class="attribute">onClick</span>={handleNavigateToProfile}
+        <span class="attribute">disabled</span>={!name || !age}
+      <span class="tag">&gt;</span>
+        Go to Profile (URL Params)
+      <span class="tag">&lt;/button&gt;</span>
+      
+      <span class="comment">{/* Declarative navigation with query strings */}</span>
+      <span class="tag">&lt;Link</span> 
+        <span class="attribute">to</span>={<span class="string">`/settings?theme=dark&notifications=true`</span>}
+        <span class="attribute">style</span>={styles.link}
+      <span class="tag">&gt;</span>
+        Go to Settings (Query Params)
+      <span class="tag">&lt;/Link&gt;</span>
+      
+      <span class="comment">{/* Static route example */}</span>
+      <span class="tag">&lt;Link</span> <span class="attribute">to</span>=<span class="string">"/about"</span> <span class="attribute">style</span>={styles.link}<span class="tag">&gt;</span>
+        About Page
+      <span class="tag">&lt;/Link&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="comment">// Profile Page - Reading URL parameters</span>
+<span class="keyword">function</span> <span class="function">ProfilePage</span>() {
+  <span class="comment">// Access URL parameters using useParams hook</span>
+  <span class="keyword">const</span> { name, age } = <span class="function">useParams</span>();
+  <span class="keyword">const</span> navigate = <span class="function">useNavigate</span>();
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.container}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h1</span> <span class="attribute">style</span>={styles.title}<span class="tag">&gt;</span>Profile Page<span class="tag">&lt;/h1&gt;</span>
+      
+      <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.infoCard}<span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.infoRow}<span class="tag">&gt;</span>
+          <span class="tag">&lt;strong&gt;</span>Name: <span class="tag">&lt;/strong&gt;</span>
+          <span class="tag">&lt;span&gt;</span>{name}<span class="tag">&lt;/span&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+        
+        <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.infoRow}<span class="tag">&gt;</span>
+          <span class="tag">&lt;strong&gt;</span>Age: <span class="tag">&lt;/strong&gt;</span>
+          <span class="tag">&lt;span&gt;</span>{age} years old<span class="tag">&lt;/span&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+        
+        <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.infoRow}<span class="tag">&gt;</span>
+          <span class="tag">&lt;strong&gt;</span>Profile Created: <span class="tag">&lt;/strong&gt;</span>
+          <span class="tag">&lt;span&gt;</span>{<span class="keyword">new</span> <span class="function">Date</span>().<span class="function">toLocaleString</span>()}<span class="tag">&lt;/span&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+      
+      <span class="comment">{/* Navigate back or to other pages */}</span>
+      <span class="tag">&lt;button</span>
+        <span class="attribute">style</span>={styles.button}
+        <span class="attribute">onClick</span>={() =&gt; navigate(<span class="string">`/edit-profile/</span><span class="template">${name}</span><span class="string">/</span><span class="template">${age}</span><span class="string">`</span>)}
+      <span class="tag">&gt;</span>
+        Edit Profile
+      <span class="tag">&lt;/button&gt;</span>
+      
+      <span class="tag">&lt;button</span>
+        <span class="attribute">style</span>={styles.button}
+        <span class="attribute">onClick</span>={() =&gt; navigate(-<span class="number">1</span>)} <span class="comment">// Go back in history</span>
+      <span class="tag">&gt;</span>
+        Go Back
+      <span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="comment">// Settings Page - Reading query parameters</span>
+<span class="keyword">function</span> <span class="function">SettingsPage</span>() {
+  <span class="comment">// Access query parameters using useSearchParams hook</span>
+  <span class="keyword">const</span> [searchParams, setSearchParams] = <span class="function">useSearchParams</span>();
+  
+  <span class="comment">// Get query parameter values with defaults</span>
+  <span class="keyword">const</span> theme = searchParams.<span class="function">get</span>(<span class="string">'theme'</span>) || <span class="string">'light'</span>;
+  <span class="keyword">const</span> notifications = searchParams.<span class="function">get</span>(<span class="string">'notifications'</span>) === <span class="string">'true'</span>;
+  <span class="keyword">const</span> navigate = <span class="function">useNavigate</span>();
+
+  <span class="comment">// Update query parameters</span>
+  <span class="keyword">const</span> <span class="function">updateTheme</span> = (newTheme) =&gt; {
+    <span class="function">setSearchParams</span>({ theme: newTheme, notifications: notifications.<span class="function">toString</span>() });
+  };
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.container}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h1</span> <span class="attribute">style</span>={styles.title}<span class="tag">&gt;</span>Settings<span class="tag">&lt;/h1&gt;</span>
+      
+      <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.infoCard}<span class="tag">&gt;</span>
+        <span class="tag">&lt;p&gt;</span><span class="tag">&lt;strong&gt;</span>Theme:<span class="tag">&lt;/strong&gt;</span> {theme}<span class="tag">&lt;/p&gt;</span>
+        <span class="tag">&lt;p&gt;</span><span class="tag">&lt;strong&gt;</span>Notifications:<span class="tag">&lt;/strong&gt;</span> {notifications ? <span class="string">'Enabled'</span> : <span class="string">'Disabled'</span>}<span class="tag">&lt;/p&gt;</span>
+        
+        <span class="tag">&lt;button</span>
+          <span class="attribute">style</span>={styles.button}
+          <span class="attribute">onClick</span>={() =&gt; <span class="function">updateTheme</span>(theme === <span class="string">'light'</span> ? <span class="string">'dark'</span> : <span class="string">'light'</span>)}
+        <span class="tag">&gt;</span>
+          Toggle Theme
+        <span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+      
+      <span class="tag">&lt;button</span>
+        <span class="attribute">style</span>={styles.button}
+        <span class="attribute">onClick</span>={() =&gt; navigate(<span class="string">'/'</span>)}
+      <span class="tag">&gt;</span>
+        Go Home
+      <span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="keyword">function</span> <span class="function">AboutPage</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.container}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h1</span> <span class="attribute">style</span>={styles.title}<span class="tag">&gt;</span>About<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;p&gt;</span>This is a simple about page.<span class="tag">&lt;/p&gt;</span>
+      <span class="tag">&lt;Link</span> <span class="attribute">to</span>=<span class="string">"/"</span> <span class="attribute">style</span>={styles.link}<span class="tag">&gt;</span>Go Home<span class="tag">&lt;/Link&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="keyword">export default function</span> <span class="function">App</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;BrowserRouter&gt;</span>
+      <span class="tag">&lt;Routes&gt;</span>
+        <span class="tag">&lt;Route</span> <span class="attribute">path</span>=<span class="string">"/"</span> <span class="attribute">element</span>={<span class="tag">&lt;HomePage /&gt;</span>} <span class="tag">/&gt;</span>
+        <span class="comment">{/* URL parameters with : syntax */}</span>
+        <span class="tag">&lt;Route</span> <span class="attribute">path</span>=<span class="string">"/profile/:name/:age"</span> <span class="attribute">element</span>={<span class="tag">&lt;ProfilePage /&gt;</span>} <span class="tag">/&gt;</span>
+        <span class="tag">&lt;Route</span> <span class="attribute">path</span>=<span class="string">"/settings"</span> <span class="attribute">element</span>={<span class="tag">&lt;SettingsPage /&gt;</span>} <span class="tag">/&gt;</span>
+        <span class="tag">&lt;Route</span> <span class="attribute">path</span>=<span class="string">"/about"</span> <span class="attribute">element</span>={<span class="tag">&lt;AboutPage /&gt;</span>} <span class="tag">/&gt;</span>
+      <span class="tag">&lt;/Routes&gt;</span>
+    <span class="tag">&lt;/BrowserRouter&gt;</span>
+  );
+}
+
+<span class="comment">// CSS-in-JS styles for web</span>
+<span class="keyword">const</span> styles = {
+  container: {
+    display: <span class="string">'flex'</span>,
+    flexDirection: <span class="string">'column'</span>,
+    alignItems: <span class="string">'center'</span>,
+    padding: <span class="string">'2rem'</span>,
+    backgroundColor: <span class="string">'#f5f5f5'</span>,
+    minHeight: <span class="string">'100vh'</span>,
+    fontFamily: <span class="string">'Arial, sans-serif'</span>
+  },
+  title: {
+    fontSize: <span class="string">'2rem'</span>,
+    fontWeight: <span class="string">'bold'</span>,
+    marginBottom: <span class="string">'1.5rem'</span>,
+    textAlign: <span class="string">'center'</span>,
+    color: <span class="string">'#333'</span>
+  },
+  input: {
+    border: <span class="string">'1px solid #ddd'</span>,
+    padding: <span class="string">'0.8rem'</span>,
+    marginBottom: <span class="string">'1rem'</span>,
+    borderRadius: <span class="string">'5px'</span>,
+    backgroundColor: <span class="string">'white'</span>,
+    fontSize: <span class="string">'1rem'</span>,
+    width: <span class="string">'300px'</span>
+  },
+  button: {
+    backgroundColor: <span class="string">'#222'</span>,
+    color: <span class="string">'white'</span>,
+    border: <span class="string">'none'</span>,
+    padding: <span class="string">'0.8rem 1.5rem'</span>,
+    borderRadius: <span class="string">'5px'</span>,
+    cursor: <span class="string">'pointer'</span>,
+    fontSize: <span class="string">'1rem'</span>,
+    margin: <span class="string">'0.5rem'</span>,
+    transition: <span class="string">'background-color 0.2s'</span>
+  },
+  link: {
+    display: <span class="string">'inline-block'</span>,
+    padding: <span class="string">'0.8rem 1.5rem'</span>,
+    backgroundColor: <span class="string">'#555'</span>,
+    color: <span class="string">'white'</span>,
+    textDecoration: <span class="string">'none'</span>,
+    borderRadius: <span class="string">'5px'</span>,
+    margin: <span class="string">'0.5rem'</span>,
+    transition: <span class="string">'background-color 0.2s'</span>
+  },
+  infoCard: {
+    backgroundColor: <span class="string">'white'</span>,
+    padding: <span class="string">'1.5rem'</span>,
+    borderRadius: <span class="string">'10px'</span>,
+    marginBottom: <span class="string">'1.5rem'</span>,
+    boxShadow: <span class="string">'0 2px 4px rgba(0,0,0,0.1)'</span>,
+    maxWidth: <span class="string">'400px'</span>
+  },
+  infoRow: {
+    marginBottom: <span class="string">'0.8rem'</span>,
+    fontSize: <span class="string">'1.1rem'</span>
+  }
+};
+            </div>
+
+            <div class="warning">
+                <strong>URL Parameter Best Practices:</strong><br>
+                • <strong>URL Params:</strong> Use for essential data that defines the page (IDs, slugs)<br>
+                • <strong>Query Params:</strong> Use for optional filters, settings, or search terms<br>
+                • <strong>State:</strong> Use for temporary data that shouldn't be in the URL<br>
+                • Keep URLs clean and readable – avoid overly long parameter strings<br>
+                • Never put sensitive data (passwords, tokens) in URLs<br>
+                • Use URL encoding for special characters in parameter values
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">22</div>
+            <h3>Programmatic Navigation and History Management</h3>
+            
+            <p>React Router provides several methods for programmatic navigation – navigating through code rather than user clicks. Understanding these methods is crucial for creating dynamic user experiences and handling navigation based on application logic.</p>
+
+            <div class="tip">
+                <strong>Navigation Methods Comparison:</strong><br>
+                • <code>navigate('/path')</code>: Navigate to a specific route (adds to history)<br>
+                • <code>navigate(-1)</code>: Go back one step in history (like browser back button)<br>
+                • <code>navigate(1)</code>: Go forward one step in history<br>
+                • <code>navigate('/path', { replace: true })</code>: Replace current entry in history<br>
+                • <code>navigate('/path', { state: data })</code>: Pass invisible state data<br>
+                • History manipulation for complex navigation flows
+            </div>
+
+            <div class="code-block">
+<span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;
+<span class="keyword">import</span> { 
+  BrowserRouter, 
+  Routes, 
+  Route, 
+  useNavigate, 
+  useLocation,
+  Link 
+} <span class="keyword">from</span> <span class="string">'react-router'</span>;
+
+<span class="comment">// Home Page - Demonstrating different navigation methods</span>
+<span class="keyword">function</span> <span class="function">HomePage</span>() {
+  <span class="keyword">const</span> navigate = <span class="function">useNavigate</span>();
+  <span class="keyword">const</span> location = <span class="function">useLocation</span>();
+  
+  <span class="comment">// Track visit count using location state</span>
+  <span class="keyword">const</span> visitCount = location.state?.visitCount || <span class="number">1</span>;
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.container}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h1</span> <span class="attribute">style</span>={styles.title}<span class="tag">&gt;</span>Navigation Methods Demo<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;p&gt;</span>Home page visits: {visitCount}<span class="tag">&lt;/p&gt;</span>
+      
+      <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.section}<span class="tag">&gt;</span>
+        <span class="tag">&lt;h3</span> <span class="attribute">style</span>={styles.sectionTitle}<span class="tag">&gt;</span>Basic Navigation<span class="tag">&lt;/h3&gt;</span>
+        
+        <span class="comment">{/* Standard navigation - adds to history */}</span>
+        <span class="tag">&lt;button</span>
+          <span class="attribute">style</span>={styles.button}
+          <span class="attribute">onClick</span>={() =&gt; navigate(<span class="string">'/details/123'</span>)}
+        <span class="tag">&gt;</span>
+          Navigate to Details (ID: 123)
+        <span class="tag">&lt;/button&gt;</span>
+        
+        <span class="comment">{/* Navigate with state (invisible data) */}</span>
+        <span class="tag">&lt;button</span>
+          <span class="attribute">style</span>={styles.button}
+          <span class="attribute">onClick</span>={() =&gt; navigate(<span class="string">'/details/456'</span>, {
+            state: { 
+              from: <span class="string">'home'</span>, 
+              timestamp: <span class="keyword">new</span> <span class="function">Date</span>().<span class="function">toISOString</span>(),
+              itemId: <span class="function">Math.random</span>()
+            }
+          })}
+        <span class="tag">&gt;</span>
+          Navigate with Hidden State
+        <span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+      
+      <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.section}<span class="tag">&gt;</span>
+        <span class="tag">&lt;h3</span> <span class="attribute">style</span>={styles.sectionTitle}<span class="tag">&gt;</span>Replace Navigation<span class="tag">&lt;/h3&gt;</span>
+        
+        <span class="comment">{/* replace: true - Replace current entry (can't go back) */}</span>
+        <span class="tag">&lt;button</span>
+          <span class="attribute">style</span>={styles.button}
+          <span class="attribute">onClick</span>={() =&gt; navigate(<span class="string">'/profile/user123'</span>, { replace: <span class="keyword">true</span> })}
+        <span class="tag">&gt;</span>
+          Replace with Profile (No Back)
+        <span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+      
+      <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.section}<span class="tag">&gt;</span>
+        <span class="tag">&lt;h3</span> <span class="attribute">style</span>={styles.sectionTitle}<span class="tag">&gt;</span>Advanced Navigation<span class="tag">&lt;/h3&gt;</span>
+        
+        <span class="comment">{/* Conditional navigation based on user state */}</span>
+        <span class="tag">&lt;button</span>
+          <span class="attribute">style</span>={styles.button}
+          <span class="attribute">onClick</span>={() =&gt; {
+            <span class="keyword">const</span> isLoggedIn = <span class="function">Math.random</span>() > <span class="number">0.5</span>; <span class="comment">// Simulate auth check</span>
+            <span class="keyword">if</span> (isLoggedIn) {
+              navigate(<span class="string">'/dashboard'</span>);
+            } <span class="keyword">else</span> {
+              navigate(<span class="string">'/login'</span>, { 
+                state: { redirectTo: <span class="string">'/dashboard'</span> } 
+              });
+            }
+          }}
+        <span class="tag">&gt;</span>
+          Go to Dashboard (Auth Required)
+        <span class="tag">&lt;/button&gt;</span>
+        
+        <span class="comment">{/* Navigate with confirmation */}</span>
+        <span class="tag">&lt;button</span>
+          <span class="attribute">style</span>={styles.button}
+          <span class="attribute">onClick</span>={() =&gt; {
+            <span class="keyword">if</span> (<span class="function">confirm</span>(<span class="string">'Are you sure you want to leave this page?'</span>)) {
+              navigate(<span class="string">'/external'</span>);
+            }
+          }}
+        <span class="tag">&gt;</span>
+          Navigate with Confirmation
+        <span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+      
+      <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.infoBox}<span class="tag">&gt;</span>
+        <span class="tag">&lt;p&gt;</span>Compare these navigation methods with the browser's Back and Forward buttons.<span class="tag">&lt;/p&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="comment">// Details Page - Demonstrating history manipulation</span>
+<span class="keyword">function</span> <span class="function">DetailsPage</span>() {
+  <span class="keyword">const</span> { id } = <span class="function">useParams</span>(); <span class="comment">// Get URL parameter</span>
+  <span class="keyword">const</span> navigate = <span class="function">useNavigate</span>();
+  <span class="keyword">const</span> location = <span class="function">useLocation</span>();
+  
+  <span class="comment">// Access any state passed during navigation</span>
+  <span class="keyword">const</span> stateData = location.state;
+  
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.container}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h1</span> <span class="attribute">style</span>={styles.title}<span class="tag">&gt;</span>Details Page<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;p</span> <span class="attribute">style</span>={styles.subtitle}<span class="tag">&gt;</span>Item ID: {id}<span class="tag">&lt;/p&gt;</span>
+      
+      {stateData && (
+        <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.infoCard}<span class="tag">&gt;</span>
+          <span class="tag">&lt;h3&gt;</span>Hidden State Data:<span class="tag">&lt;/h3&gt;</span>
+          <span class="tag">&lt;p&gt;</span><span class="tag">&lt;strong&gt;</span>From:<span class="tag">&lt;/strong&gt;</span> {stateData.from}<span class="tag">&lt;/p&gt;</span>
+          <span class="tag">&lt;p&gt;</span><span class="tag">&lt;strong&gt;</span>Timestamp:<span class="tag">&lt;/strong&gt;</span> {stateData.timestamp}<span class="tag">&lt;/p&gt;</span>
+          <span class="tag">&lt;p&gt;</span><span class="tag">&lt;strong&gt;</span>Random ID:<span class="tag">&lt;/strong&gt;</span> {stateData.itemId}<span class="tag">&lt;/p&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+      )}
+      
+      <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.section}<span class="tag">&gt;</span>
+        <span class="tag">&lt;h3</span> <span class="attribute">style</span>={styles.sectionTitle}<span class="tag">&gt;</span>Navigate to Other Pages<span class="tag">&lt;/h3&gt;</span>
+        
+        <span class="comment">{/* Navigate to another details page */}</span>
+        <span class="tag">&lt;button</span>
+          <span class="attribute">style</span>={styles.button}
+          <span class="attribute">onClick</span>={() =&gt; navigate(<span class="string">`/details/</span><span class="template">${Math.floor(Math.random() * 1000)}</span><span class="string">`</span>)}
+        <span class="tag">&gt;</span>
+          Go to Random Details
+        <span class="tag">&lt;/button&gt;</span>
+        
+        <span class="tag">&lt;button</span>
+          <span class="attribute">style</span>={styles.button}
+          <span class="attribute">onClick</span>={() =&gt; navigate(<span class="string">'/profile/user456'</span>)}
+        <span class="tag">&gt;</span>
+          Go to Profile
+        <span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+      
+      <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.section}<span class="tag">&gt;</span>
+        <span class="tag">&lt;h3</span> <span class="attribute">style</span>={styles.sectionTitle}<span class="tag">&gt;</span>History Navigation<span class="tag">&lt;/h3&gt;</span>
+        
+        <span class="comment">{/* Go back one step in browser history */}</span>
+        <span class="tag">&lt;button</span>
+          <span class="attribute">style</span>={styles.button}
+          <span class="attribute">onClick</span>={() =&gt; navigate(-<span class="number">1</span>)}
+        <span class="tag">&gt;</span>
+          Go Back (History -1)
+        <span class="tag">&lt;/button&gt;</span>
+        
+        <span class="comment">{/* Go forward one step (if there's forward history) */}</span>
+        <span class="tag">&lt;button</span>
+          <span class="attribute">style</span>={styles.button}
+          <span class="attribute">onClick</span>={() =&gt; navigate(<span class="number">1</span>)}
+        <span class="tag">&gt;</span>
+          Go Forward (History +1)
+        <span class="tag">&lt;/button&gt;</span>
+        
+        <span class="comment">{/* Go directly home (like "pop to top") */}</span>
+        <span class="tag">&lt;button</span>
+          <span class="attribute">style</span>={styles.button}
+          <span class="attribute">onClick</span>={() =&gt; navigate(<span class="string">'/'</span>)}
+        <span class="tag">&gt;</span>
+          Go Home (Direct)
+        <span class="tag">&lt;/button&gt;</span>
+        
+        <span class="comment">{/* Go back multiple steps in history */}</span>
+        <span class="tag">&lt;button</span>
+          <span class="attribute">style</span>={styles.button}
+          <span class="attribute">onClick</span>={() =&gt; navigate(-<span class="number">2</span>)}
+        <span class="tag">&gt;</span>
+          Go Back 2 Steps
+        <span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+      
+      <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.infoBox}<span class="tag">&gt;</span>
+        <span class="tag">&lt;p&gt;</span>Visit several pages, then compare browser history with the controls above.<span class="tag">&lt;/p&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="comment">// Profile Page</span>
+<span class="keyword">function</span> <span class="function">ProfilePage</span>() {
+  <span class="keyword">const</span> { userId } = <span class="function">useParams</span>();
+  <span class="keyword">const</span> navigate = <span class="function">useNavigate</span>();
+  
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.container}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h1</span> <span class="attribute">style</span>={styles.title}<span class="tag">&gt;</span>Profile Page<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;p</span> <span class="attribute">style</span>={styles.subtitle}<span class="tag">&gt;</span>User ID: {userId}<span class="tag">&lt;/p&gt;</span>
+      
+      <span class="tag">&lt;button</span>
+        <span class="attribute">style</span>={styles.button}
+        <span class="attribute">onClick</span>={() =&gt; navigate(-<span class="number">1</span>)}
+      <span class="tag">&gt;</span>
+        Go Back
+      <span class="tag">&lt;/button&gt;</span>
+      
+      <span class="tag">&lt;button</span>
+        <span class="attribute">style</span>={styles.button}
+        <span class="attribute">onClick</span>={() =&gt; navigate(<span class="string">'/'</span>)}
+      <span class="tag">&gt;</span>
+        Go Home
+      <span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="comment">// Login Page - For auth flow demonstration</span>
+<span class="keyword">function</span> <span class="function">LoginPage</span>() {
+  <span class="keyword">const</span> navigate = <span class="function">useNavigate</span>();
+  <span class="keyword">const</span> location = <span class="function">useLocation</span>();
+  
+  <span class="comment">// Get the redirect location if passed via state</span>
+  <span class="keyword">const</span> redirectTo = location.state?.redirectTo || <span class="string">'/'</span>;
+  
+  <span class="keyword">const</span> <span class="function">handleLogin</span> = () =&gt; {
+    <span class="comment">// Simulate login process</span>
+    <span class="function">setTimeout</span>(() =&gt; {
+      <span class="comment">// Use replace to prevent going back to login after auth</span>
+      navigate(redirectTo, { replace: <span class="keyword">true</span> });
+    }, <span class="number">1000</span>);
+  };
+  
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.container}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h1</span> <span class="attribute">style</span>={styles.title}<span class="tag">&gt;</span>Login Page<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;p</span> <span class="attribute">style</span>={styles.subtitle}<span class="tag">&gt;</span>Please log in to continue<span class="tag">&lt;/p&gt;</span>
+      <span class="tag">&lt;p&gt;</span>Will redirect to: {redirectTo}<span class="tag">&lt;/p&gt;</span>
+      
+      <span class="tag">&lt;button</span>
+        <span class="attribute">style</span>={styles.button}
+        <span class="attribute">onClick</span>={handleLogin}
+      <span class="tag">&gt;</span>
+        Login (Simulate)
+      <span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="comment">// Dashboard Page - Protected route example</span>
+<span class="keyword">function</span> <span class="function">DashboardPage</span>() {
+  <span class="keyword">const</span> navigate = <span class="function">useNavigate</span>();
+  
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.container}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h1</span> <span class="attribute">style</span>={styles.title}<span class="tag">&gt;</span>Dashboard<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;p&gt;</span>This is a protected dashboard route.<span class="tag">&lt;/p&gt;</span>
+      
+      <span class="tag">&lt;button</span>
+        <span class="attribute">style</span>={styles.button}
+        <span class="attribute">onClick</span>={() =&gt; navigate(<span class="string">'/'</span>)}
+      <span class="tag">&gt;</span>
+        Go Home
+      <span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="comment">// External Page - For confirmation demo</span>
+<span class="keyword">function</span> <span class="function">ExternalPage</span>() {
+  <span class="keyword">const</span> navigate = <span class="function">useNavigate</span>();
+  
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.container}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h1</span> <span class="attribute">style</span>={styles.title}<span class="tag">&gt;</span>External Page<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;p&gt;</span>Navigation to this page was confirmed.<span class="tag">&lt;/p&gt;</span>
+      
+      <span class="tag">&lt;button</span>
+        <span class="attribute">style</span>={styles.button}
+        <span class="attribute">onClick</span>={() =&gt; navigate(<span class="string">'/'</span>)}
+      <span class="tag">&gt;</span>
+        Go Home
+      <span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="keyword">export default function</span> <span class="function">App</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;BrowserRouter&gt;</span>
+      <span class="tag">&lt;Routes&gt;</span>
+        <span class="tag">&lt;Route</span> <span class="attribute">path</span>=<span class="string">"/"</span> <span class="attribute">element</span>={<span class="tag">&lt;HomePage /&gt;</span>} <span class="tag">/&gt;</span>
+        <span class="tag">&lt;Route</span> <span class="attribute">path</span>=<span class="string">"/details/:id"</span> <span class="attribute">element</span>={<span class="tag">&lt;DetailsPage /&gt;</span>} <span class="tag">/&gt;</span>
+        <span class="tag">&lt;Route</span> <span class="attribute">path</span>=<span class="string">"/profile/:userId"</span> <span class="attribute">element</span>={<span class="tag">&lt;ProfilePage /&gt;</span>} <span class="tag">/&gt;</span>
+        <span class="tag">&lt;Route</span> <span class="attribute">path</span>=<span class="string">"/login"</span> <span class="attribute">element</span>={<span class="tag">&lt;LoginPage /&gt;</span>} <span class="tag">/&gt;</span>
+        <span class="tag">&lt;Route</span> <span class="attribute">path</span>=<span class="string">"/dashboard"</span> <span class="attribute">element</span>={<span class="tag">&lt;DashboardPage /&gt;</span>} <span class="tag">/&gt;</span>
+        <span class="tag">&lt;Route</span> <span class="attribute">path</span>=<span class="string">"/external"</span> <span class="attribute">element</span>={<span class="tag">&lt;ExternalPage /&gt;</span>} <span class="tag">/&gt;</span>
+      <span class="tag">&lt;/Routes&gt;</span>
+    <span class="tag">&lt;/BrowserRouter&gt;</span>
+  );
+}
+
+<span class="comment">// CSS-in-JS styles for web navigation demo</span>
+<span class="keyword">const</span> styles = {
+  container: {
+    display: <span class="string">'flex'</span>,
+    flexDirection: <span class="string">'column'</span>,
+    alignItems: <span class="string">'center'</span>,
+    padding: <span class="string">'2rem'</span>,
+    backgroundColor: <span class="string">'#f5f5f5'</span>,
+    minHeight: <span class="string">'100vh'</span>,
+    fontFamily: <span class="string">'Arial, sans-serif'</span>
+  },
+  title: {
+    fontSize: <span class="string">'2rem'</span>,
+    fontWeight: <span class="string">'bold'</span>,
+    marginBottom: <span class="string">'1rem'</span>,
+    textAlign: <span class="string">'center'</span>,
+    color: <span class="string">'#333'</span>
+  },
+  subtitle: {
+    fontSize: <span class="string">'1.2rem'</span>,
+    color: <span class="string">'#666'</span>,
+    marginBottom: <span class="string">'1.5rem'</span>,
+    textAlign: <span class="string">'center'</span>
+  },
+  section: {
+    backgroundColor: <span class="string">'white'</span>,
+    padding: <span class="string">'1.5rem'</span>,
+    borderRadius: <span class="string">'10px'</span>,
+    marginBottom: <span class="string">'1.5rem'</span>,
+    boxShadow: <span class="string">'0 2px 4px rgba(0,0,0,0.1)'</span>,
+    width: <span class="string">'100%'</span>,
+    maxWidth: <span class="string">'600px'</span>
+  },
+  sectionTitle: {
+    fontSize: <span class="string">'1.3rem'</span>,
+    fontWeight: <span class="string">'600'</span>,
+    marginBottom: <span class="string">'1rem'</span>,
+    color: <span class="string">'#333'</span>
+  },
+  button: {
+    backgroundColor: <span class="string">'#222'</span>,
+    color: <span class="string">'white'</span>,
+    border: <span class="string">'none'</span>,
+    padding: <span class="string">'0.8rem 1.2rem'</span>,
+    borderRadius: <span class="string">'5px'</span>,
+    cursor: <span class="string">'pointer'</span>,
+    fontSize: <span class="string">'1rem'</span>,
+    margin: <span class="string">'0.3rem'</span>,
+    transition: <span class="string">'background-color 0.2s'</span>
+  },
+  infoBox: {
+    backgroundColor: <span class="string">'#eeeeee'</span>,
+    padding: <span class="string">'1rem'</span>,
+    borderRadius: <span class="string">'8px'</span>,
+    borderLeft: <span class="string">'4px solid #444'</span>,
+    marginTop: <span class="string">'1.5rem'</span>,
+    maxWidth: <span class="string">'600px'</span>
+  },
+  infoCard: {
+    backgroundColor: <span class="string">'white'</span>,
+    padding: <span class="string">'1.5rem'</span>,
+    borderRadius: <span class="string">'10px'</span>,
+    marginBottom: <span class="string">'1.5rem'</span>,
+    boxShadow: <span class="string">'0 2px 4px rgba(0,0,0,0.1)'</span>,
+    maxWidth: <span class="string">'400px'</span>
+  }
+};
+            </div>
+
+            <div class="warning">
+                <strong>When to Use Each Method:</strong><br>
+                • <code>navigate('/path')</code>: Standard navigation, adds to browser history<br>
+                • <code>navigate(-1)</code>: Browser back button equivalent (go back in history)<br>
+                • <code>navigate('/path', { replace: true })</code>: Login → Dashboard (prevent back to login)<br>
+                • <code>navigate('/path', { state: data })</code>: Pass data invisibly through navigation<br>
+                • <code>Link</code> component: Declarative navigation for user-initiated actions<br>
+                • History numbers: For complex back/forward navigation patterns
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">23</div>
+            <h3>Layout Patterns and Navigation Components</h3>
+            
+            <p>React Router works well with layout patterns for creating consistent navigation across your web application. Unlike mobile headers, web apps typically use navigation bars, sidebars, or breadcrumbs for user orientation and quick actions.</p>
+
+            <div class="code-block">
+<span class="keyword">import</span> React, { useState } <span class="keyword">from</span> <span class="string">'react'</span>;
+<span class="keyword">import</span> { 
+  BrowserRouter, 
+  Routes, 
+  Route, 
+  Link, 
+  Outlet,
+  useNavigate, 
+  useLocation,
+  useParams,
+  useSearchParams
+} <span class="keyword">from</span> <span class="string">'react-router'</span>;
+
+<span class="comment">// Layout Component - Persistent navigation across routes</span>
+<span class="keyword">function</span> <span class="function">Layout</span>() {
+  <span class="keyword">const</span> location = <span class="function">useLocation</span>();
+  <span class="keyword">const</span> navigate = <span class="function">useNavigate</span>();
+  <span class="keyword">const</span> [searchQuery, setSearchQuery] = <span class="function">useState</span>(<span class="string">''</span>);
+  
+  <span class="keyword">const</span> <span class="function">handleSearch</span> = (e) =&gt; {
+    e.<span class="function">preventDefault</span>();
+    <span class="keyword">if</span> (searchQuery.<span class="function">trim</span>()) {
+      navigate(<span class="string">`/search?q=</span><span class="template">${encodeURIComponent(searchQuery)}</span><span class="string">`</span>);
+    }
+  };
+  
+  <span class="comment">// Check if current path is active</span>
+  <span class="keyword">const</span> <span class="function">isActivePage</span> = (path) =&gt; {
+    <span class="keyword">if</span> (path === <span class="string">'/'</span>) <span class="keyword">return</span> location.pathname === <span class="string">'/'</span>;
+    <span class="keyword">return</span> location.pathname.<span class="function">startsWith</span>(path);
+  };
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.appContainer}<span class="tag">&gt;</span>
+      <span class="comment">{/* Navigation Header */}</span>
+      <span class="tag">&lt;header</span> <span class="attribute">style</span>={styles.header}<span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.headerContent}<span class="tag">&gt;</span>
+          <span class="tag">&lt;h1</span> <span class="attribute">style</span>={styles.logo}<span class="tag">&gt;</span>My App<span class="tag">&lt;/h1&gt;</span>
+          
+          <span class="comment">{/* Navigation Links */}</span>
+          <span class="tag">&lt;nav</span> <span class="attribute">style</span>={styles.nav}<span class="tag">&gt;</span>
+            <span class="tag">&lt;Link </span>
+              <span class="attribute">to</span>=<span class="string">"/"</span> 
+              <span class="attribute">style</span>={{\n                ...styles.navLink, \n                ...(isActivePage(<span class="string">'/'</span>) ? styles.activeNavLink : {})\n              }}
+            <span class="tag">&gt;</span>
+              Home
+            <span class="tag">&lt;/Link&gt;</span>
+            <span class="tag">&lt;Link </span>
+              <span class="attribute">to</span>=<span class="string">"/profile/john-doe"</span> 
+              <span class="attribute">style</span>={{\n                ...styles.navLink,\n                ...(isActivePage(<span class="string">'/profile'</span>) ? styles.activeNavLink : {})\n              }}
+            <span class="tag">&gt;</span>
+              Profile
+            <span class="tag">&lt;/Link&gt;</span>
+            <span class="tag">&lt;Link </span>
+              <span class="attribute">to</span>=<span class="string">"/settings"</span> 
+              <span class="attribute">style</span>={{\n                ...styles.navLink,\n                ...(isActivePage(<span class="string">'/settings'</span>) ? styles.activeNavLink : {})\n              }}
+            <span class="tag">&gt;</span>
+              Settings
+            <span class="tag">&lt;/Link&gt;</span>
+            <span class="tag">&lt;Link </span>
+              <span class="attribute">to</span>=<span class="string">"/details"</span> 
+              <span class="attribute">style</span>={{\n                ...styles.navLink,\n                ...(isActivePage(<span class="string">'/details'</span>) ? styles.activeNavLink : {})\n              }}
+            <span class="tag">&gt;</span>
+              Details
+            <span class="tag">&lt;/Link&gt;</span>
+          <span class="tag">&lt;/nav&gt;</span>
+          
+          <span class="comment">{/* Search Form */}</span>
+          <span class="tag">&lt;form</span> <span class="attribute">onSubmit</span>={handleSearch} <span class="attribute">style</span>={styles.searchForm}<span class="tag">&gt;</span>
+            <span class="tag">&lt;input</span>
+              <span class="attribute">type</span>=<span class="string">"text"</span>
+              <span class="attribute">placeholder</span>=<span class="string">"Search..."</span>
+              <span class="attribute">value</span>={searchQuery}
+              <span class="attribute">onChange</span>={(e) =&gt; setSearchQuery(e.target.value)}
+              <span class="attribute">style</span>={styles.searchInput}
+            <span class="tag">/&gt;</span>
+            <span class="tag">&lt;button</span> <span class="attribute">type</span>=<span class="string">"submit"</span> <span class="attribute">style</span>={styles.searchButton}<span class="tag">&gt;</span>
+              Search
+            <span class="tag">&lt;/button&gt;</span>
+          <span class="tag">&lt;/form&gt;</span>
+          
+          <span class="comment">{/* Settings Button */}</span>
+          <span class="tag">&lt;button</span>
+            <span class="attribute">onClick</span>={() =&gt; alert(<span class="string">'Settings clicked'</span>)}
+            <span class="attribute">style</span>={styles.settingsButton}
+          <span class="tag">&gt;</span>
+            Settings
+          <span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+      <span class="tag">&lt;/header&gt;</span>
+      
+      <span class="comment">{/* Main Content Area */}</span>
+      <span class="tag">&lt;main</span> <span class="attribute">style</span>={styles.main}<span class="tag">&gt;</span>
+        <span class="tag">&lt;Outlet /&gt;</span> <span class="comment">{/* Child routes render here */}</span>
+      <span class="tag">&lt;/main&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="comment">// Home Page Component</span>
+<span class="keyword">function</span> <span class="function">HomePage</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.pageContainer}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h1&gt;</span>Layout Customization Demo<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;p&gt;</span>This demo shows different layout patterns for web navigation.<span class="tag">&lt;/p&gt;</span>
+      
+      <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.linkGrid}<span class="tag">&gt;</span>
+        <span class="tag">&lt;Link</span> <span class="attribute">to</span>=<span class="string">"/profile/john-doe"</span> <span class="attribute">style</span>={styles.demoLink}<span class="tag">&gt;</span>
+          Profile (Dynamic Title)
+        <span class="tag">&lt;/Link&gt;</span>
+        
+        <span class="tag">&lt;Link</span> <span class="attribute">to</span>=<span class="string">"/settings"</span> <span class="attribute">style</span>={styles.demoLink}<span class="tag">&gt;</span>
+          Settings (Minimal Layout)
+        <span class="tag">&lt;/Link&gt;</span>
+        
+        <span class="tag">&lt;Link</span> <span class="attribute">to</span>=<span class="string">"/details"</span> <span class="attribute">style</span>={styles.demoLink}<span class="tag">&gt;</span>
+          Details (Special Styling)
+        <span class="tag">&lt;/Link&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="comment">// Profile Page with dynamic title</span>
+<span class="keyword">function</span> <span class="function">ProfilePage</span>() {
+  <span class="keyword">const</span> { userName } = <span class="function">useParams</span>();
+  <span class="keyword">const</span> [likes, setLikes] = <span class="function">useState</span>(<span class="number">0</span>);
+  <span class="keyword">const</span> navigate = <span class="function">useNavigate</span>();
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.pageContainer}<span class="tag">&gt;</span>
+      <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.profileHeader}<span class="tag">&gt;</span>
+        <span class="tag">&lt;h1</span> <span class="attribute">style</span>={styles.profileTitle}<span class="tag">&gt;</span>{userName}'s Profile<span class="tag">&lt;/h1&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.profileActions}<span class="tag">&gt;</span>
+          <span class="tag">&lt;button</span>
+            <span class="attribute">onClick</span>={() =&gt; setLikes(likes + <span class="number">1</span>)}
+            <span class="attribute">style</span>={styles.likeButton}
+          <span class="tag">&gt;</span>
+            {likes} Likes
+          <span class="tag">&lt;/button&gt;</span>
+          <span class="tag">&lt;button</span>
+            <span class="attribute">onClick</span>={() =&gt; navigate(-<span class="number">1</span>)}
+            <span class="attribute">style</span>={styles.backButton}
+          <span class="tag">&gt;</span>
+            ← Back
+          <span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+      
+      <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.profileContent}<span class="tag">&gt;</span>
+        <span class="tag">&lt;p&gt;</span>This profile page demonstrates dynamic content in the header area.<span class="tag">&lt;/p&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.infoBox}<span class="tag">&gt;</span>
+          <span class="tag">&lt;p&gt;</span>The page title and actions belong to this layout rather than a separate header.<span class="tag">&lt;/p&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="comment">// Settings Page - Minimal layout (no navigation header)</span>
+<span class="keyword">function</span> <span class="function">SettingsPage</span>() {
+  <span class="keyword">const</span> navigate = <span class="function">useNavigate</span>();
+  
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.minimalContainer}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h1</span> <span class="attribute">style</span>={styles.title}<span class="tag">&gt;</span>Settings<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;p</span> <span class="attribute">style</span>={styles.subtitle}<span class="tag">&gt;</span>This page uses a minimal layout without the main navigation header.<span class="tag">&lt;/p&gt;</span>
+      
+      <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.settingsContent}<span class="tag">&gt;</span>
+        <span class="tag">&lt;label</span> <span class="attribute">style</span>={styles.settingItem}<span class="tag">&gt;</span>
+          <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="string">"checkbox"</span> <span class="tag">/&gt;</span> Enable notifications
+        <span class="tag">&lt;/label&gt;</span>
+        <span class="tag">&lt;label</span> <span class="attribute">style</span>={styles.settingItem}<span class="tag">&gt;</span>
+          <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="string">"checkbox"</span> <span class="tag">/&gt;</span> Dark mode
+        <span class="tag">&lt;/label&gt;</span>
+        <span class="tag">&lt;label</span> <span class="attribute">style</span>={styles.settingItem}<span class="tag">&gt;</span>
+          <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="string">"checkbox"</span> <span class="tag">/&gt;</span> Auto-save
+        <span class="tag">&lt;/label&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+      
+      <span class="tag">&lt;button</span>
+        <span class="attribute">onClick</span>={() =&gt; navigate(-<span class="number">1</span>)}
+        <span class="attribute">style</span>={styles.backButton}
+      <span class="tag">&gt;</span>
+        Go Back
+      <span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="comment">// Details Page - Special background styling</span>
+<span class="keyword">function</span> <span class="function">DetailsPage</span>() {
+  <span class="keyword">const</span> navigate = <span class="function">useNavigate</span>();
+  
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.specialContainer}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h1</span> <span class="attribute">style</span>={styles.specialTitle}<span class="tag">&gt;</span>Details<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;p</span> <span class="attribute">style</span>={styles.specialSubtitle}<span class="tag">&gt;</span>
+        This page demonstrates custom styling that works with the layout.
+      <span class="tag">&lt;/p&gt;</span>
+      
+      <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.detailsContent}<span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.featureCard}<span class="tag">&gt;</span>
+          <span class="tag">&lt;h3&gt;</span>Custom styling<span class="tag">&lt;/h3&gt;</span>
+          <span class="tag">&lt;p&gt;</span>Pages can have unique backgrounds and styling while maintaining consistent navigation.<span class="tag">&lt;/p&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+        
+        <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.featureCard}<span class="tag">&gt;</span>
+          <span class="tag">&lt;h3&gt;</span>Responsive design<span class="tag">&lt;/h3&gt;</span>
+          <span class="tag">&lt;p&gt;</span>Web layouts automatically adapt to different screen sizes.<span class="tag">&lt;/p&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+      
+      <span class="tag">&lt;button</span>
+        <span class="attribute">onClick</span>={() =&gt; navigate(-<span class="number">1</span>)}
+        <span class="attribute">style</span>={styles.specialBackButton}
+      <span class="tag">&gt;</span>
+        Go Back
+      <span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="comment">// Search Results Page</span>
+<span class="keyword">function</span> <span class="function">SearchPage</span>() {
+  <span class="keyword">const</span> [searchParams] = <span class="function">useSearchParams</span>();
+  <span class="keyword">const</span> query = searchParams.<span class="function">get</span>(<span class="string">'q'</span>);
+  
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>={styles.pageContainer}<span class="tag">&gt;</span>
+      <span class="tag">&lt;h1&gt;</span>Search Results<span class="tag">&lt;/h1&gt;</span>
+      <span class="tag">&lt;p&gt;</span>Searching for: "{query}"<span class="tag">&lt;/p&gt;</span>
+      <span class="tag">&lt;p&gt;</span>Search results would appear here...<span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="keyword">export default function</span> <span class="function">App</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;BrowserRouter&gt;</span>
+      <span class="tag">&lt;Routes&gt;</span>
+        <span class="comment">{/* Routes with shared layout */}</span>
+        <span class="tag">&lt;Route</span> <span class="attribute">path</span>=<span class="string">"/"</span> <span class="attribute">element</span>={<span class="tag">&lt;Layout /&gt;</span>}<span class="tag">&gt;</span>
+          <span class="comment">{/* Home page with main navigation */}</span>
+          <span class="tag">&lt;Route</span> <span class="attribute">index</span> <span class="attribute">element</span>={<span class="tag">&lt;HomePage /&gt;</span>} <span class="tag">/&gt;</span>
+          
+          <span class="comment">{/* Profile with dynamic title from URL params */}</span>
+          <span class="tag">&lt;Route</span> <span class="attribute">path</span>=<span class="string">"profile/:userName"</span> <span class="attribute">element</span>={<span class="tag">&lt;ProfilePage /&gt;</span>} <span class="tag">/&gt;</span>
+          
+          <span class="comment">{/* Details with special styling */}</span>
+          <span class="tag">&lt;Route</span> <span class="attribute">path</span>=<span class="string">"details"</span> <span class="attribute">element</span>={<span class="tag">&lt;DetailsPage /&gt;</span>} <span class="tag">/&gt;</span>
+          
+          <span class="comment">{/* Search results */}</span>
+          <span class="tag">&lt;Route</span> <span class="attribute">path</span>=<span class="string">"search"</span> <span class="attribute">element</span>={<span class="tag">&lt;SearchPage /&gt;</span>} <span class="tag">/&gt;</span>
+        <span class="tag">&lt;/Route&gt;</span>
+        
+        <span class="comment">{/* Settings route without shared layout (minimal design) */}</span>
+        <span class="tag">&lt;Route</span> <span class="attribute">path</span>=<span class="string">"settings"</span> <span class="attribute">element</span>={<span class="tag">&lt;SettingsPage /&gt;</span>} <span class="tag">/&gt;</span>
+      <span class="tag">&lt;/Routes&gt;</span>
+    <span class="tag">&lt;/BrowserRouter&gt;</span>
+  );
+}
+
+<span class="comment">// Complete CSS-in-JS styles for layout demo</span>
+<span class="keyword">const</span> styles = {
+  <span class="comment">// App-level styles</span>
+  appContainer: {
+    minHeight: <span class="string">'100vh'</span>,
+    fontFamily: <span class="string">'Arial, sans-serif'</span>,
+    display: <span class="string">'flex'</span>,
+    flexDirection: <span class="string">'column'</span>
+  },
+  header: {
+    backgroundColor: <span class="string">'#333'</span>,
+    color: <span class="string">'white'</span>,
+    boxShadow: <span class="string">'0 2px 4px rgba(0,0,0,0.1)'</span>
+  },
+  headerContent: {
+    display: <span class="string">'flex'</span>,
+    alignItems: <span class="string">'center'</span>,
+    justifyContent: <span class="string">'space-between'</span>,
+    maxWidth: <span class="string">'1200px'</span>,
+    margin: <span class="string">'0 auto'</span>,
+    padding: <span class="string">'1rem 2rem'</span>
+  },
+  logo: {
+    margin: <span class="string">'0'</span>,
+    fontSize: <span class="string">'1.5rem'</span>
+  },
+  nav: {
+    display: <span class="string">'flex'</span>,
+    gap: <span class="string">'1.5rem'</span>
+  },
+  navLink: {
+    color: <span class="string">'white'</span>,
+    textDecoration: <span class="string">'none'</span>,
+    padding: <span class="string">'0.5rem 1rem'</span>,
+    borderRadius: <span class="string">'4px'</span>,
+    transition: <span class="string">'background-color 0.2s'</span>
+  },
+  activeNavLink: {
+    backgroundColor: <span class="string">'rgba(255, 255, 255, 0.2)'</span>,
+    fontWeight: <span class="string">'bold'</span>
+  },
+  searchForm: {
+    display: <span class="string">'flex'</span>,
+    gap: <span class="string">'0.5rem'</span>
+  },
+  searchInput: {
+    padding: <span class="string">'0.5rem'</span>,
+    borderRadius: <span class="string">'4px'</span>,
+    border: <span class="string">'none'</span>,
+    fontSize: <span class="string">'1rem'</span>
+  },
+  searchButton: {
+    padding: <span class="string">'0.5rem 1rem'</span>,
+    backgroundColor: <span class="string">'white'</span>,
+    border: <span class="string">'none'</span>,
+    borderRadius: <span class="string">'4px'</span>,
+    cursor: <span class="string">'pointer'</span>
+  },
+  settingsButton: {
+    backgroundColor: <span class="string">'transparent'</span>,
+    border: <span class="string">'none'</span>,
+    color: <span class="string">'white'</span>,
+    fontSize: <span class="string">'1.2rem'</span>,
+    cursor: <span class="string">'pointer'</span>,
+    padding: <span class="string">'0.5rem'</span>,
+    borderRadius: <span class="string">'4px'</span>
+  },
+  main: {
+    flex: <span class="string">'1'</span>,
+    maxWidth: <span class="string">'1200px'</span>,
+    margin: <span class="string">'0 auto'</span>,
+    padding: <span class="string">'2rem'</span>,
+    width: <span class="string">'100%'</span>
+  },
+  
+  <span class="comment">// Page-level styles</span>
+  pageContainer: {
+    padding: <span class="string">'1rem'</span>
+  },
+  title: {
+    fontSize: <span class="string">'2rem'</span>,
+    fontWeight: <span class="string">'bold'</span>,
+    marginBottom: <span class="string">'1rem'</span>,
+    textAlign: <span class="string">'center'</span>
+  },
+  subtitle: {
+    fontSize: <span class="string">'1.2rem'</span>,
+    color: <span class="string">'#666'</span>,
+    marginBottom: <span class="string">'1.5rem'</span>,
+    textAlign: <span class="string">'center'</span>
+  },
+  linkGrid: {
+    display: <span class="string">'grid'</span>,
+    gridTemplateColumns: <span class="string">'repeat(auto-fit, minmax(200px, 1fr))'</span>,
+    gap: <span class="string">'1rem'</span>,
+    marginTop: <span class="string">'2rem'</span>
+  },
+  demoLink: {
+    display: <span class="string">'block'</span>,
+    padding: <span class="string">'1.5rem'</span>,
+    backgroundColor: <span class="string">'white'</span>,
+    borderRadius: <span class="string">'8px'</span>,
+    textDecoration: <span class="string">'none'</span>,
+    color: <span class="string">'#333'</span>,
+    boxShadow: <span class="string">'0 2px 4px rgba(0,0,0,0.1)'</span>,
+    textAlign: <span class="string">'center'</span>,
+    transition: <span class="string">'transform 0.2s'</span>
+  },
+  
+  <span class="comment">// Profile page styles</span>
+  profileHeader: {
+    display: <span class="string">'flex'</span>,
+    justifyContent: <span class="string">'space-between'</span>,
+    alignItems: <span class="string">'center'</span>,
+    marginBottom: <span class="string">'2rem'</span>,
+    flexWrap: <span class="string">'wrap'</span>,
+    gap: <span class="string">'1rem'</span>
+  },
+  profileTitle: {
+    margin: <span class="string">'0'</span>,
+    color: <span class="string">'#222'</span>
+  },
+  profileActions: {
+    display: <span class="string">'flex'</span>,
+    gap: <span class="string">'1rem'</span>
+  },
+  likeButton: {
+    backgroundColor: <span class="string">'#222'</span>,
+    color: <span class="string">'white'</span>,
+    border: <span class="string">'none'</span>,
+    padding: <span class="string">'0.8rem 1.2rem'</span>,
+    borderRadius: <span class="string">'4px'</span>,
+    cursor: <span class="string">'pointer'</span>
+  },
+  profileContent: {
+    backgroundColor: <span class="string">'white'</span>,
+    padding: <span class="string">'2rem'</span>,
+    borderRadius: <span class="string">'8px'</span>,
+    boxShadow: <span class="string">'0 2px 4px rgba(0,0,0,0.1)'</span>
+  },
+  
+  <span class="comment">// Settings page styles (minimal)</span>
+  minimalContainer: {
+    minHeight: <span class="string">'100vh'</span>,
+    padding: <span class="string">'2rem'</span>,
+    backgroundColor: <span class="string">'#f9f9f9'</span>,
+    fontFamily: <span class="string">'Arial, sans-serif'</span>
+  },
+  settingsContent: {
+    backgroundColor: <span class="string">'white'</span>,
+    padding: <span class="string">'2rem'</span>,
+    borderRadius: <span class="string">'8px'</span>,
+    marginBottom: <span class="string">'2rem'</span>,
+    boxShadow: <span class="string">'0 2px 4px rgba(0,0,0,0.1)'</span>
+  },
+  settingItem: {
+    display: <span class="string">'block'</span>,
+    marginBottom: <span class="string">'1rem'</span>,
+    fontSize: <span class="string">'1.1rem'</span>
+  },
+  
+  <span class="comment">// Details page styles (special)</span>
+  specialContainer: {
+    minHeight: <span class="string">'80vh'</span>,
+    background: <span class="string">'linear-gradient(135deg, #222, #555)'</span>,
+    padding: <span class="string">'2rem'</span>,
+    borderRadius: <span class="string">'12px'</span>,
+    margin: <span class="string">'1rem'</span>,
+    color: <span class="string">'white'</span>
+  },
+  specialTitle: {
+    color: <span class="string">'white'</span>,
+    fontSize: <span class="string">'2.5rem'</span>,
+    marginBottom: <span class="string">'1rem'</span>,
+    textAlign: <span class="string">'center'</span>
+  },
+  specialSubtitle: {
+    color: <span class="string">'rgba(255, 255, 255, 0.9)'</span>,
+    fontSize: <span class="string">'1.2rem'</span>,
+    textAlign: <span class="string">'center'</span>,
+    marginBottom: <span class="string">'2rem'</span>
+  },
+  detailsContent: {
+    display: <span class="string">'grid'</span>,
+    gridTemplateColumns: <span class="string">'repeat(auto-fit, minmax(250px, 1fr))'</span>,
+    gap: <span class="string">'1.5rem'</span>,
+    marginBottom: <span class="string">'2rem'</span>
+  },
+  featureCard: {
+    backgroundColor: <span class="string">'rgba(255, 255, 255, 0.1)'</span>,
+    padding: <span class="string">'1.5rem'</span>,
+    borderRadius: <span class="string">'8px'</span>,
+    backdropFilter: <span class="string">'blur(10px)'</span>
+  },
+  
+  <span class="comment">// Common button styles</span>
+  backButton: {
+    backgroundColor: <span class="string">'#222'</span>,
+    color: <span class="string">'white'</span>,
+    border: <span class="string">'none'</span>,
+    padding: <span class="string">'0.8rem 1.2rem'</span>,
+    borderRadius: <span class="string">'4px'</span>,
+    cursor: <span class="string">'pointer'</span>,
+    fontSize: <span class="string">'1rem'</span>
+  },
+  specialBackButton: {
+    backgroundColor: <span class="string">'rgba(255, 255, 255, 0.2)'</span>,
+    color: <span class="string">'white'</span>,
+    border: <span class="string">'2px solid white'</span>,
+    padding: <span class="string">'0.8rem 1.5rem'</span>,
+    borderRadius: <span class="string">'25px'</span>,
+    cursor: <span class="string">'pointer'</span>,
+    fontSize: <span class="string">'1rem'</span>,
+    backdropFilter: <span class="string">'blur(10px)'</span>
+  },
+  
+  <span class="comment">// Utility styles</span>
+  infoBox: {
+    backgroundColor: <span class="string">'#eeeeee'</span>,
+    padding: <span class="string">'1rem'</span>,
+    borderRadius: <span class="string">'8px'</span>,
+    borderLeft: <span class="string">'4px solid #444'</span>,
+    marginTop: <span class="string">'1.5rem'</span>
+  }
+};
+            </div>
+
+            <div class="tip">
+                <strong>Web Navigation Layout Options:</strong><br>
+                • <code>Layout</code> component: Shared navigation structure across routes<br>
+                • <code>Outlet</code>: Where nested route content renders<br>
+                • <code>useLocation</code>: Access current route for active link styling<br>
+                • <code>Link</code> component: Declarative navigation with active states<br>
+                • Nested routes: Organize routes hierarchically<br>
+                • Route-specific layouts: Different layouts for different sections<br>
+                • CSS-in-JS styling: Dynamic styles based on route state<br>
+                • Responsive design: Layouts that adapt to screen sizes<br>
+                • Search integration: URL-based search with query parameters
+            </div>
+
+            <div class="warning">
+                <strong>Best Practices for Web Navigation Layout:</strong><br>
+                • Keep navigation consistent across all pages<br>
+                • Use visual indicators for active/current page<br>
+                • Implement responsive design for mobile devices<br>
+                • Use breadcrumbs for deep navigation hierarchies<br>
+                • Follow web accessibility guidelines (ARIA labels, keyboard navigation)<br>
+                • Consider SEO implications of your routing structure<br>
+                • Test navigation on different screen sizes and devices<br>
+                • Use semantic HTML for better accessibility
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">24</div>
+            <h3>Review and next routing topics</h3>
+            
+            <p>The examples used React Router's Declarative Mode: a browser router, route elements, URL parameters, links, navigation Hooks, and nested layouts. This is enough for straightforward client-rendered applications.</p>
+
+            <div class="tip">
+                <strong>Review:</strong>
+                <ul>
+                    <li><code>BrowserRouter</code> synchronizes the app with browser history.</li>
+                    <li><code>Routes</code> and <code>Route</code> map URL patterns to elements.</li>
+                    <li><code>Link</code> and <code>NavLink</code> handle accessible internal navigation.</li>
+                    <li><code>useParams</code> reads path segments; <code>useSearchParams</code> reads and updates the query string.</li>
+                    <li><code>useNavigate</code> is for navigation caused by application logic.</li>
+                    <li>Nested routes and <code>Outlet</code> create shared layouts.</li>
+                </ul>
+            </div>
+
+            <div class="warning">
+                For route loaders, actions, pending UI, error boundaries, and server rendering, continue with React Router's Data or Framework Mode. These modes coordinate data with navigation more effectively than fetching route data in component Effects.
+            </div>
+        </div>
+
+        <h2 id="next-steps">Where to go next</h2>
+        
+        <div class="step">
+            <div class="step-number">25</div>
+            <h3>Extend the project</h3>
+            <p>Apply the concepts to one feature before adding another abstraction. Profile first when working on performance, and choose route data APIs when data belongs to a URL.</p>
+            <ul>
+                <li><strong>useRef:</strong> Retain a mutable value without rendering or access a DOM node React renders.</li>
+                <li><strong>useEffectEvent:</strong> Separate non-reactive event logic from an Effect while reading the latest props and state.</li>
+                <li><strong>Actions:</strong> Study React 19 form actions, <code>useActionState</code>, and <code>useOptimistic</code> for mutations and optimistic UI.</li>
+                <li><strong>React Router data APIs:</strong> Move route loading and mutations into loaders and actions.</li>
+                <li><strong>Testing:</strong> Use Vitest and React Testing Library to test behavior through the rendered interface.</li>
+                <li><strong>React Compiler:</strong> Evaluate compiler-driven memoization before adding broad manual <code>useMemo</code>, <code>useCallback</code>, and <code>memo</code> usage.</li>
+            </ul>
+            
+            <div class="tip">
+                <strong>References</strong>
+                <br>React Hooks: <a href="https://react.dev/reference/react/hooks" target="_blank">react.dev/reference/react/hooks</a>
+                <br>React Router: <a href="https://reactrouter.com/" target="_blank">reactrouter.com</a>
+                <br>React Compiler: <a href="https://react.dev/learn/react-compiler" target="_blank">react.dev/learn/react-compiler</a>
+            </div>
+        </div>
+
+        <div class="warning">
+            Use updater functions when state depends on previous state. Treat Effects as synchronization, return cleanup when setup must be undone, keep Context narrowly scoped, and add memoization in response to measured work or a concrete identity requirement.
+        </div>
+
+        <nav class="course-pager" aria-label="Previous and next page">
+            <a href="react-tutorial.html" class="course-pager__prev"><span>← Previous</span>React with Vite – Components, props, state, events</a>
+        </nav>
+    </div>
+
+    <script>
+        // Add a copy button to every code example
+        async function copyText(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.setAttribute('readonly', '');
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-9999px';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            textArea.setSelectionRange(0, text.length);
+            const copied = document.execCommand('copy');
+            textArea.remove();
+
+            if (copied) {
+                return true;
+            }
+
+            if (navigator.clipboard && window.isSecureContext) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    return true;
+                } catch {
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        document.querySelectorAll('.code-block').forEach(block => {
+            const code = block.textContent.trim();
+            const language = block.dataset.language || 'code';
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'copy-button';
+            button.textContent = 'Copy';
+            button.setAttribute('aria-label', `Copy ${language} example`);
+            button.setAttribute('aria-live', 'polite');
+
+            button.addEventListener('click', async () => {
+                try {
+                    const copied = await copyText(code);
+                    if (!copied) {
+                        throw new Error('Copy command failed');
+                    }
+
+                    button.textContent = 'Copied';
+                    button.setAttribute('aria-label', `Copied ${language} example`);
+                } catch {
+                    button.textContent = 'Copy failed';
+                    button.setAttribute('aria-label', `Could not copy ${language} example`);
+                }
+
+                window.setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.setAttribute('aria-label', `Copy ${language} example`);
+                }, 4000);
+            });
+
+            block.appendChild(button);
+        });
+
+        // Progress tracking
+        let progress = 0;
+        const steps = document.querySelectorAll('.step');
+        const totalSteps = steps.length;
+
+        function updateProgress() {
+            const progressBar = document.getElementById('progressBar');
+
+            steps.forEach((step, index) => {
+                const rect = step.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    progress = Math.max(progress, ((index + 1) / totalSteps) * 100);
+                }
+            });
+
+            progressBar.style.width = `${progress}%`;
+        }
+
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        updateProgress();
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

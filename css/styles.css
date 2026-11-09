@@ -273,6 +273,36 @@ li {
     padding-left: 0.15rem;
 }
 
+.exercise-set {
+    margin: 36px 0 8px;
+    padding: 28px 30px;
+    background: #f5f5f3;
+    border: 1px solid var(--line);
+    overflow-wrap: anywhere;
+}
+
+.exercise-set > h3 {
+    margin-bottom: 8px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.65rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+}
+
+.exercise-set article {
+    padding: 22px 0 4px;
+    border-top: 1px solid var(--line);
+}
+
+.exercise-set article h4 {
+    margin-top: 0;
+}
+
+.exercise-set code {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
 .nav-links {
     display: flex;
     flex-wrap: wrap;
@@ -326,6 +356,10 @@ li {
 
     .step {
         padding-left: 40px;
+    }
+
+    .exercise-set {
+        padding: 22px 20px;
     }
 
     .term-list div {

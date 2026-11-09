@@ -4,20 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Helper Guide - Web Development</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/helper.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/helper.css">
+    <link rel="stylesheet" href="../css/course-nav.css">
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="nav-container">
-                <div class="logo">
-                    <h2>📚 Student Helper</h2>
-                </div>
-                <div class="close-helper" onclick="window.close()">✕</div>
-            </div>
-        </nav>
-    </header>
+    <nav class="course-nav course-nav--page" aria-label="Course navigation">
+        <a href="../index.html" class="course-nav__home">← Contents</a>
+        <span class="course-nav__year">Year 3</span>
+        <a href="helper.html" class="active" aria-current="page" title="Advanced web intro – Portfolio with HTML, CSS and JavaScript">Advanced web intro</a>
+        <a href="react-tutorial.html" title="React with Vite – Components, props, state, events">React with Vite</a>
+        <a href="react-tutorial-step-2.html" title="React Hooks &amp; Routing">React Hooks &amp; Routing</a>
+    </nav>
 
     <main>
         <section class="helper-hero">
@@ -674,6 +672,11 @@
                 </div>
             </div>
         </section>
+        <div class="container">
+            <nav class="course-pager" aria-label="Previous and next page">
+                <a href="react-tutorial.html" class="course-pager__next"><span>Next →</span>React with Vite – Components, props, state, events</a>
+            </nav>
+        </div>
     </main>
 
     <footer>
@@ -682,6 +685,6 @@
         </div>
     </footer>
 
-    <script src="js/script.js"></script>
+    <script src="../js/script.js"></script>
 </body>
 </html>

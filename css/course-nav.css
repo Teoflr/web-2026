@@ -1,0 +1,128 @@
+/* Shared course navigation (top bar + previous/next pager) */
+.course-nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.3rem;
+    margin: 0 0 1.5rem;
+    padding: 0.55rem 0.75rem;
+    background: rgba(246, 248, 250, 0.96);
+    border: 1px solid #d0d7de;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(36, 41, 46, 0.06);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.92rem;
+    line-height: 1.4;
+}
+
+.course-nav a {
+    color: #0366d6;
+    font-weight: 600;
+    padding: 0.35rem 0.65rem;
+    border-radius: 8px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.course-nav a:hover {
+    background: rgba(3, 102, 214, 0.1);
+    text-decoration: none;
+}
+
+.course-nav a.active {
+    background: #0366d6;
+    color: #fff;
+}
+
+.course-nav .course-nav__home {
+    color: #24292e;
+}
+
+.course-nav .course-nav__home.active {
+    background: #24292e;
+    color: #fff;
+}
+
+.course-nav__year {
+    margin: 0 0.25rem 0 0.35rem;
+    padding: 0.2rem 0.6rem 0.2rem 0.9rem;
+    border-left: 1px solid #d0d7de;
+    color: #6a737d;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* Variant for pages whose body has no outer margin */
+.course-nav--page {
+    width: min(1160px, calc(100% - 40px));
+    margin: 16px auto;
+}
+
+.course-nav--page + main {
+    margin-top: 0;
+}
+
+.course-pager {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 2.5rem 0 0;
+    padding: 1.25rem 0 0;
+    background: none;
+    border: 0;
+    border-top: 1px solid #d0d7de;
+    border-radius: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.4;
+}
+
+.course-pager a {
+    flex: 1 1 240px;
+    max-width: calc(50% - 0.5rem);
+    padding: 0.75rem 1rem;
+    background: #fff;
+    border: 1px solid #d0d7de;
+    border-radius: 10px;
+    color: #0366d6;
+    font-weight: 600;
+    text-decoration: none;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.course-pager a:hover {
+    background: #f6f8fa;
+    border-color: #0366d6;
+    text-decoration: none;
+}
+
+.course-pager a span {
+    display: block;
+    margin-bottom: 0.15rem;
+    color: #6a737d;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.course-pager .course-pager__next {
+    margin-left: auto;
+    text-align: right;
+}
+
+@media (max-width: 700px) {
+    .course-nav {
+        position: static;
+    }
+
+    .course-pager a {
+        max-width: none;
+    }
+}
