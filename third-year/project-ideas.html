@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Third-Year Project Ideas — React and Material UI</title>
+    <link rel="stylesheet" href="../css/styles.css?v=2">
+    <link rel="stylesheet" href="../css/course-nav.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="course-nav" aria-label="Course navigation">
+            <a href="../index.html" class="course-nav__home">← Contents</a>
+            <span class="course-nav__year">Year 3</span>
+            <a href="helper.html" title="Advanced web intro – Portfolio with HTML, CSS and JavaScript">Advanced web intro</a>
+            <a href="react-tutorial.html" title="React with Vite – Components, props, state, events">React with Vite</a>
+            <a href="react-tutorial-step-2.html" title="React Hooks &amp; Routing">React Hooks &amp; Routing</a>
+            <a href="material-ui.html" title="Material UI – Components, theming and layout">Material UI</a>
+            <a href="project-ideas.html" class="active" aria-current="page" title="Third-year project ideas and assessment criteria">Project Ideas</a>
+        </nav>
+
+        <header class="header">
+            <h1>Third-Year Project Ideas</h1>
+            <p>Twenty frontend project briefs designed to be completed in approximately 24 hours.</p>
+        </header>
+
+        <div class="time-estimate">
+            <span><strong>Duration:</strong> Approximately 24 hours</span>
+            <span><strong>Stack:</strong> React, Vite, React Router, Material UI</span>
+            <span><strong>Data:</strong> Public APIs, localStorage, or bundled JSON</span>
+            <span><strong>Backend:</strong> Not required</span>
+        </div>
+
+        <div class="progress-bar" aria-label="Reading progress">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+
+        <nav class="nav-links" aria-label="Page sections">
+            <strong>On this page</strong>
+            <a href="#guidelines">Requirements</a>
+            <a href="#local-projects">Local data</a>
+            <a href="#api-projects">Public APIs</a>
+            <a href="#hybrid-projects">Hybrid projects</a>
+            <a href="#repository">Git repository</a>
+            <a href="#assessment">Assessment</a>
+        </nav>
+
+        <h2 id="guidelines">Project requirements</h2>
+
+        <section class="exercise-set" aria-labelledby="scope-heading">
+            <h3 id="scope-heading">Build a focused, complete application</h3>
+            <p>Your project should demonstrate the topics from the Year 3 tutorials. Aim for a well-finished application with a clear purpose rather than a large collection of unfinished features.</p>
+
+            <article>
+                <h4>Technical requirements</h4>
+                <ul>
+                    <li>Three to five routes with React Router, including a useful not-found page.</li>
+                    <li>Reusable React components with clear responsibilities and data passed through props.</li>
+                    <li>Controlled forms, validation, event handling, and immutable state updates.</li>
+                    <li>At least one reusable custom Hook, such as <code class="code-inline">useLocalStorage</code> or <code class="code-inline">useFetch</code>.</li>
+                    <li>Context or <code class="code-inline">useReducer</code> for one genuinely shared or complex feature.</li>
+                    <li>A responsive Material UI interface with a theme and accessible labels.</li>
+                    <li>Loading, empty, success, and error states where they are relevant.</li>
+                </ul>
+            </article>
+
+            <article>
+                <h4>Keep within scope</h4>
+                <ul>
+                    <li>Use no more than one primary public API.</li>
+                    <li>Do not add authentication, payments, chat, or a custom backend.</li>
+                    <li>Use bundled JSON for read-only starter content and <code class="code-inline">localStorage</code> for data that users create or edit.</li>
+                    <li>Do not make every screen configurable. Concentrate on the main user journey.</li>
+                    <li>You must be able to explain, test, and adapt all code included in your submission.</li>
+                </ul>
+            </article>
+
+        </section>
+
+        <h2 id="local-projects">Projects using local data</h2>
+
+        <div class="step" id="study-planner">
+            <div class="step-number">1</div>
+            <h3>Study Planner</h3>
+            <p>Build a personal academic dashboard where a student can organise modules, assignments, revision sessions, and deadlines. The home screen should show what is due soon and calculate progress from completed tasks.</p>
+            <p>The project is entirely local, keeping the focus on React state and interface design rather than API reliability. Seed data can demonstrate the application on first launch, while changes are saved in <code class="code-inline">localStorage</code>.</p>
+            <ul>
+                <li>Create, edit, complete, and delete assignments.</li>
+                <li>Filter work by module, priority, completion state, or deadline.</li>
+                <li>Provide dashboard, module, assignment, and settings routes.</li>
+                <li>Show overdue, due-soon, and completed summaries.</li>
+            </ul>
+            <div class="tip"><strong>Primary focus:</strong> Controlled forms, derived state, date handling, custom storage Hook, and responsive dashboard components.</div>
+        </div>
+
+        <div class="step" id="kanban-board">
+            <div class="step-number">2</div>
+            <h3>Kanban Task Board</h3>
+            <p>Create a board that organises tasks into Todo, In Progress, and Done columns. Users should be able to add detailed tasks, move them between stages, set priorities, and inspect an individual task on a separate route or dialog.</p>
+            <p>A reducer is a natural fit because each action describes a state transition: add, update, move, or remove. Drag-and-drop can be included if time permits, but accessible move buttons should remain available.</p>
+            <ul>
+                <li>Support task titles, descriptions, priorities, tags, and due dates.</li>
+                <li>Filter the board by priority, tag, or search text.</li>
+                <li>Persist the board and selected filters locally.</li>
+                <li>Display counts and completion progress for each column.</li>
+            </ul>
+            <div class="tip"><strong>Primary focus:</strong> <code class="code-inline">useReducer</code>, component composition, immutable updates, dialogs, and responsive column layouts.</div>
+        </div>
+
+        <div class="step" id="habit-tracker">
+            <div class="step-number">3</div>
+            <h3>Habit Tracker</h3>
+            <p>Design an application for defining recurring habits and recording whether each habit was completed on a given day. The dashboard should make current progress easy to understand without turning into a complex health platform.</p>
+            <p>Calculate streaks and completion percentages from stored check-ins rather than saving those derived values separately. A weekly view provides useful date logic while keeping the project achievable.</p>
+            <ul>
+                <li>Create habits with a title, category, frequency, and target.</li>
+                <li>Record daily completion and calculate current streaks.</li>
+                <li>Show weekly summaries and simple progress indicators.</li>
+                <li>Allow habits to be paused, edited, or archived.</li>
+            </ul>
+            <div class="tip"><strong>Primary focus:</strong> Date-based state, derived statistics, reusable progress components, themes, and local persistence.</div>
+        </div>
+
+        <div class="step" id="expense-tracker">
+            <div class="step-number">4</div>
+            <h3>Personal Expense Tracker</h3>
+            <p>Develop a private budgeting tool where users record income and expenses, assign categories, and inspect spending summaries. The application should explain where money went rather than attempting bank integration or financial advice.</p>
+            <p>Transactions can be stored locally and grouped by month and category during rendering. A small chart library is optional; Material UI progress bars and summary cards are sufficient.</p>
+            <ul>
+                <li>Add, edit, and delete income or expense transactions.</li>
+                <li>Filter by month, category, transaction type, or search text.</li>
+                <li>Calculate balance, total income, total spending, and category totals.</li>
+                <li>Provide a monthly summary and transaction detail view.</li>
+            </ul>
+            <div class="tip"><strong>Primary focus:</strong> Numeric form validation, array transformations, derived totals, table components, and localStorage.</div>
+        </div>
+
+        <div class="step" id="flashcards">
+            <div class="step-number">5</div>
+            <h3>Flashcard Learning App</h3>
+            <p>Build a study tool in which users create decks and review cards one at a time. A study session should reveal answers, collect confidence ratings, and present a short result summary.</p>
+            <p>The application does not need a full spaced-repetition algorithm. A simple system that prioritises cards marked “Needs practice” is enough to demonstrate useful state transitions and local persistence.</p>
+            <ul>
+                <li>Create, edit, delete, and search decks and cards.</li>
+                <li>Run a study session with reveal and rating actions.</li>
+                <li>Track recent scores and cards that need more practice.</li>
+                <li>Import starter decks from bundled JSON.</li>
+            </ul>
+            <div class="tip"><strong>Primary focus:</strong> Nested routes, reducer state, conditional rendering, local data import, and session summaries.</div>
+        </div>
+
+        <div class="step" id="quiz-platform">
+            <div class="step-number">6</div>
+            <h3>Quiz Platform</h3>
+            <p>Create a quiz application with categories, multiple-choice questions, a timed session, and a final results screen. Questions can come from bundled JSON so their quality and format remain consistent.</p>
+            <p>An optional extension can load questions from the Open Trivia Database, but the project should continue to function with local questions if the API is unavailable.</p>
+            <ul>
+                <li>Select a category, difficulty, and quiz length.</li>
+                <li>Show one question at a time with progress and optional timer.</li>
+                <li>Review answers and explanations after submission.</li>
+                <li>Store personal high scores and recent attempts.</li>
+            </ul>
+            <div class="tip"><strong>Primary focus:</strong> Multi-step state, timers and cleanup, routing, score calculation, and accessible answer controls.</div>
+        </div>
+
+        <h2 id="api-projects">Projects using public APIs</h2>
+
+        <div class="step" id="recipe-explorer">
+            <div class="step-number">7</div>
+            <h3>Recipe Explorer</h3>
+            <p>Build a visual recipe application that lets users search by meal name, browse categories, and open a complete recipe. The detail screen should turn the API's ingredient fields into a clean list.</p>
+            <p>Users can save favourites and attach a private note without needing an account. Recent searches and favourites belong in <code class="code-inline">localStorage</code>; recipe content comes from TheMealDB.</p>
+            <ul>
+                <li>Search recipes and browse a selected category or area.</li>
+                <li>Display ingredients, measurements, instructions, and images.</li>
+                <li>Save favourites and personal cooking notes.</li>
+                <li>Handle no-results, loading, network, and malformed-data states.</li>
+            </ul>
+            <div class="tip"><strong>Data source:</strong> <a href="https://www.themealdb.com/api.php" target="_blank" rel="noreferrer">TheMealDB API</a>. <strong>Primary focus:</strong> Fetching, data transformation, detail routes, and favourites.</div>
+        </div>
+
+        <div class="step" id="weather-dashboard">
+            <div class="step-number">8</div>
+            <h3>Weather Dashboard</h3>
+            <p>Create a dashboard where users search for a place and inspect current conditions plus a multi-day forecast. Open-Meteo's geocoding endpoint can translate a place name into coordinates before the forecast request runs.</p>
+            <p>The interface should convert weather codes into readable labels and icons. Avoid attempting advanced meteorology; concentrate on presenting a small set of useful measurements clearly.</p>
+            <ul>
+                <li>Search locations and resolve duplicate place names.</li>
+                <li>Show current temperature, wind, precipitation, and forecast.</li>
+                <li>Save favourite locations and the preferred temperature unit.</li>
+                <li>Provide skeleton, error, retry, and no-location states.</li>
+            </ul>
+            <div class="tip"><strong>Data source:</strong> <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">Open-Meteo</a>. <strong>Primary focus:</strong> Dependent requests, Effects, preferences Context, and responsive information cards.</div>
+        </div>
+
+        <div class="step" id="country-comparison">
+            <div class="step-number">9</div>
+            <h3>Country Comparison Tool</h3>
+            <p>Develop an explorer that presents key facts about countries and lets users place two or three countries side by side. The comparison should make large values understandable with formatted numbers and concise labels.</p>
+            <p>REST Countries returns nested and sometimes optional fields, providing useful practice in normalising API data before it reaches presentation components.</p>
+            <ul>
+                <li>Search and filter countries by name, region, or language.</li>
+                <li>Show flags, capitals, currencies, languages, population, and area.</li>
+                <li>Compare selected countries in a responsive layout.</li>
+                <li>Save a shortlist of favourite countries locally.</li>
+            </ul>
+            <div class="tip"><strong>Data source:</strong> <a href="https://restcountries.com/" target="_blank" rel="noreferrer">REST Countries</a>. <strong>Primary focus:</strong> Normalising nested data, URL parameters, comparison state, and number formatting.</div>
+        </div>
+
+        <div class="step" id="book-discovery">
+            <div class="step-number">10</div>
+            <h3>Book Discovery App</h3>
+            <p>Create a book search experience where users explore results, inspect a selected work, and maintain a personal reading list. Search results should show the information available without assuming every book has a cover or description.</p>
+            <p>Open Library results can be large and inconsistent, so this project is especially useful for pagination, fallback UI, and converting raw responses into a smaller internal model.</p>
+            <ul>
+                <li>Search by title, author, or subject with pagination.</li>
+                <li>Display covers, publication years, authors, and editions.</li>
+                <li>Save books as Want to Read, Reading, or Finished.</li>
+                <li>Add ratings or notes that remain private in localStorage.</li>
+            </ul>
+            <div class="tip"><strong>Data source:</strong> <a href="https://openlibrary.org/developers/api" target="_blank" rel="noreferrer">Open Library APIs</a>. <strong>Primary focus:</strong> Search parameters, pagination, fallback content, custom fetch Hook, and reading-list state.</div>
+        </div>
+
+        <div class="step" id="pokemon-team-builder">
+            <div class="step-number">11</div>
+            <h3>Pokémon Team Builder</h3>
+            <p>Build a searchable Pokédex that also allows users to assemble a team of up to six Pokémon. A team summary can show shared types and total statistics without attempting to simulate battles.</p>
+            <p>Because individual details require additional requests, fetch only what the current screen needs and cache selected results in state where practical.</p>
+            <ul>
+                <li>Browse or search Pokémon and open a detailed profile.</li>
+                <li>Display types, abilities, sprites, and base statistics.</li>
+                <li>Add and remove team members with a six-member limit.</li>
+                <li>Show a summary of team types, strengths, and stat totals.</li>
+            </ul>
+            <div class="tip"><strong>Data source:</strong> <a href="https://pokeapi.co/" target="_blank" rel="noreferrer">PokéAPI</a>. <strong>Primary focus:</strong> Paginated API data, detail fetching, shared team Context, constraints, and visual cards.</div>
+        </div>
+
+        <div class="step" id="tv-series-tracker">
+            <div class="step-number">12</div>
+            <h3>TV Series Tracker</h3>
+            <p>Create a television discovery application where users search shows, inspect summaries and schedules, and build a private watchlist. Watched status belongs to the local application; the API only supplies programme information.</p>
+            <p>Keep episode tracking simple by marking episodes or seasons as watched. Recommendations and streaming-provider integration are outside the required scope.</p>
+            <ul>
+                <li>Search shows and display useful result cards.</li>
+                <li>Show genres, rating, status, schedule, summary, and episodes.</li>
+                <li>Maintain Planning, Watching, Completed, and Dropped lists.</li>
+                <li>Track watched episodes and calculate series progress.</li>
+            </ul>
+            <div class="tip"><strong>Data source:</strong> <a href="https://www.tvmaze.com/api" target="_blank" rel="noreferrer">TVmaze API</a>. <strong>Primary focus:</strong> Search, nested routes, HTML-content handling, local watch state, and progress calculations.</div>
+        </div>
+
+        <div class="step" id="museum-gallery">
+            <div class="step-number">13</div>
+            <h3>Museum Gallery</h3>
+            <p>Design an online gallery for discovering artworks from the Art Institute of Chicago. Users should be able to search, open a focused artwork view, and create a personal collection.</p>
+            <p>The visual design is important, but the application should still handle missing images, unknown artists, and public-domain restrictions gracefully.</p>
+            <ul>
+                <li>Search artwork and browse paginated results.</li>
+                <li>Show artist, date, medium, dimensions, and description.</li>
+                <li>Save works into named personal collections.</li>
+                <li>Offer a grid/list display preference and image fallbacks.</li>
+            </ul>
+            <div class="tip"><strong>Data source:</strong> <a href="https://api.artic.edu/docs/" target="_blank" rel="noreferrer">Art Institute of Chicago API</a>. <strong>Primary focus:</strong> Search, image URLs, pagination, collection state, and accessible gallery layouts.</div>
+        </div>
+
+        <div class="step" id="earthquake-monitor">
+            <div class="step-number">14</div>
+            <h3>Earthquake Monitor</h3>
+            <p>Build a data dashboard for recent earthquakes using the USGS GeoJSON feeds. The main view should help users understand location, time, depth, and magnitude without presenting the project as an emergency-warning service.</p>
+            <p>A map is optional. A well-designed sortable table and detail screen are enough to meet the learning objectives and avoid spending most of the project configuring mapping software.</p>
+            <ul>
+                <li>Load recent earthquake data and show the feed update time.</li>
+                <li>Filter by magnitude, date range, depth, or search text.</li>
+                <li>Sort results and open an event detail page.</li>
+                <li>Save filter preferences and selected events locally.</li>
+            </ul>
+            <div class="tip"><strong>Data source:</strong> <a href="https://earthquake.usgs.gov/earthquakes/feed/" target="_blank" rel="noreferrer">USGS earthquake feeds</a>. <strong>Primary focus:</strong> GeoJSON transformation, tables, dates, filters, and responsible data communication.</div>
+        </div>
+
+        <div class="step" id="currency-converter">
+            <div class="step-number">15</div>
+            <h3>Currency Converter</h3>
+            <p>Create a focused currency conversion tool with clearly labelled amounts, currencies, rates, and rate dates. Users should be able to reverse a pair and save combinations they use often.</p>
+            <p>The application should state that rates are informational and may not match bank rates. Historical charts can be an extension, but reliable current conversion is the core feature.</p>
+            <ul>
+                <li>Select source and target currencies and enter an amount.</li>
+                <li>Convert values and show the rate's effective date.</li>
+                <li>Reverse currency pairs and save favourite pairs.</li>
+                <li>Maintain a small local history of recent calculations.</li>
+            </ul>
+            <div class="tip"><strong>Data source:</strong> <a href="https://frankfurter.dev/" target="_blank" rel="noreferrer">Frankfurter API</a>. <strong>Primary focus:</strong> Controlled numeric inputs, request parameters, formatting, validation, and persisted preferences.</div>
+        </div>
+
+        <div class="step" id="holiday-planner">
+            <div class="step-number">16</div>
+            <h3>Public Holiday Planner</h3>
+            <p>Build a planning tool that displays public holidays for a selected country and year. Users can combine those holidays with locally entered leave days to explore possible breaks.</p>
+            <p>The project should not attempt employee scheduling. Its purpose is to combine simple API data with user-created local records and clear calendar-style presentation.</p>
+            <ul>
+                <li>Select a supported country and year.</li>
+                <li>Group holidays by month and identify the day of the week.</li>
+                <li>Add personal leave days and notes locally.</li>
+                <li>Highlight sequences that connect leave, weekends, and holidays.</li>
+            </ul>
+            <div class="tip"><strong>Data source:</strong> <a href="https://date.nager.at/Api" target="_blank" rel="noreferrer">Nager.Date API</a>. <strong>Primary focus:</strong> Dates, combined remote/local data, derived ranges, and calendar-like responsive layouts.</div>
+        </div>
+
+        <div class="step" id="github-explorer">
+            <div class="step-number">17</div>
+            <h3>GitHub Profile Explorer</h3>
+            <p>Create a developer profile viewer that searches a GitHub username and presents public profile and repository information. The dashboard should emphasise useful summaries rather than reproduce GitHub.</p>
+            <p>The unauthenticated API has rate limits, so the interface must explain rate-limit errors and avoid unnecessary repeated requests. Saved profiles remain local.</p>
+            <ul>
+                <li>Search a username and display the public profile.</li>
+                <li>List repositories with language, stars, forks, and update date.</li>
+                <li>Filter or sort repositories and calculate language totals.</li>
+                <li>Save favourite profiles and recent searches.</li>
+            </ul>
+            <div class="tip"><strong>Data source:</strong> <a href="https://docs.github.com/en/rest" target="_blank" rel="noreferrer">GitHub REST API</a>. <strong>Primary focus:</strong> Multiple related requests, rate-limit handling, sorting, aggregation, and profile routes.</div>
+        </div>
+
+        <h2 id="hybrid-projects">Hybrid and content-driven projects</h2>
+
+        <div class="step" id="packing-assistant">
+            <div class="step-number">18</div>
+            <h3>Travel Packing Assistant</h3>
+            <p>Develop a trip planner that generates and manages packing lists. Users enter the destination, dates, trip type, and planned activities, then begin with sensible items from bundled JSON.</p>
+            <p>An optional Open-Meteo request can show the destination forecast and suggest weather-related items. The user always remains in control of the final list.</p>
+            <ul>
+                <li>Create trips with dates, destination, type, and notes.</li>
+                <li>Generate a starter list from bundled categories and rules.</li>
+                <li>Add, edit, remove, categorise, and check off items.</li>
+                <li>Optionally fetch weather and display relevant suggestions.</li>
+            </ul>
+            <div class="tip"><strong>Data:</strong> Bundled packing JSON, localStorage, and optional Open-Meteo. <strong>Primary focus:</strong> Combining data sources, custom Hooks, checklists, and derived completion progress.</div>
+        </div>
+
+        <div class="step" id="portfolio-builder">
+            <div class="step-number">19</div>
+            <h3>Student Portfolio Builder</h3>
+            <p>Create an editor and live preview for a student portfolio. Users enter profile details, skills, education, and projects, then switch between editor and preview routes.</p>
+            <p>This extends the introductory portfolio work into React without becoming a full website generator. One carefully designed template and a few theme choices are enough.</p>
+            <ul>
+                <li>Edit profile, skills, education, links, and project entries.</li>
+                <li>Preview changes immediately in a responsive portfolio layout.</li>
+                <li>Choose from a limited set of colours and typography options.</li>
+                <li>Save locally and export or import the portfolio data as JSON.</li>
+            </ul>
+            <div class="tip"><strong>Data:</strong> LocalStorage with JSON import/export. <strong>Primary focus:</strong> Complex controlled forms, Context, live preview, file handling, and theme customization.</div>
+        </div>
+
+        <div class="step" id="accessibility-checklist">
+            <div class="step-number">20</div>
+            <h3>Accessibility Checklist Manager</h3>
+            <p>Build a structured review tool based on a curated, bundled accessibility checklist. Users create a review for a website, mark checks as Pass, Fail, Not Applicable, or Not Tested, and record evidence.</p>
+            <p>This is a checklist manager rather than an automated scanner. It should support careful review of labels, keyboard access, contrast, headings, forms, and alternative text.</p>
+            <ul>
+                <li>Load checklist criteria from bundled JSON grouped by topic.</li>
+                <li>Create reviews and record status, severity, notes, and evidence.</li>
+                <li>Filter findings and calculate completion and issue totals.</li>
+                <li>Export a review as JSON or a printable HTML report.</li>
+            </ul>
+            <div class="tip"><strong>Data:</strong> Bundled checklist JSON and localStorage reviews. <strong>Primary focus:</strong> Accessible form design, reducer state, filtering, reporting, and print styles.</div>
+        </div>
+
+        <h2 id="repository">Git repository requirements</h2>
+
+        <section class="exercise-set" aria-labelledby="repository-heading">
+            <h3 id="repository-heading">What your repository should contain</h3>
+            <p>Your repository should contain everything needed to understand, install, run, and assess the project. A fresh copy should work after following the instructions in <code class="code-inline">README.md</code>.</p>
+
+            <article>
+                <h4>Required project files</h4>
+                <ul>
+                    <li><code class="code-inline">README.md</code> with the project title, purpose, main features, setup instructions, available scripts, data source, and known limitations.</li>
+                    <li><code class="code-inline">docs/plan.md</code> containing the original project thinking, requirements, proposed structure, and development plan.</li>
+                    <li><code class="code-inline">package.json</code> and the matching lock file, normally <code class="code-inline">package-lock.json</code>.</li>
+                    <li><code class="code-inline">src/</code> containing the React application source code.</li>
+                    <li><code class="code-inline">public/</code> only when the project requires static files that cannot be imported from <code class="code-inline">src/</code>.</li>
+                    <li><code class="code-inline">.gitignore</code> configured for a Vite and Node.js project.</li>
+                    <li><code class="code-inline">.env.example</code> with placeholder names if environment variables are required. The real <code class="code-inline">.env</code> file must not be committed.</li>
+                </ul>
+            </article>
+
+            <article>
+                <h4>Source-code organisation</h4>
+                <ul>
+                    <li>Reusable interface elements in a clear components directory.</li>
+                    <li>Route-level screens separated from smaller reusable components.</li>
+                    <li>Custom Hooks, Context, or reducer files separated when they contain substantial shared logic.</li>
+                    <li>API request or storage code kept outside presentation components where practical.</li>
+                    <li>Bundled JSON, seed data, theme configuration, and assets placed in clearly named locations.</li>
+                    <li>Consistent file names and imports, with unused starter files removed.</li>
+                </ul>
+            </article>
+
+            <article>
+                <h4>Planning and evidence in docs/plan.md</h4>
+                <p>Create <code class="code-inline">docs/plan.md</code> before implementation begins. Keep the initial thinking visible; if the project changes, append the decision and its reason instead of rewriting the original plan to match the finished application.</p>
+                <ul>
+                    <li><strong>Initial idea:</strong> The problem, intended users, project goals, and why the idea was selected.</li>
+                    <li><strong>Scope:</strong> Must-have features, optional features, and features deliberately left out.</li>
+                    <li><strong>User journey:</strong> The main tasks a user should be able to complete from start to finish.</li>
+                    <li><strong>Application structure:</strong> Proposed routes, page responsibilities, reusable components, and shared state.</li>
+                    <li><strong>Data model:</strong> The main objects and fields, example data, relationships, and validation rules.</li>
+                    <li><strong>Data source:</strong> The selected public API, bundled JSON, or localStorage approach, including expected loading and error states.</li>
+                    <li><strong>Interface plan:</strong> Early sketches or wireframes, responsive layout decisions, and planned Material UI components.</li>
+                    <li><strong>Accessibility plan:</strong> Keyboard use, labels, headings, colour contrast, alternative text, and validation feedback.</li>
+                    <li><strong>Testing plan:</strong> Important user journeys, edge cases, and logic that must be checked.</li>
+                    <li><strong>Task breakdown:</strong> A realistic order of work for the available development time.</li>
+                    <li><strong>Changes during development:</strong> Decisions that differed from the initial plan, with a short explanation of why.</li>
+                    <li><strong>Completion evidence:</strong> Desktop and mobile screenshots plus a short comparison between the plan and final result.</li>
+                </ul>
+            </article>
+
+            <article>
+                <h4>Git history</h4>
+                <ul>
+                    <li>Regular, meaningful commits that show the project developing over time.</li>
+                    <li>Commit messages that describe the change, such as “Add recipe search states” rather than “update”.</li>
+                    <li>A working final version on the repository's default branch.</li>
+                    <li>No generated dependency folders, secrets, unrelated files, or large unused assets in the history.</li>
+                </ul>
+            </article>
+
+            <article>
+                <h4>Do not commit</h4>
+                <ul>
+                    <li><code class="code-inline">node_modules/</code>, build output such as <code class="code-inline">dist/</code>, or temporary cache folders.</li>
+                    <li><code class="code-inline">.env</code> files, API keys, access tokens, passwords, or other private information.</li>
+                    <li>Editor, operating-system, or temporary files that are unrelated to the project.</li>
+                    <li>Large media files that are unused or can be replaced by appropriately sized web assets.</li>
+                </ul>
+            </article>
+
+            <article>
+                <h4>Final repository check</h4>
+                <ul>
+                    <li>A fresh clone can run with <code class="code-inline">npm install</code> followed by <code class="code-inline">npm run dev</code>.</li>
+                    <li>The production build completes with <code class="code-inline">npm run build</code>.</li>
+                    <li>The application contains no broken imports, missing assets, broken routes, or avoidable console errors.</li>
+                    <li>The README accurately describes the submitted version of the application.</li>
+                </ul>
+            </article>
+        </section>
+
+        <h2 id="assessment">Assessment criteria</h2>
+
+        <section class="exercise-set" aria-labelledby="assessment-heading">
+            <h3 id="assessment-heading">How your project will be assessed</h3>
+            <p>All project choices use the same criteria. Assessment focuses on the quality of the implementation and your understanding of the submitted work.</p>
+            <article>
+                <ul>
+                    <li><strong>20% — Planning and structure:</strong> The initial thinking and decisions recorded in <code class="code-inline">docs/plan.md</code>, including requirements, routes, components, and data model.</li>
+                    <li><strong>25% — React implementation:</strong> State, events, Hooks, component reuse, and immutable updates.</li>
+                    <li><strong>15% — Data handling:</strong> Fetching or local persistence, transformation, and edge states.</li>
+                    <li><strong>15% — Interface quality:</strong> Responsive Material UI design and coherent theme.</li>
+                    <li><strong>15% — Accessibility and reliability:</strong> Labels, keyboard use, semantic structure, validation, and errors.</li>
+                    <li><strong>10% — Explanation:</strong> README, setup instructions, known limitations, and ability to explain key code.</li>
+                </ul>
+            </article>
+        </section>
+
+        <nav class="course-pager" aria-label="Previous and next page">
+            <a href="material-ui.html" class="course-pager__prev"><span>← Previous</span>Material UI – Components, theming and layout</a>
+        </nav>
+    </div>
+
+    <script>
+        const progressBar = document.getElementById('progressBar');
+
+        function updateProgress() {
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = maxScroll > 0 ? (window.scrollY / maxScroll) * 100 : 100;
+            progressBar.style.width = `${Math.min(progress, 100)}%`;
+        }
+
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        updateProgress();
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', event => {
+                event.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                target?.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

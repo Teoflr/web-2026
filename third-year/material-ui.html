@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material UI — Components, Theming and Layout</title>
+    <link rel="stylesheet" href="../css/styles.css?v=2">
+    <link rel="stylesheet" href="../css/course-nav.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="course-nav" aria-label="Course navigation">
+            <a href="../index.html" class="course-nav__home">← Contents</a>
+            <span class="course-nav__year">Year 3</span>
+            <a href="helper.html" title="Advanced web intro – Portfolio with HTML, CSS and JavaScript">Advanced web intro</a>
+            <a href="react-tutorial.html" title="React with Vite – Components, props, state, events">React with Vite</a>
+            <a href="react-tutorial-step-2.html" title="React Hooks &amp; Routing">React Hooks &amp; Routing</a>
+            <a href="material-ui.html" class="active" aria-current="page" title="Material UI – Components, theming and layout">Material UI</a>
+            <a href="project-ideas.html" title="Third-year project ideas and assessment criteria">Project Ideas</a>
+        </nav>
+
+        <header class="header">
+            <h1>Material UI</h1>
+            <p>Build accessible React interfaces with components, themes, responsive layouts, and feedback patterns.</p>
+        </header>
+
+        <div class="time-estimate">
+            <span><strong>Time:</strong> 3–4 hours</span>
+            <span><strong>Level:</strong> Intermediate</span>
+            <span><strong>Before you begin:</strong> Complete React Hooks &amp; Routing</span>
+            <span><strong>Current stack:</strong> Material UI 9.6.0, React 19.3.1, Vite 8.3.8</span>
+        </div>
+
+        <div class="progress-bar" aria-label="Reading progress">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+
+        <nav class="nav-links" aria-label="Tutorial sections">
+            <strong>On this page</strong>
+            <a href="#introduction">Introduction</a>
+            <a href="#installation">Installation</a>
+            <a href="#setup">Setup</a>
+            <a href="#basic-components">Components</a>
+            <a href="#theming">Theming</a>
+            <a href="#layout">Layout</a>
+            <a href="#advanced-components">Advanced</a>
+            <a href="#practical-project">Project</a>
+        </nav>
+
+        <h2 id="introduction">What is Material UI?</h2>
+
+        <div class="step">
+            <div class="step-number">1</div>
+            <h3>A component library for React</h3>
+            <p>Material UI, usually shortened to MUI, is a React component library based on Material Design. It supplies tested interface building blocks while leaving application data and behavior under your control.</p>
+
+            <dl class="term-list">
+                <div>
+                    <dt>Components</dt>
+                    <dd>Buttons, fields, cards, dialogs, tables, navigation, and many other accessible interface patterns.</dd>
+                </div>
+                <div>
+                    <dt>Design system</dt>
+                    <dd>A shared approach to color, typography, spacing, shape, elevation, and responsive breakpoints.</dd>
+                </div>
+                <div>
+                    <dt>Customization</dt>
+                    <dd>The <code class="code-inline">sx</code> prop handles local styles, while a theme defines application-wide design decisions.</dd>
+                </div>
+                <div>
+                    <dt>Accessibility</dt>
+                    <dd>Components include keyboard and focus behavior, but you must still provide labels, useful text, and a logical document structure.</dd>
+                </div>
+            </dl>
+
+            <div class="tip">
+                MUI reduces repeated interface work; it does not replace React. State, events, data fetching, routing, and application structure still use the React concepts from the previous tutorials.
+            </div>
+        </div>
+
+        <h2 id="installation">Install Material UI</h2>
+
+        <div class="step">
+            <div class="step-number">2</div>
+            <h3>Create a Vite React project</h3>
+            <p>Start with the same Vite setup used in the React tutorials. Vite 8 requires Node.js 20.19+ or 22.12+; use an active LTS release for course work.</p>
+
+            <div class="code-block" data-language="bash"><span class="comment"># Create a React project</span>
+<span class="keyword">npm</span> create vite@latest my-mui-app <span class="operator">--</span> <span class="operator">--template</span> react
+
+<span class="comment"># Enter the project and install its dependencies</span>
+<span class="keyword">cd</span> my-mui-app
+<span class="keyword">npm</span> install</div>
+
+            <div class="warning">
+                Run the remaining commands inside <code class="code-inline">my-mui-app</code>. If <code class="code-inline">node --version</code> reports an older version, update Node.js before continuing.
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">3</div>
+            <h3>Install the component packages</h3>
+            <p>The core package uses Emotion as its default styling engine. Icons and the Roboto font are separate packages so applications only install them when needed.</p>
+
+            <div class="code-block" data-language="bash"><span class="comment"># Core components and styling engine</span>
+<span class="keyword">npm</span> install @mui/material @emotion/react @emotion/styled
+
+<span class="comment"># Icons and the default Material Design typeface</span>
+<span class="keyword">npm</span> install @mui/icons-material @fontsource/roboto</div>
+
+            <ul>
+                <li><strong><code class="code-inline">@mui/material</code>:</strong> Core components and theme utilities.</li>
+                <li><strong><code class="code-inline">@emotion/react</code> and <code class="code-inline">@emotion/styled</code>:</strong> The default CSS-in-JS engine.</li>
+                <li><strong><code class="code-inline">@mui/icons-material</code>:</strong> Material Symbols packaged as React SVG components.</li>
+                <li><strong><code class="code-inline">@fontsource/roboto</code>:</strong> Local font files that are bundled by Vite.</li>
+            </ul>
+
+            <div class="tip">
+                Do not install <code class="code-inline">@mui/lab</code> unless a project uses one of its experimental components. None of the examples in this tutorial require it.
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">4</div>
+            <h3>Load the font and baseline styles</h3>
+            <p>Import the font weights you use in <code class="code-inline">src/main.jsx</code>. <code class="code-inline">CssBaseline</code> applies a small cross-browser reset and theme-aware page defaults.</p>
+
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { StrictMode } <span class="keyword">from</span> <span class="string">'react'</span>
+<span class="keyword">import</span> { createRoot } <span class="keyword">from</span> <span class="string">'react-dom/client'</span>
+<span class="keyword">import</span> { CssBaseline } <span class="keyword">from</span> <span class="string">'@mui/material'</span>
+<span class="keyword">import</span> <span class="string">'@fontsource/roboto/300.css'</span>
+<span class="keyword">import</span> <span class="string">'@fontsource/roboto/400.css'</span>
+<span class="keyword">import</span> <span class="string">'@fontsource/roboto/500.css'</span>
+<span class="keyword">import</span> <span class="string">'@fontsource/roboto/700.css'</span>
+<span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">'./App.jsx'</span>
+
+<span class="function">createRoot</span>(document.<span class="function">getElementById</span>(<span class="string">'root'</span>)).<span class="function">render</span>(
+  <span class="tag">&lt;StrictMode&gt;</span>
+    <span class="tag">&lt;CssBaseline /&gt;</span>
+    <span class="tag">&lt;App /&gt;</span>
+  <span class="tag">&lt;/StrictMode&gt;</span>,
+)</div>
+
+            <p>The icon package renders SVGs, so it does not need a Material Icons font link in <code class="code-inline">index.html</code>.</p>
+        </div>
+
+        <h2 id="setup">First component</h2>
+
+        <div class="step">
+            <div class="step-number">5</div>
+            <h3>Build the first MUI screen</h3>
+            <p>Replace the starter contents of <code class="code-inline">src/App.jsx</code>. Import each component by name and use <code class="code-inline">sx</code> for styles that belong to this one instance.</p>
+
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { Button, Container, Typography } <span class="keyword">from</span> <span class="string">'@mui/material'</span>
+
+<span class="keyword">function</span> <span class="function">App</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;Container</span> <span class="attribute">maxWidth</span>=<span class="string">"sm"</span> <span class="attribute">sx</span>={{ py: <span class="number">4</span> }}<span class="tag">&gt;</span>
+      <span class="tag">&lt;Typography</span>
+        <span class="attribute">variant</span>=<span class="string">"h2"</span>
+        <span class="attribute">component</span>=<span class="string">"h1"</span>
+        <span class="attribute">gutterBottom</span>
+      <span class="tag">&gt;</span>
+        Welcome to Material UI
+      <span class="tag">&lt;/Typography&gt;</span>
+
+      <span class="tag">&lt;Typography</span> <span class="attribute">variant</span>=<span class="string">"body1"</span> <span class="attribute">sx</span>={{ mb: <span class="number">2</span> }}<span class="tag">&gt;</span>
+        This screen uses responsive spacing and theme typography.
+      <span class="tag">&lt;/Typography&gt;</span>
+
+      <span class="tag">&lt;Button</span> <span class="attribute">variant</span>=<span class="string">"contained"</span> <span class="attribute">size</span>=<span class="string">"large"</span><span class="tag">&gt;</span>
+        Get started
+      <span class="tag">&lt;/Button&gt;</span>
+    <span class="tag">&lt;/Container&gt;</span>
+  )
+}
+
+<span class="keyword">export default</span> App</div>
+
+            <div class="code-block" data-language="bash"><span class="keyword">npm</span> run dev</div>
+
+            <div class="success">
+                Open the local address printed by Vite. The heading, spacing, button, ripple, focus state, and Roboto typeface should now be visible.
+            </div>
+        </div>
+
+        <h2 id="basic-components">Essential components</h2>
+
+        <div class="step">
+            <div class="step-number">6</div>
+            <h3>Buttons and actions</h3>
+            <p>Choose a button variant according to the action's importance. Most views should have one clear primary action.</p>
+
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { Button, Stack } <span class="keyword">from</span> <span class="string">'@mui/material'</span>
+<span class="keyword">import</span> { Delete, Send } <span class="keyword">from</span> <span class="string">'@mui/icons-material'</span>
+
+<span class="keyword">function</span> <span class="function">ButtonShowcase</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;Stack</span>
+      <span class="attribute">direction</span>={{ xs: <span class="string">'column'</span>, sm: <span class="string">'row'</span> }}
+      <span class="attribute">spacing</span>={<span class="number">2</span>}
+    <span class="tag">&gt;</span>
+      <span class="tag">&lt;Button</span> <span class="attribute">variant</span>=<span class="string">"contained"</span> <span class="attribute">startIcon</span>={<span class="tag">&lt;Send /&gt;</span>}<span class="tag">&gt;</span>
+        Send message
+      <span class="tag">&lt;/Button&gt;</span>
+      <span class="tag">&lt;Button</span> <span class="attribute">variant</span>=<span class="string">"outlined"</span><span class="tag">&gt;</span>
+        Cancel
+      <span class="tag">&lt;/Button&gt;</span>
+      <span class="tag">&lt;Button</span> <span class="attribute">variant</span>=<span class="string">"text"</span> <span class="attribute">color</span>=<span class="string">"error"</span> <span class="attribute">startIcon</span>={<span class="tag">&lt;Delete /&gt;</span>}<span class="tag">&gt;</span>
+        Delete
+      <span class="tag">&lt;/Button&gt;</span>
+    <span class="tag">&lt;/Stack&gt;</span>
+  )
+}</div>
+
+            <ul>
+                <li><strong>Contained:</strong> The highest-emphasis action, such as Save or Submit.</li>
+                <li><strong>Outlined:</strong> A secondary action, such as Cancel or Back.</li>
+                <li><strong>Text:</strong> A low-emphasis action within a card, dialog, or toolbar.</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <div class="step-number">7</div>
+            <h3>Controlled text fields</h3>
+            <p>A MUI input is controlled in the same way as a native React input: state supplies the value and an event handler updates it.</p>
+
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { useState } <span class="keyword">from</span> <span class="string">'react'</span>
+<span class="keyword">import</span> { Stack, TextField } <span class="keyword">from</span> <span class="string">'@mui/material'</span>
+
+<span class="keyword">function</span> <span class="function">AccountFields</span>() {
+  <span class="keyword">const</span> [email, setEmail] = <span class="function">useState</span>(<span class="string">''</span>)
+  <span class="keyword">const</span> [password, setPassword] = <span class="function">useState</span>(<span class="string">''</span>)
+  <span class="keyword">const</span> passwordIsShort = password.length > <span class="number">0</span> && password.length < <span class="number">8</span>
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;Stack</span> <span class="attribute">spacing</span>={<span class="number">3</span>} <span class="attribute">sx</span>={{ maxWidth: <span class="number">420</span> }}<span class="tag">&gt;</span>
+      <span class="tag">&lt;TextField</span>
+        <span class="attribute">label</span>=<span class="string">"Email address"</span>
+        <span class="attribute">type</span>=<span class="string">"email"</span>
+        <span class="attribute">value</span>={email}
+        <span class="attribute">onChange</span>={(event) =&gt; <span class="function">setEmail</span>(event.target.value)}
+        <span class="attribute">helperText</span>=<span class="string">"We will not share your email"</span>
+        <span class="attribute">required</span>
+      <span class="tag">/&gt;</span>
+
+      <span class="tag">&lt;TextField</span>
+        <span class="attribute">label</span>=<span class="string">"Password"</span>
+        <span class="attribute">type</span>=<span class="string">"password"</span>
+        <span class="attribute">value</span>={password}
+        <span class="attribute">onChange</span>={(event) =&gt; <span class="function">setPassword</span>(event.target.value)}
+        <span class="attribute">error</span>={passwordIsShort}
+        <span class="attribute">helperText</span>={passwordIsShort ? <span class="string">'Use at least 8 characters'</span> : <span class="string">'Enter a password'</span>}
+        <span class="attribute">required</span>
+      <span class="tag">/&gt;</span>
+    <span class="tag">&lt;/Stack&gt;</span>
+  )
+}</div>
+
+            <p>The visible label is also the field's accessible name. Do not use a placeholder as the only label.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-number">8</div>
+            <h3>Cards for related content</h3>
+            <p>Cards group one subject and its actions. Keep action labels specific and write meaningful alternative text for content images.</p>
+
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> {
+  Button, Card, CardActions, CardContent, CardMedia, Typography,
+} <span class="keyword">from</span> <span class="string">'@mui/material'</span>
+<span class="keyword">import</span> { FavoriteBorder, Share } <span class="keyword">from</span> <span class="string">'@mui/icons-material'</span>
+
+<span class="keyword">function</span> <span class="function">AnimalCard</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;Card</span> <span class="attribute">sx</span>={{ maxWidth: <span class="number">345</span> }}<span class="tag">&gt;</span>
+      <span class="tag">&lt;CardMedia</span>
+        <span class="attribute">component</span>=<span class="string">"img"</span>
+        <span class="attribute">height</span>=<span class="string">"200"</span>
+        <span class="attribute">image</span>=<span class="string">"https://mui.com/static/images/cards/contemplative-reptile.jpg"</span>
+        <span class="attribute">alt</span>=<span class="string">"Green lizard resting on a branch"</span>
+      <span class="tag">/&gt;</span>
+      <span class="tag">&lt;CardContent&gt;</span>
+        <span class="tag">&lt;Typography</span> <span class="attribute">gutterBottom</span> <span class="attribute">variant</span>=<span class="string">"h5"</span> <span class="attribute">component</span>=<span class="string">"h2"</span><span class="tag">&gt;</span>
+          Lizard
+        <span class="tag">&lt;/Typography&gt;</span>
+        <span class="tag">&lt;Typography</span> <span class="attribute">variant</span>=<span class="string">"body2"</span> <span class="attribute">color</span>=<span class="string">"text.secondary"</span><span class="tag">&gt;</span>
+          Lizards are a widespread group of squamate reptiles.
+        <span class="tag">&lt;/Typography&gt;</span>
+      <span class="tag">&lt;/CardContent&gt;</span>
+      <span class="tag">&lt;CardActions&gt;</span>
+        <span class="tag">&lt;Button</span> <span class="attribute">size</span>=<span class="string">"small"</span> <span class="attribute">startIcon</span>={<span class="tag">&lt;FavoriteBorder /&gt;</span>}<span class="tag">&gt;</span>Like<span class="tag">&lt;/Button&gt;</span>
+        <span class="tag">&lt;Button</span> <span class="attribute">size</span>=<span class="string">"small"</span> <span class="attribute">startIcon</span>={<span class="tag">&lt;Share /&gt;</span>}<span class="tag">&gt;</span>Share<span class="tag">&lt;/Button&gt;</span>
+      <span class="tag">&lt;/CardActions&gt;</span>
+    <span class="tag">&lt;/Card&gt;</span>
+  )
+}</div>
+        </div>
+
+        <section class="exercise-set" aria-labelledby="component-exercise">
+            <h3 id="component-exercise">Component exercise</h3>
+            <p>Combine the components from this section into a contact form.</p>
+            <article>
+                <h4>Build a contact card</h4>
+                <ol>
+                    <li>Use labelled <code class="code-inline">TextField</code> components for name, email, and a multiline message.</li>
+                    <li>Arrange the fields with a vertical <code class="code-inline">Stack</code>.</li>
+                    <li>Place the form in <code class="code-inline">CardContent</code> and the submit button in <code class="code-inline">CardActions</code>.</li>
+                    <li>Handle submission on the <code class="code-inline">form</code>, prevent its default navigation, and show the submitted values in the console.</li>
+                </ol>
+            </article>
+        </section>
+
+        <h2 id="theming">Custom theming</h2>
+
+        <div class="step">
+            <div class="step-number">9</div>
+            <h3>Create an application theme</h3>
+            <p>A theme centralizes design choices. Wrap the application once, near the root, so every MUI component can read the same values.</p>
+
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { CssBaseline } <span class="keyword">from</span> <span class="string">'@mui/material'</span>
+<span class="keyword">import</span> { createTheme, ThemeProvider } <span class="keyword">from</span> <span class="string">'@mui/material/styles'</span>
+
+<span class="keyword">const</span> theme = <span class="function">createTheme</span>({
+  palette: {
+    primary: { main: <span class="string">'#5e35b1'</span> },
+    secondary: { main: <span class="string">'#00897b'</span> },
+  },
+  typography: {
+    fontFamily: <span class="string">'"Roboto", "Helvetica", "Arial", sans-serif'</span>,
+    h1: { fontSize: <span class="string">'2.5rem'</span>, fontWeight: <span class="number">700</span> },
+    button: { textTransform: <span class="string">'none'</span> },
+  },
+  shape: { borderRadius: <span class="number">10</span> },
+})
+
+<span class="keyword">function</span> <span class="function">Root</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;ThemeProvider</span> <span class="attribute">theme</span>={theme}<span class="tag">&gt;</span>
+      <span class="tag">&lt;CssBaseline /&gt;</span>
+      <span class="tag">&lt;App /&gt;</span>
+    <span class="tag">&lt;/ThemeProvider&gt;</span>
+  )
+}</div>
+
+            <div class="tip">
+                Use the theme for repeated design decisions. Keep one-off layout adjustments close to the component with <code class="code-inline">sx</code>.
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">10</div>
+            <h3>Add light and dark color schemes</h3>
+            <p>The current color-scheme API stores the user's choice and applies the correct palette. A component that calls <code class="code-inline">useColorScheme</code> must be inside the matching <code class="code-inline">ThemeProvider</code>.</p>
+
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { Button, CssBaseline, Stack, Typography } <span class="keyword">from</span> <span class="string">'@mui/material'</span>
+<span class="keyword">import</span> {
+  createTheme, ThemeProvider, useColorScheme,
+} <span class="keyword">from</span> <span class="string">'@mui/material/styles'</span>
+
+<span class="keyword">const</span> theme = <span class="function">createTheme</span>({
+  colorSchemes: {
+    light: <span class="keyword">true</span>,
+    dark: <span class="keyword">true</span>,
+  },
+})
+
+<span class="keyword">function</span> <span class="function">ColorModeControl</span>() {
+  <span class="keyword">const</span> { mode, setMode } = <span class="function">useColorScheme</span>()
+
+  <span class="keyword">if</span> (!mode) {
+    <span class="keyword">return</span> <span class="tag">&lt;Button</span> <span class="attribute">disabled</span><span class="tag">&gt;</span>Loading color mode<span class="tag">&lt;/Button&gt;</span>
+  }
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;Stack</span> <span class="attribute">direction</span>=<span class="string">"row"</span> <span class="attribute">spacing</span>={<span class="number">2</span>} <span class="attribute">alignItems</span>=<span class="string">"center"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;Typography&gt;</span>Mode: {mode}<span class="tag">&lt;/Typography&gt;</span>
+      <span class="tag">&lt;Button</span>
+        <span class="attribute">variant</span>=<span class="string">"outlined"</span>
+        <span class="attribute">onClick</span>={() =&gt; <span class="function">setMode</span>(mode === <span class="string">'dark'</span> ? <span class="string">'light'</span> : <span class="string">'dark'</span>)}
+      <span class="tag">&gt;</span>
+        Toggle mode
+      <span class="tag">&lt;/Button&gt;</span>
+    <span class="tag">&lt;/Stack&gt;</span>
+  )
+}
+
+<span class="keyword">function</span> <span class="function">App</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;ThemeProvider</span> <span class="attribute">theme</span>={theme}<span class="tag">&gt;</span>
+      <span class="tag">&lt;CssBaseline /&gt;</span>
+      <span class="tag">&lt;ColorModeControl /&gt;</span>
+    <span class="tag">&lt;/ThemeProvider&gt;</span>
+  )
+}</div>
+
+            <div class="warning">
+                Do not read the initial mode during server rendering without accounting for hydration. MUI may return <code class="code-inline">undefined</code> on the first render, which is why this example includes a loading state.
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">11</div>
+            <h3>Recognize older MUI examples</h3>
+            <p>Search results and older tutorials can use APIs that have since changed. Prefer the current documentation when the patterns conflict.</p>
+            <ul>
+                <li>Current Grid items use <code class="code-inline">size={{ xs: 12, md: 6 }}</code>; older examples use <code class="code-inline">item xs={12} md={6}</code>.</li>
+                <li>Clickable list rows use <code class="code-inline">ListItemButton</code>; older examples use <code class="code-inline">&lt;ListItem button&gt;</code>.</li>
+                <li>Actions at the end of a list row use the <code class="code-inline">secondaryAction</code> prop; older examples use <code class="code-inline">ListItemSecondaryAction</code>.</li>
+                <li>Use <code class="code-inline">onKeyDown</code>, because React deprecated <code class="code-inline">onKeyPress</code>.</li>
+                <li>Prefer <code class="code-inline">sx</code> over deprecated system props and repeated inline <code class="code-inline">style</code> objects.</li>
+            </ul>
+        </div>
+
+        <h2 id="layout">Responsive layout</h2>
+
+        <div class="step">
+            <div class="step-number">12</div>
+            <h3>Build a responsive Grid</h3>
+            <p>MUI breakpoints are mobile-first. Each value applies at that breakpoint and remains active until a larger breakpoint overrides it.</p>
+
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { Card, CardContent, Grid, Typography } <span class="keyword">from</span> <span class="string">'@mui/material'</span>
+
+<span class="keyword">const</span> cards = [<span class="string">'Components'</span>, <span class="string">'Themes'</span>, <span class="string">'Layouts'</span>]
+
+<span class="keyword">function</span> <span class="function">ResponsiveCards</span>() {
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;Grid</span> <span class="attribute">container</span> <span class="attribute">spacing</span>={<span class="number">3</span>}<span class="tag">&gt;</span>
+      {cards.<span class="function">map</span>((title) =&gt; (
+        <span class="tag">&lt;Grid</span> <span class="attribute">key</span>={title} <span class="attribute">size</span>={{ xs: <span class="number">12</span>, md: <span class="number">6</span>, lg: <span class="number">4</span> }}<span class="tag">&gt;</span>
+          <span class="tag">&lt;Card</span> <span class="attribute">sx</span>={{ height: <span class="string">'100%'</span> }}<span class="tag">&gt;</span>
+            <span class="tag">&lt;CardContent&gt;</span>
+              <span class="tag">&lt;Typography</span> <span class="attribute">variant</span>=<span class="string">"h5"</span> <span class="attribute">component</span>=<span class="string">"h2"</span><span class="tag">&gt;</span>
+                {title}
+              <span class="tag">&lt;/Typography&gt;</span>
+            <span class="tag">&lt;/CardContent&gt;</span>
+          <span class="tag">&lt;/Card&gt;</span>
+        <span class="tag">&lt;/Grid&gt;</span>
+      ))}
+    <span class="tag">&lt;/Grid&gt;</span>
+  )
+}</div>
+
+            <ul>
+                <li><strong>xs:</strong> 0px and wider.</li>
+                <li><strong>sm:</strong> 600px and wider.</li>
+                <li><strong>md:</strong> 900px and wider.</li>
+                <li><strong>lg:</strong> 1200px and wider.</li>
+                <li><strong>xl:</strong> 1536px and wider.</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <div class="step-number">13</div>
+            <h3>Combine AppBar and responsive Drawers</h3>
+            <p>Use a temporary Drawer on small screens and a permanent Drawer from <code class="code-inline">sm</code> upwards. This keeps the menu available without covering desktop content.</p>
+
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { useState } <span class="keyword">from</span> <span class="string">'react'</span>
+<span class="keyword">import</span> {
+  AppBar, Box, Drawer, IconButton, List, ListItemButton,
+  ListItemIcon, ListItemText, Toolbar, Typography,
+} <span class="keyword">from</span> <span class="string">'@mui/material'</span>
+<span class="keyword">import</span> { Home, Menu, Person, Settings } <span class="keyword">from</span> <span class="string">'@mui/icons-material'</span>
+
+<span class="keyword">const</span> drawerWidth = <span class="number">240</span>
+<span class="keyword">const</span> destinations = [
+  { label: <span class="string">'Home'</span>, icon: <span class="tag">&lt;Home /&gt;</span> },
+  { label: <span class="string">'Profile'</span>, icon: <span class="tag">&lt;Person /&gt;</span> },
+  { label: <span class="string">'Settings'</span>, icon: <span class="tag">&lt;Settings /&gt;</span> },
+]
+
+<span class="keyword">function</span> <span class="function">AppLayout</span>() {
+  <span class="keyword">const</span> [mobileOpen, setMobileOpen] = <span class="function">useState</span>(<span class="keyword">false</span>)
+
+  <span class="keyword">const</span> drawer = (
+    <span class="tag">&lt;&gt;</span>
+      <span class="tag">&lt;Toolbar /&gt;</span>
+      <span class="tag">&lt;List&gt;</span>
+        {destinations.<span class="function">map</span>(({ label, icon }) =&gt; (
+          <span class="tag">&lt;ListItemButton</span> <span class="attribute">key</span>={label}<span class="tag">&gt;</span>
+            <span class="tag">&lt;ListItemIcon&gt;</span>{icon}<span class="tag">&lt;/ListItemIcon&gt;</span>
+            <span class="tag">&lt;ListItemText</span> <span class="attribute">primary</span>={label} <span class="tag">/&gt;</span>
+          <span class="tag">&lt;/ListItemButton&gt;</span>
+        ))}
+      <span class="tag">&lt;/List&gt;</span>
+    <span class="tag">&lt;/&gt;</span>
+  )
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;Box</span> <span class="attribute">sx</span>={{ display: <span class="string">'flex'</span> }}<span class="tag">&gt;</span>
+      <span class="tag">&lt;AppBar</span>
+        <span class="attribute">position</span>=<span class="string">"fixed"</span>
+        <span class="attribute">sx</span>={{ zIndex: (theme) =&gt; theme.zIndex.drawer + <span class="number">1</span> }}
+      <span class="tag">&gt;</span>
+        <span class="tag">&lt;Toolbar&gt;</span>
+          <span class="tag">&lt;IconButton</span>
+            <span class="attribute">color</span>=<span class="string">"inherit"</span>
+            <span class="attribute">edge</span>=<span class="string">"start"</span>
+            <span class="attribute">aria-label</span>=<span class="string">"Open navigation"</span>
+            <span class="attribute">onClick</span={() =&gt; <span class="function">setMobileOpen</span>(<span class="keyword">true</span>)}
+            <span class="attribute">sx</span>={{ mr: <span class="number">2</span>, display: { sm: <span class="string">'none'</span> } }}
+          <span class="tag">&gt;</span>
+            <span class="tag">&lt;Menu /&gt;</span>
+          <span class="tag">&lt;/IconButton&gt;</span>
+          <span class="tag">&lt;Typography</span> <span class="attribute">variant</span>=<span class="string">"h6"</span> <span class="attribute">component</span>=<span class="string">"h1"</span><span class="tag">&gt;</span>Dashboard<span class="tag">&lt;/Typography&gt;</span>
+        <span class="tag">&lt;/Toolbar&gt;</span>
+      <span class="tag">&lt;/AppBar&gt;</span>
+
+      <span class="tag">&lt;Box</span> <span class="attribute">component</span>=<span class="string">"nav"</span> <span class="attribute">aria-label</span>=<span class="string">"Main navigation"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;Drawer</span>
+          <span class="attribute">variant</span>=<span class="string">"temporary"</span>
+          <span class="attribute">open</span>={mobileOpen}
+          <span class="attribute">onClose</span={() =&gt; <span class="function">setMobileOpen</span>(<span class="keyword">false</span>)}
+          <span class="attribute">ModalProps</span>={{ keepMounted: <span class="keyword">true</span> }}
+          <span class="attribute">sx</span>={{ display: { xs: <span class="string">'block'</span>, sm: <span class="string">'none'</span> }, <span class="string">'&amp; .MuiDrawer-paper'</span>: { width: drawerWidth } }}
+        <span class="tag">&gt;</span>
+          {drawer}
+        <span class="tag">&lt;/Drawer&gt;</span>
+        <span class="tag">&lt;Drawer</span>
+          <span class="attribute">variant</span>=<span class="string">"permanent"</span>
+          <span class="attribute">open</span>
+          <span class="attribute">sx</span>={{ display: { xs: <span class="string">'none'</span>, sm: <span class="string">'block'</span> }, <span class="string">'&amp; .MuiDrawer-paper'</span>: { width: drawerWidth } }}
+        <span class="tag">&gt;</span>
+          {drawer}
+        <span class="tag">&lt;/Drawer&gt;</span>
+      <span class="tag">&lt;/Box&gt;</span>
+
+      <span class="tag">&lt;Box</span>
+        <span class="attribute">component</span>=<span class="string">"main"</span>
+        <span class="attribute">sx</span>={{ flexGrow: <span class="number">1</span>, p: <span class="number">3</span>, width: { sm: <span class="string">`calc(100% - ${drawerWidth}px)`</span> } }}
+      <span class="tag">&gt;</span>
+        <span class="tag">&lt;Toolbar /&gt;</span>
+        <span class="tag">&lt;Typography</span> <span class="attribute">variant</span>=<span class="string">"h4"</span><span class="tag">&gt;</span>Main content<span class="tag">&lt;/Typography&gt;</span>
+      <span class="tag">&lt;/Box&gt;</span>
+    <span class="tag">&lt;/Box&gt;</span>
+  )
+}</div>
+        </div>
+
+        <h2 id="advanced-components">Advanced components</h2>
+
+        <div class="step">
+            <div class="step-number">14</div>
+            <h3>Sortable and selectable tables</h3>
+            <p>Keep sort and selection state in React. Copy the source array before sorting so the module-level data is not mutated.</p>
+
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { useState } <span class="keyword">from</span> <span class="string">'react'</span>
+<span class="keyword">import</span> {
+  Checkbox, Paper, Table, TableBody, TableCell, TableContainer,
+  TableHead, TableRow, TableSortLabel,
+} <span class="keyword">from</span> <span class="string">'@mui/material'</span>
+
+<span class="keyword">const</span> people = [
+  { id: <span class="number">1</span>, name: <span class="string">'John Doe'</span>, email: <span class="string">'john@example.com'</span>, role: <span class="string">'Admin'</span> },
+  { id: <span class="number">2</span>, name: <span class="string">'Jane Smith'</span>, email: <span class="string">'jane@example.com'</span>, role: <span class="string">'User'</span> },
+  { id: <span class="number">3</span>, name: <span class="string">'Bob Johnson'</span>, email: <span class="string">'bob@example.com'</span>, role: <span class="string">'Editor'</span> },
+]
+
+<span class="keyword">function</span> <span class="function">PeopleTable</span>() {
+  <span class="keyword">const</span> [order, setOrder] = <span class="function">useState</span>(<span class="string">'asc'</span>)
+  <span class="keyword">const</span> [orderBy, setOrderBy] = <span class="function">useState</span>(<span class="string">'name'</span>)
+  <span class="keyword">const</span> [selected, setSelected] = <span class="function">useState</span>([])
+
+  <span class="keyword">function</span> <span class="function">handleSort</span>(property) {
+    <span class="keyword">const</span> isAscending = orderBy === property && order === <span class="string">'asc'</span>
+    <span class="function">setOrder</span>(isAscending ? <span class="string">'desc'</span> : <span class="string">'asc'</span>)
+    <span class="function">setOrderBy</span>(property)
+  }
+
+  <span class="keyword">function</span> <span class="function">toggleSelected</span>(id) {
+    <span class="function">setSelected</span>((current) =&gt;
+      current.<span class="function">includes</span>(id)
+        ? current.<span class="function">filter</span>((selectedId) =&gt; selectedId !== id)
+        : [...current, id],
+    )
+  }
+
+  <span class="keyword">const</span> sortedPeople = [...people].<span class="function">sort</span>((a, b) =&gt; {
+    <span class="keyword">const</span> comparison = a[orderBy].<span class="function">localeCompare</span>(b[orderBy])
+    <span class="keyword">return</span> order === <span class="string">'asc'</span> ? comparison : -comparison
+  })
+
+  <span class="keyword">const</span> allSelected = selected.length === people.length
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;TableContainer</span> <span class="attribute">component</span>={Paper}<span class="tag">&gt;</span>
+      <span class="tag">&lt;Table</span> <span class="attribute">aria-label</span>=<span class="string">"People"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;TableHead&gt;</span>
+          <span class="tag">&lt;TableRow&gt;</span>
+            <span class="tag">&lt;TableCell</span> <span class="attribute">padding</span>=<span class="string">"checkbox"</span><span class="tag">&gt;</span>
+              <span class="tag">&lt;Checkbox</span>
+                <span class="attribute">checked</span>={allSelected}
+                <span class="attribute">indeterminate</span>={selected.length > <span class="number">0</span> && !allSelected}
+                <span class="attribute">onChange</span={() =&gt; <span class="function">setSelected</span>(allSelected ? [] : people.<span class="function">map</span>((person) =&gt; person.id))}
+                <span class="attribute">slotProps</span>={{ input: { <span class="string">'aria-label'</span>: <span class="string">'Select all people'</span> } }}
+              <span class="tag">/&gt;</span>
+            <span class="tag">&lt;/TableCell&gt;</span>
+            <span class="tag">&lt;TableCell&gt;</span>
+              <span class="tag">&lt;TableSortLabel</span>
+                <span class="attribute">active</span>={orderBy === <span class="string">'name'</span>}
+                <span class="attribute">direction</span>={orderBy === <span class="string">'name'</span> ? order : <span class="string">'asc'</span>}
+                <span class="attribute">onClick</span={() =&gt; <span class="function">handleSort</span>(<span class="string">'name'</span>)}
+              <span class="tag">&gt;</span>
+                Name
+              <span class="tag">&lt;/TableSortLabel&gt;</span>
+            <span class="tag">&lt;/TableCell&gt;</span>
+            <span class="tag">&lt;TableCell&gt;</span>Email<span class="tag">&lt;/TableCell&gt;</span>
+            <span class="tag">&lt;TableCell&gt;</span>Role<span class="tag">&lt;/TableCell&gt;</span>
+          <span class="tag">&lt;/TableRow&gt;</span>
+        <span class="tag">&lt;/TableHead&gt;</span>
+        <span class="tag">&lt;TableBody&gt;</span>
+          {sortedPeople.<span class="function">map</span>((person) =&gt; (
+            <span class="tag">&lt;TableRow</span> <span class="attribute">key</span>={person.id} <span class="attribute">hover</span> <span class="attribute">selected</span>={selected.<span class="function">includes</span>(person.id)}<span class="tag">&gt;</span>
+              <span class="tag">&lt;TableCell</span> <span class="attribute">padding</span>=<span class="string">"checkbox"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;Checkbox</span>
+                  <span class="attribute">checked</span>={selected.<span class="function">includes</span>(person.id)}
+                  <span class="attribute">onChange</span={() =&gt; <span class="function">toggleSelected</span>(person.id)}
+                  <span class="attribute">slotProps</span>={{ input: { <span class="string">'aria-label'</span>: <span class="string">`Select ${person.name}`</span> } }}
+                <span class="tag">/&gt;</span>
+              <span class="tag">&lt;/TableCell&gt;</span>
+              <span class="tag">&lt;TableCell&gt;</span>{person.name}<span class="tag">&lt;/TableCell&gt;</span>
+              <span class="tag">&lt;TableCell&gt;</span>{person.email}<span class="tag">&lt;/TableCell&gt;</span>
+              <span class="tag">&lt;TableCell&gt;</span>{person.role}<span class="tag">&lt;/TableCell&gt;</span>
+            <span class="tag">&lt;/TableRow&gt;</span>
+          ))}
+        <span class="tag">&lt;/TableBody&gt;</span>
+      <span class="tag">&lt;/Table&gt;</span>
+    <span class="tag">&lt;/TableContainer&gt;</span>
+  )
+}</div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">15</div>
+            <h3>Dialogs and snackbars</h3>
+            <p>Dialogs ask the user to complete a focused task. Snackbars provide brief, non-blocking feedback after an action.</p>
+
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { useState } <span class="keyword">from</span> <span class="string">'react'</span>
+<span class="keyword">import</span> {
+  Alert, Button, Dialog, DialogActions, DialogContent,
+  DialogTitle, Snackbar, TextField,
+} <span class="keyword">from</span> <span class="string">'@mui/material'</span>
+
+<span class="keyword">function</span> <span class="function">AddPerson</span>() {
+  <span class="keyword">const</span> [dialogOpen, setDialogOpen] = <span class="function">useState</span>(<span class="keyword">false</span>)
+  <span class="keyword">const</span> [saved, setSaved] = <span class="function">useState</span>(<span class="keyword">false</span>)
+  <span class="keyword">const</span> [name, setName] = <span class="function">useState</span>(<span class="string">''</span>)
+
+  <span class="keyword">function</span> <span class="function">handleSubmit</span>(event) {
+    event.<span class="function">preventDefault</span>()
+    <span class="function">setDialogOpen</span>(<span class="keyword">false</span>)
+    <span class="function">setSaved</span>(<span class="keyword">true</span>)
+    <span class="function">setName</span>(<span class="string">''</span>)
+  }
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;&gt;</span>
+      <span class="tag">&lt;Button</span> <span class="attribute">variant</span>=<span class="string">"contained"</span> <span class="attribute">onClick</span={() =&gt; <span class="function">setDialogOpen</span>(<span class="keyword">true</span>)}<span class="tag">&gt;</span>
+        Add person
+      <span class="tag">&lt;/Button&gt;</span>
+
+      <span class="tag">&lt;Dialog</span> <span class="attribute">open</span>={dialogOpen} <span class="attribute">onClose</span={() =&gt; <span class="function">setDialogOpen</span>(<span class="keyword">false</span>)}<span class="tag">&gt;</span>
+        <span class="tag">&lt;DialogTitle&gt;</span>Add a person<span class="tag">&lt;/DialogTitle&gt;</span>
+        <span class="tag">&lt;DialogContent</span> <span class="attribute">component</span>=<span class="string">"form"</span> <span class="attribute">id</span>=<span class="string">"add-person-form"</span> <span class="attribute">onSubmit</span>={handleSubmit}<span class="tag">&gt;</span>
+          <span class="tag">&lt;TextField</span>
+            <span class="attribute">autoFocus</span>
+            <span class="attribute">fullWidth</span>
+            <span class="attribute">required</span>
+            <span class="attribute">margin</span>=<span class="string">"dense"</span>
+            <span class="attribute">label</span>=<span class="string">"Full name"</span>
+            <span class="attribute">value</span>={name}
+            <span class="attribute">onChange</span>={(event) =&gt; <span class="function">setName</span>(event.target.value)}
+          <span class="tag">/&gt;</span>
+        <span class="tag">&lt;/DialogContent&gt;</span>
+        <span class="tag">&lt;DialogActions&gt;</span>
+          <span class="tag">&lt;Button</span> <span class="attribute">onClick</span={() =&gt; <span class="function">setDialogOpen</span>(<span class="keyword">false</span>)}<span class="tag">&gt;</span>Cancel<span class="tag">&lt;/Button&gt;</span>
+          <span class="tag">&lt;Button</span> <span class="attribute">type</span>=<span class="string">"submit"</span> <span class="attribute">form</span>=<span class="string">"add-person-form"</span> <span class="attribute">variant</span>=<span class="string">"contained"</span><span class="tag">&gt;</span>Save<span class="tag">&lt;/Button&gt;</span>
+        <span class="tag">&lt;/DialogActions&gt;</span>
+      <span class="tag">&lt;/Dialog&gt;</span>
+
+      <span class="tag">&lt;Snackbar</span> <span class="attribute">open</span>={saved} <span class="attribute">autoHideDuration</span>={<span class="number">4000</span>} <span class="attribute">onClose</span={() =&gt; <span class="function">setSaved</span>(<span class="keyword">false</span>)}<span class="tag">&gt;</span>
+        <span class="tag">&lt;Alert</span> <span class="attribute">severity</span>=<span class="string">"success"</span> <span class="attribute">variant</span>=<span class="string">"filled"</span> <span class="attribute">onClose</span={() =&gt; <span class="function">setSaved</span>(<span class="keyword">false</span>)}<span class="tag">&gt;</span>
+          Person saved
+        <span class="tag">&lt;/Alert&gt;</span>
+      <span class="tag">&lt;/Snackbar&gt;</span>
+    <span class="tag">&lt;/&gt;</span>
+  )
+}</div>
+        </div>
+
+        <h2 id="practical-project">Complete project</h2>
+
+        <div class="step">
+            <div class="step-number">16</div>
+            <h3>Build a task manager</h3>
+            <p>This example combines state, forms, lists, icons, chips, layout, and theme-aware styling.</p>
+
+            <div class="code-block" data-language="jsx"><span class="keyword">import</span> { useState } <span class="keyword">from</span> <span class="string">'react'</span>
+<span class="keyword">import</span> {
+  Button, Card, CardContent, Chip, Container, IconButton,
+  List, ListItem, ListItemText, Stack, TextField, Typography,
+} <span class="keyword">from</span> <span class="string">'@mui/material'</span>
+<span class="keyword">import</span> { Add, CheckCircle, Delete } <span class="keyword">from</span> <span class="string">'@mui/icons-material'</span>
+
+<span class="keyword">const</span> initialTasks = [
+  { id: <span class="number">1</span>, title: <span class="string">'Learn Material UI'</span>, completed: <span class="keyword">false</span>, priority: <span class="string">'high'</span> },
+  { id: <span class="number">2</span>, title: <span class="string">'Build a React app'</span>, completed: <span class="keyword">true</span>, priority: <span class="string">'medium'</span> },
+]
+
+<span class="keyword">function</span> <span class="function">TaskManager</span>() {
+  <span class="keyword">const</span> [tasks, setTasks] = <span class="function">useState</span>(initialTasks)
+  <span class="keyword">const</span> [newTask, setNewTask] = <span class="function">useState</span>(<span class="string">''</span>)
+
+  <span class="keyword">function</span> <span class="function">addTask</span>() {
+    <span class="keyword">const</span> title = newTask.<span class="function">trim</span>()
+    <span class="keyword">if</span> (!title) <span class="keyword">return</span>
+
+    <span class="function">setTasks</span>((current) =&gt; [
+      ...current,
+      { id: crypto.<span class="function">randomUUID</span>(), title, completed: <span class="keyword">false</span>, priority: <span class="string">'medium'</span> },
+    ])
+    <span class="function">setNewTask</span>(<span class="string">''</span>)
+  }
+
+  <span class="keyword">function</span> <span class="function">toggleTask</span>(id) {
+    <span class="function">setTasks</span>((current) =&gt;
+      current.<span class="function">map</span>((task) =&gt;
+        task.id === id ? { ...task, completed: !task.completed } : task,
+      ),
+    )
+  }
+
+  <span class="keyword">function</span> <span class="function">deleteTask</span>(id) {
+    <span class="function">setTasks</span>((current) =&gt; current.<span class="function">filter</span>((task) =&gt; task.id !== id))
+  }
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;Container</span> <span class="attribute">maxWidth</span>=<span class="string">"md"</span> <span class="attribute">sx</span>={{ py: <span class="number">4</span> }}<span class="tag">&gt;</span>
+      <span class="tag">&lt;Typography</span> <span class="attribute">variant</span>=<span class="string">"h3"</span> <span class="attribute">component</span>=<span class="string">"h1"</span> <span class="attribute">gutterBottom</span><span class="tag">&gt;</span>
+        Task manager
+      <span class="tag">&lt;/Typography&gt;</span>
+
+      <span class="tag">&lt;Card</span> <span class="attribute">sx</span>={{ mb: <span class="number">3</span> }}<span class="tag">&gt;</span>
+        <span class="tag">&lt;CardContent&gt;</span>
+          <span class="tag">&lt;Stack</span> <span class="attribute">direction</span>={{ xs: <span class="string">'column'</span>, sm: <span class="string">'row'</span> }} <span class="attribute">spacing</span>={<span class="number">2</span>}<span class="tag">&gt;</span>
+            <span class="tag">&lt;TextField</span>
+              <span class="attribute">fullWidth</span>
+              <span class="attribute">label</span>=<span class="string">"New task"</span>
+              <span class="attribute">value</span>={newTask}
+              <span class="attribute">onChange</span>={(event) =&gt; <span class="function">setNewTask</span>(event.target.value)}
+              <span class="attribute">onKeyDown</span>={(event) =&gt; {
+                <span class="keyword">if</span> (event.key === <span class="string">'Enter'</span>) <span class="function">addTask</span>()
+              }}
+            <span class="tag">/&gt;</span>
+            <span class="tag">&lt;Button</span> <span class="attribute">variant</span>=<span class="string">"contained"</span> <span class="attribute">startIcon</span>={<span class="tag">&lt;Add /&gt;</span>} <span class="attribute">onClick</span>={addTask}<span class="tag">&gt;</span>
+              Add
+            <span class="tag">&lt;/Button&gt;</span>
+          <span class="tag">&lt;/Stack&gt;</span>
+        <span class="tag">&lt;/CardContent&gt;</span>
+      <span class="tag">&lt;/Card&gt;</span>
+
+      <span class="tag">&lt;Card&gt;</span>
+        <span class="tag">&lt;List</span> <span class="attribute">aria-label</span>=<span class="string">"Tasks"</span><span class="tag">&gt;</span>
+          {tasks.<span class="function">map</span>((task) =&gt; (
+            <span class="tag">&lt;ListItem</span>
+              <span class="attribute">key</span>={task.id}
+              <span class="attribute">divider</span>
+              <span class="attribute">secondaryAction</span>={
+                <span class="tag">&lt;Stack</span> <span class="attribute">direction</span>=<span class="string">"row"</span><span class="tag">&gt;</span>
+                  <span class="tag">&lt;IconButton</span>
+                    <span class="attribute">onClick</span={() =&gt; <span class="function">toggleTask</span>(task.id)}
+                    <span class="attribute">color</span>={task.completed ? <span class="string">'success'</span> : <span class="string">'default'</span>}
+                    <span class="attribute">aria-label</span>={task.completed ? <span class="string">`Mark ${task.title} incomplete`</span> : <span class="string">`Complete ${task.title}`</span>}
+                  <span class="tag">&gt;</span>
+                    <span class="tag">&lt;CheckCircle /&gt;</span>
+                  <span class="tag">&lt;/IconButton&gt;</span>
+                  <span class="tag">&lt;IconButton</span> <span class="attribute">onClick</span={() =&gt; <span class="function">deleteTask</span>(task.id)} <span class="attribute">color</span>=<span class="string">"error"</span> <span class="attribute">aria-label</span>={<span class="string">`Delete ${task.title}`</span>}<span class="tag">&gt;</span>
+                    <span class="tag">&lt;Delete /&gt;</span>
+                  <span class="tag">&lt;/IconButton&gt;</span>
+                <span class="tag">&lt;/Stack&gt;</span>
+              }
+            <span class="tag">&gt;</span>
+              <span class="tag">&lt;ListItemText</span>
+                <span class="attribute">primary</span>={task.title}
+                <span class="attribute">slotProps</span>={{
+                  primary: {
+                    sx: {
+                      textDecoration: task.completed ? <span class="string">'line-through'</span> : <span class="string">'none'</span>,
+                      opacity: task.completed ? <span class="number">0.6</span> : <span class="number">1</span>,
+                    },
+                  },
+                }}
+                <span class="attribute">secondary</span>={<span class="tag">&lt;Chip</span> <span class="attribute">label</span>={task.priority} <span class="attribute">size</span>=<span class="string">"small"</span> <span class="attribute">color</span>={task.priority === <span class="string">'high'</span> ? <span class="string">'error'</span> : <span class="string">'warning'</span>} <span class="tag">/&gt;</span>}
+              <span class="tag">/&gt;</span>
+            <span class="tag">&lt;/ListItem&gt;</span>
+          ))}
+        <span class="tag">&lt;/List&gt;</span>
+        {tasks.length === <span class="number">0</span> && (
+          <span class="tag">&lt;Typography</span> <span class="attribute">color</span>=<span class="string">"text.secondary"</span> <span class="attribute">sx</span>={{ p: <span class="number">3</span>, textAlign: <span class="string">'center'</span> }}<span class="tag">&gt;</span>
+            No tasks yet. Add one above.
+          <span class="tag">&lt;/Typography&gt;</span>
+        )}
+      <span class="tag">&lt;/Card&gt;</span>
+    <span class="tag">&lt;/Container&gt;</span>
+  )
+}</div>
+
+            <div class="success">
+                The project now supports adding, completing, and deleting tasks; responsive input layout; accessible icon labels; priority chips; and theme-aware colors.
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">17</div>
+            <h3>Where to go next</h3>
+            <p>You now have the core patterns needed to build a consistent MUI application. Extend the task manager before adding more libraries:</p>
+            <ul>
+                <li>Persist tasks with the custom local-storage Hook from the previous tutorial.</li>
+                <li>Add filtering and editing while keeping state updates immutable.</li>
+                <li>Move repeated component overrides into the theme.</li>
+                <li>Add routes for the dashboard, tasks, and settings screens.</li>
+                <li>Test interactions with Vitest and React Testing Library.</li>
+                <li>Explore MUI X only when the project needs advanced data grids or date pickers.</li>
+            </ul>
+
+            <div class="tip">
+                <strong>References</strong>
+                <br>Material UI documentation: <a href="https://mui.com/material-ui/" target="_blank" rel="noreferrer">mui.com/material-ui</a>
+                <br>Component examples: <a href="https://mui.com/material-ui/all-components/" target="_blank" rel="noreferrer">All Material UI components</a>
+                <br>Theming guide: <a href="https://mui.com/material-ui/customization/theming/" target="_blank" rel="noreferrer">Customizing the theme</a>
+                <br>Accessibility guidance: <a href="https://mui.com/material-ui/guides/accessibility/" target="_blank" rel="noreferrer">Accessibility</a>
+            </div>
+        </div>
+
+        <nav class="course-pager" aria-label="Previous and next page">
+            <a href="react-tutorial-step-2.html" class="course-pager__prev"><span>← Previous</span>React Hooks &amp; Routing</a>
+            <a href="project-ideas.html" class="course-pager__next"><span>Next →</span>Third-Year Project Ideas</a>
+        </nav>
+    </div>
+
+    <script>
+        async function copyText(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    return true;
+                } catch {
+                    // Fall through for browsers that deny Clipboard API access.
+                }
+            }
+
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.setAttribute('readonly', '');
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-9999px';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            textArea.setSelectionRange(0, text.length);
+            const copied = document.execCommand('copy');
+            textArea.remove();
+
+            return copied;
+        }
+
+        document.querySelectorAll('.code-block').forEach(block => {
+            const code = block.textContent.trim();
+            const language = block.dataset.language || 'code';
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'copy-button';
+            button.textContent = 'Copy';
+            button.setAttribute('aria-label', `Copy ${language} example`);
+            button.setAttribute('aria-live', 'polite');
+
+            button.addEventListener('click', async () => {
+                try {
+                    const copied = await copyText(code);
+                    if (!copied) {
+                        throw new Error('Copy command failed');
+                    }
+
+                    button.textContent = 'Copied';
+                    button.setAttribute('aria-label', `Copied ${language} example`);
+                } catch {
+                    button.textContent = 'Copy failed';
+                    button.setAttribute('aria-label', `Could not copy ${language} example`);
+                }
+
+                window.setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.setAttribute('aria-label', `Copy ${language} example`);
+                }, 4000);
+            });
+
+            block.appendChild(button);
+        });
+
+        let progress = 0;
+        const steps = document.querySelectorAll('.step');
+        const totalSteps = steps.length;
+
+        function updateProgress() {
+            const progressBar = document.getElementById('progressBar');
+
+            steps.forEach((step, index) => {
+                const rect = step.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    progress = Math.max(progress, ((index + 1) / totalSteps) * 100);
+                }
+            });
+
+            progressBar.style.width = `${progress}%`;
+        }
+
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        updateProgress();
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', event => {
+                event.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                target?.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
